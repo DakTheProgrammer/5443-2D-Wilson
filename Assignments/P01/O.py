@@ -5,7 +5,7 @@ import copy
 class O(Shapes):
     def __init__(self, screen, grid):
         self.__parts = []
-        self.__color = (242, 132, 130)#(224, 185, 143)
+        self.__color = (224, 185, 143)
 
         #top left [0]
         #has to be a deep copy or else the graphics mess up

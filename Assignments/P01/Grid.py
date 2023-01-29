@@ -51,6 +51,12 @@ class Grid:
                     for parts in shapes.getParts():
                         if parts.y < self.__slots[r * self.__slots_cols].y:
                             parts.y += self.__slot_size
+                
+                pygame.mixer.Channel(0).play(pygame.mixer.Sound('Audio/Line.mp3'))
+
+                return 100
+        
+        return 0
 
     def checkGameOver(self, placed):
         pass

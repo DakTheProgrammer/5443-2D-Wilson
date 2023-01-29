@@ -72,3 +72,6 @@ class Shapes:
     
     def getColor(self):
         return self.__color
+    
+    def badPiece(self):
+        self.__color = (255, 0,0)
