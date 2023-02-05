@@ -1,4 +1,11 @@
-#TO DO: SOUND
+#######################################################################
+#                           Hipster Tetris
+#                         By: Dakota Wilson
+#
+#   A Pygame version of Tetris using classes with OOP principles. A
+# class assignment to make a tile based game that has collisions.
+#
+#######################################################################
 from Grid import Grid
 from T import T
 from I import I
@@ -11,12 +18,14 @@ import random
 
 pygame.init()
 speed = 1
+#buffer to balance movement speed
 moveBuffer = 0
 screen_Size = 800
 maxBuffer = 1000
 
 score = 0
 
+#fonts:
 font = pygame.font.Font("Fonts/Lora-Bold.ttf", 35)
 subFont = pygame.font.Font("Fonts/Lora-Bold.ttf", 27)
 title = font.render("HIPSTER TETRIS", True, ((208, 220, 216)))
@@ -29,11 +38,12 @@ instructions_Place = subFont.render("S: Place", True, ((208, 220, 216)))
 instructions_Restart = subFont.render("R: Restart", True, ((208, 220, 216)))
 gameOver = font.render("GAME OVER!", True, ((255, 0, 0)))
 
+#background music:
 pygame.mixer.init()
 pygame.mixer.music.load('Audio/Tetris.mp3')
 pygame.mixer.music.play(-1)
 
-
+#gets a random new Tetris piece
 def getRandomPiece(screen, gameSpace):
     r = random.randint(0,4)
     if r == 0:
@@ -51,12 +61,16 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((screen_Size, screen_Size))
     pygame.display.set_caption("Tetris")
 
+    #Used to get game clock used for frame rate
     clock = pygame.time.Clock()
 
     running = True
+    #when game over used to display game over text
     over = False
+    #used to know when to make game faster holds old score
     oldScore = 0
 
+    #creates starting items
     gameSpace = Grid(screen)
     piece = getRandomPiece(screen, gameSpace)
     nextPiece = getRandomPiece(screen, gameSpace)
@@ -92,22 +106,29 @@ if __name__ == '__main__':
         #fills the screen with a soft grey for the eye
         screen.fill((34, 40, 49))
         
+        #real game logic
         if not piece.gameOver(groundedShapes):
             score += gameSpace.checkClear(groundedShapes)
 
+            #when the score hasn't just been updated and 10 lines have been cleared increase speed
             if oldScore < score:
                 if score % 1000 == 0:
                     speed += 1
                     oldScore = score
 
+            #logic for when the pice gets placed 
             if piece.isGrounded(groundedShapes):
                 groundedShapes.append(piece)
                 piece = nextPiece
                 nextPiece = getRandomPiece(screen, gameSpace)
                 nextBox.setPiece(nextPiece)
             
+            #draws the piece
             piece.draw()
 
+            #used to make sure piece is moving too fast
+            #skips move in that case to slow it down
+            #used to allow that classic tetris look when moving
             if moveBuffer >= maxBuffer:
                 piece.move()
                 moveBuffer = 0
@@ -115,6 +136,7 @@ if __name__ == '__main__':
                 moveBuffer += speed * dt
 
             #user controls(needs quit so user can quit while running)
+            #run game to see what each are used for specifically
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -141,11 +163,13 @@ if __name__ == '__main__':
                         oldScore = 0
                         speed = 1
         else:
+            #makes the piece that ended the game red
             piece.badPiece()
             groundedShapes.append(piece)
 
             over = True            
 
+        #always draws these
         for shapes in groundedShapes:
                 shapes.draw()
 
@@ -167,6 +191,7 @@ if __name__ == '__main__':
         screen.blit(instructions_Place, (screen.get_width() * .695,screen.get_height() * .895))
         screen.blit(instructions_Restart, (screen.get_width() * .67,screen.get_height() * .925))
 
+        #display game over
         if over:
             screen.blit(gameOver, (screen.get_width() / 8,screen.get_height() / 2))
 

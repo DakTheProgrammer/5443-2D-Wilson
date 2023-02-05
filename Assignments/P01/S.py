@@ -3,7 +3,37 @@ import pygame
 import copy
 
 class S(Shapes):
+    """
+    A class used to represent S shape in Tetris
+
+    ...
+
+    Attributes
+    ----------
+    grid : Grid
+        The grid that the shape will be displayed on
+    parts: list
+        list of the parts of the shape
+    color: Tuple
+        Color of the shape in (R,G,B) format
+    direction: char
+        The direction the shape is facing
+
+    Methods
+    -------
+    rotate(placed)
+        rotates the shape
+
+    """
     def __init__(self, screen, grid):
+        """
+        Parameters
+        ----------
+        screen : pygame.Display
+            The screen the game is played on
+        grid : Grid
+            The grid that the game is played on
+        """
         self.__parts = []
         self.__color = (242, 132, 130)
         self.__grid = grid
@@ -26,6 +56,16 @@ class S(Shapes):
         super().__init__(screen, self.__grid, self.__parts, self.__color)
 
     def rotate(self, placed):
+        """
+        Rotates the shape
+
+        Parameters
+        ----------
+        placed : list
+            The shapes that have already been placed
+        """
+
+        #See I for description on what is happening
         if self.__direction == 'E':
             temp2 = copy.deepcopy(self.__parts[2])
             temp2.y -= self.__grid.getSlotSize() * 2

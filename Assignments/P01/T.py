@@ -3,7 +3,37 @@ import pygame
 import copy
 
 class T(Shapes):
+    """
+    A class used to represent T shape in Tetris
+
+    ...
+
+    Attributes
+    ----------
+    grid : Grid
+        The grid that the shape will be displayed on
+    parts: list
+        list of the parts of the shape
+    color: Tuple
+        Color of the shape in (R,G,B) format
+    direction: char
+        The direction the shape is facing
+
+    Methods
+    -------
+    rotate(placed)
+        rotates the shape
+
+    """
     def __init__(self, screen, grid):
+        """
+        Parameters
+        ----------
+        screen : pygame.Display
+            The screen the game is played on
+        grid : Grid
+            The grid that the game is played on
+        """
         self.__parts = []
         self.__grid = grid
         self.__color = (240, 177, 168)
@@ -23,6 +53,16 @@ class T(Shapes):
         super().__init__(screen, grid, self.__parts, self.__color)
 
     def rotate(self, placed):
+        """
+        Rotates the shape
+
+        Parameters
+        ----------
+        placed : list
+            The shapes that have already been placed
+        """
+
+        #See I shape for description of what is happening
         if self.__direction == 'N':
             temp = copy.deepcopy(self.__parts[1])
             temp.x += self.__grid.getSlotSize()

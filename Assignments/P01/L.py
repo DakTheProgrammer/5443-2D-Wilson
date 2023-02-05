@@ -4,6 +4,28 @@ import copy
 
 class L(Shapes):
     def __init__(self, screen, grid):
+        """
+        A class used to represent L shape in Tetris
+
+        ...
+
+        Attributes
+        ----------
+        grid : Grid
+            The grid that the shape will be displayed on
+        parts: list
+            list of the parts of the shape
+        color: Tuple
+            Color of the shape in (R,G,B) format
+        direction: char
+            The direction the shape is facing
+
+        Methods
+        -------
+        rotate(placed)
+            rotates the shape
+
+        """
         self.__parts = []
         self.__color = (132, 165, 157)
         self.__grid = grid
@@ -26,6 +48,16 @@ class L(Shapes):
         super().__init__(screen, self.__grid, self.__parts, self.__color)
 
     def rotate(self, placed):
+        """
+        Rotates the shape
+
+        Parameters
+        ----------
+        placed : list
+            The shapes that have already been placed
+        """
+
+        #see I shape for description
         if self.__direction == 'N':
             temp0 = copy.deepcopy(self.__parts[0])
             temp0.x += self.__grid.getSlotSize() * 2

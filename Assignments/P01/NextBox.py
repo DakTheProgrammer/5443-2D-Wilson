@@ -7,7 +7,42 @@ import pygame
 import copy
 
 class NextBox:
+    """
+    A class used to represent the next shape box in Tetris
+
+    ...
+
+    Attributes
+    ----------
+    screen : pygame.Display
+        a screen object used to determine screen metrics
+    color : tuple
+        the (R,G,B) values of the color of the box
+    box: pygame.Rect
+        rectangle that stores the shape
+    font: pygame.Font
+        font for the text above the box 
+    fontRender: pygame.Font.Render
+        The renderer for the font
+    shapeColor: tuple
+        the (R,G,B) values of the color of the shape
+
+    Methods
+    -------
+    draw()
+        draws the Next box
+    setPiece(piece)
+        sets the piece inside the box
+    """
     def __init__(self, screen, shape):
+        """
+        Parameters
+        ----------
+        screen : pygame.Display
+            The screen the game is played on
+        shape : Shape
+            The shape that goes in the box
+        """
         self.__screen = screen
         self.__color = (208, 220, 216)
         self.__box = pygame.Rect(screen.get_width() * .65, screen.get_width() * .1, self.__screen.get_width() / 4.5, self.__screen.get_width() / 4.5)
@@ -17,6 +52,11 @@ class NextBox:
         self.setPiece(shape)
         
     def draw(self):
+        """
+        Parameters
+        ----------
+        None
+        """
         pygame.draw.rect(self.__screen, self.__color, self.__box, 2)
 
         for shapes in self.__shape:
@@ -26,9 +66,16 @@ class NextBox:
         self.__screen.blit(self.__fontRender, (self.__box.topleft[0], self.__box.topleft[1] - self.__font.get_linesize()))
 
     def setPiece(self, piece):
+        """
+        Parameters
+        ----------
+        piece : Shape
+            Sets the pice in the box
+        """
         self.__shape = copy.deepcopy(piece.getParts())
         self.__shapeColor = piece.getColor()
 
+        #moves the shape around based on its type to ensure a good look
         for shapes in self.__shape:
             if(type(piece) == T):   
                 shapes.x += self.__box.x - shapes.width - .5 * self.__box.width
