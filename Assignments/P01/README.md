@@ -28,6 +28,6 @@ A Pygame version of Tetris using classes with OOP principles. A class assignment
     - `python Game.py`
 
 #### Screen Shots:
-<img src="Images/Start.jpg" width="300">
-<img src="Images/Gameplay.jpg" width="300">
-<img src="Images/Gameover.jpg" width="300">
+<img src="Images/Start.jpg">
+<img src="Images/Gameplay.jpg">
+<img src="Images/Gameover.jpg">
