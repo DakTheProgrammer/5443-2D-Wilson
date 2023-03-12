@@ -9,16 +9,16 @@ A Pygame version of Tetris using classes with OOP principles. A class assignment
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
 |   1   | Game.py         | Main driver of my project that launches the game.  |
-|   1   | Shapes.py       | Base class for shapes.                             |
-|   1   | I.py            | I shape child class.                               |
-|   1   | L.py            | L shape child class.                               |
-|   1   | O.py            | O shape child class.                               |
-|   1   | S.py            | S shape child class.                               |
-|   1   | T.py            | T shape child class.                               |
-|   1   | NextBox.py      | Class for the next shape box.                      |
-|   1   | Fonts           | Folder with used fonts.                            |
-|   1   | Audio           | Folder with Audio used in game.                    |
-|   1   | Images          | Folder with screenshots of the game.               |
+|   2   | Shapes.py       | Base class for shapes.                             |
+|   3   | I.py            | I shape child class.                               |
+|   4   | L.py            | L shape child class.                               |
+|   5   | O.py            | O shape child class.                               |
+|   6   | S.py            | S shape child class.                               |
+|   7   | T.py            | T shape child class.                               |
+|   8   | NextBox.py      | Class for the next shape box.                      |
+|   9   | Fonts           | Folder with used fonts.                            |
+|   10  | Audio           | Folder with Audio used in game.                    |
+|   11  | Images          | Folder with screenshots of the game.               |
 
 ### Instructions
 
