@@ -23,13 +23,7 @@ class TankArm(pygame.sprite.Sprite):
         self.image = pygame.transform.smoothscale(self.image, ((self.image.get_size()[0] + 6.5) / 2, (self.image.get_size()[1] + 6.5 ) / 2))
         self.__rot_image = self.image
         self.rect = self.image.get_rect()
-
-        
-
-        
-    
-    def getCollisions(self, group):
-        print(pygame.sprite.spritecollideany(self, group))
+        self.__disabled = False
 
     def draw(self, screen):        
         self.rotate()
@@ -43,7 +37,7 @@ class TankArm(pygame.sprite.Sprite):
         self.rect.center = (x, y)
 
     def rotate(self):
-        if self.__owned:
+        if self.__owned and not self.__disabled:
             player_rect = self.image.get_rect(center = self.rect.center)
 
             mx, my = pygame.mouse.get_pos()
@@ -73,3 +67,12 @@ class TankArm(pygame.sprite.Sprite):
     def getAngle(self):
         #this is due to starting at angle 180
         return self.__angle + 180
+    
+    def ChangeOwned(self):
+        self.__owned = not self.__owned
+
+    def Disable(self):
+        self.__disabled = True
+
+    def Enable(self):
+        self.__disabled = False

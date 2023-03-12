@@ -7,6 +7,9 @@ class Tank(pygame.sprite.Sprite):
     def __init__(self, playerNum, owned, x = 100, y = 100):
         super().__init__()
         
+        #makes it so sounds dont play on restart
+        pygame.mixer.Channel(1).pause()
+        
         self.__owned = owned
         self.__playerNum = playerNum
 
@@ -46,11 +49,13 @@ class Tank(pygame.sprite.Sprite):
         offset = (location[0] - self.rect[0], location[1] - self.rect[1])
         overlaps = self.__mask.overlap(mask, offset)
 
-        if item == 'proj' and overlaps != None:
+        if item == 'proj' and overlaps != None and not self.__owned:
             self.Death()
-            return True
+            return (True, True)
         if item == 'hill' and overlaps != None:
-            return True
+            return (True, False)
+        
+        return (False,False)
 
         
 
@@ -82,7 +87,7 @@ class Tank(pygame.sprite.Sprite):
         if self.posx < 0:
             self.posx = 0
         
-        if self.posx > screen.get_width() - self.rect.width or self.getCollision(hill.getMask(), hill.rect, 'hill'):
+        if self.posx > screen.get_width() - self.rect.width or self.getCollision(hill.getMask(), hill.rect, 'hill')[0]:
             self.posx = self.rect.x
             
         self.rect.x = self.posx
@@ -121,3 +126,13 @@ class Tank(pygame.sprite.Sprite):
     def Death(self):
         self.__isAlive = False
         pygame.mixer.Channel(1).play(pygame.mixer.Sound('Sounds/Fire.mp3'))
+
+    def ChangeTurn(self):
+        self.__owned = not self.__owned         
+        self.__Arm.ChangeOwned()
+
+    def DisableArm(self):
+        self.__Arm.Disable()
+
+    def EnableArm(self):
+        self.__Arm.Enable()

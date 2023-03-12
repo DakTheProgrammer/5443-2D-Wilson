@@ -1,12 +1,8 @@
-import sys
 from GameDriver import GameDriver
 
-try:
-    player = int(sys.argv[1])
-except:
-    print("Invalid argument")
-    sys.exit()
+while True:
+    Game = GameDriver(background=(135, 206, 235))
+    Game.gameLoop()
 
-Game = GameDriver(player,background=(135, 206, 235))
-
-Game.gameLoop()
+    if Game.CheckExit():
+        break

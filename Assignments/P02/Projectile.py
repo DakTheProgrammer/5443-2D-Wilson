@@ -28,6 +28,8 @@ class Projectile(pygame.sprite.Sprite):
 
         self.__cannonDust = Dust(self.__origin, 500,(105,105,105))
         self.__trail = []
+
+        self.__alive = True
         
 
     def draw(self, screen, power):
@@ -47,7 +49,7 @@ class Projectile(pygame.sprite.Sprite):
 
         screen.blit(self.image, self.rect)
 
-    def getCollision(self, mask, location, item):
+    def getCollision(self, mask, location, item, screen):
         offset = (location[0] - self.rect[0], location[1] - self.rect[1])
         overlaps = self.__mask.overlap(mask, offset)
 
@@ -55,14 +57,22 @@ class Projectile(pygame.sprite.Sprite):
             return True
         elif item == 'crater' and overlaps != None:
             return True
+        elif self.rect.centery > screen.get_height():
+            self.destroy()
+
+        return False
         
     def getMask(self):
         return self.__mask
     
     def destroy(self):
-        self.rect.center = (800,800)
+        self.__alive = False
+        self.rect.center = (5000,5000)
 
     def __calculate_new_xy(self, old_xy,offset,angle_in_radians):
         new_x = old_xy[0] + (offset*math.cos(-angle_in_radians))
         new_y = old_xy[1] + (offset*math.sin(-angle_in_radians))
         return new_x, new_y
+    
+    def isAlive(self):
+        return self.__alive
