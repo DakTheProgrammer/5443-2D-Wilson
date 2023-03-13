@@ -34,7 +34,7 @@ A turn based tank shooter written in pygame. This game involves projectile motio
     - `python main.py`
 
 #### Screen Shots:
-<img src="Images/Crater.jpg">
-<img src="Images/GameOver.jpg">
-<img src="Images/Shot.jpg">
-<img src="Images/Start.jpg">
+<img src="Images/Crater.png">
+<img src="Images/GameOver.png">
+<img src="Images/Shot.png">
+<img src="Images/Start.png">
