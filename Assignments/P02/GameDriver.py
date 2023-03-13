@@ -48,6 +48,16 @@ from Crater import Crater
         a boolean value that tells if the game is over
     exit : bool
         a boolean that is used to check if the game needs to restart or end
+    powerUpInstruction : pygame.Render
+        label for upping power
+    powerDownInstruction : pygame.Render
+        label for lowering power
+    moverRightInstruction : pygame.Render
+        label for moving right
+    moverLeftInstruction : pygame.Render
+        label for moving left
+    shootInstruction : pygame.Render
+        label for shooting projectile from tanks
 
     Methods
     -------
@@ -110,6 +120,12 @@ class GameDriver:
 
         self.__font = pygame.font.Font("Fonts/Lora-Bold.ttf", 35)
 
+        self.__powerUpInstruction = self.__font.render("W: Power up", True, ((0, 0, 0)))
+        self.__powerDownInstruction = self.__font.render("S: Power up", True, ((0, 0, 0)))
+        self.__moverRightInstruction = self.__font.render("D: Move right", True, ((0, 0, 0)))
+        self.__moverLeftInstruction = self.__font.render("A: Move left", True, ((0, 0, 0)))
+        self.__shootInstruction = self.__font.render("Click: Shoot", True, ((0, 0, 0)))
+
         self.__craters = []
 
         self.__gameOver = False
@@ -160,6 +176,11 @@ class GameDriver:
         TurnLabel = self.__font.render("Player " + str(self.__owner + 1 ) + " Turn", True, (0,0,0))
         self.__screen.blit(powerLabel, (0,0))
         self.__screen.blit(TurnLabel, (self.__screen.get_width() / 3,0))
+        self.__screen.blit(self.__powerUpInstruction, (self.__screen.get_width() * .70, 0))
+        self.__screen.blit(self.__powerDownInstruction, (self.__screen.get_width() * .70, self.__screen.get_height() * .045))
+        self.__screen.blit(self.__moverRightInstruction, (self.__screen.get_width() * .70,self.__screen.get_height() * .09))
+        self.__screen.blit(self.__moverLeftInstruction, (self.__screen.get_width() * .70,self.__screen.get_height() * .135))
+        self.__screen.blit(self.__shootInstruction, (self.__screen.get_width() * .70,self.__screen.get_height() * .18))
         
         self.__hill.draw(self.__screen)
         
