@@ -27,7 +27,7 @@ class GameDriver:
             ], 9,self.__screen, 4
         )
 
-        self.__ship = Ship()
+        self.__ship = Ship(self.__screen.get_rect().center)
 
 
     def GameLoop(self):
@@ -50,3 +50,13 @@ class GameDriver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.__running = False
+
+        is_key_pressed = pygame.key.get_pressed()
+
+
+        if is_key_pressed[pygame.K_d]:
+            self.__ship.rotate(clockwise=True)
+        elif is_key_pressed[pygame.K_a]:
+            self.__ship.rotate(clockwise=False)
+        if is_key_pressed[pygame.K_w]:
+            self.__ship.accelerate()
