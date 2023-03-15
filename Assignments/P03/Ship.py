@@ -54,6 +54,7 @@ class Ship:
 
     def draw(self, screen):
         self.__ship.update('Move', [self.__velocity, screen])
+        self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
         
         self.__ship.draw(screen)
 
@@ -61,7 +62,6 @@ class Ship:
         sign = 1 if clockwise else -1
         angle = self.__maneuverability * sign
         self.__direction.rotate_ip(angle)
-        #self.__ship.update('Rotate', self.__direction)
 
     def accelerate(self):
         self.__velocity += self.__direction * self.__acceleration

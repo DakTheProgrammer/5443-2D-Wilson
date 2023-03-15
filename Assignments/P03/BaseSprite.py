@@ -1,5 +1,6 @@
 import pygame
 from pygame.math import Vector2
+import math
 
 class BaseSprite(pygame.sprite.Sprite):
     def __init__(self, img, size, mask = False, loc = (0,0)):
@@ -12,6 +13,9 @@ class BaseSprite(pygame.sprite.Sprite):
         #used to make transitions look smoother
         self.rectBuffer = self.image.get_size()[1] / 2
 
+        #needed for rotation
+        self.imageHolder = self.image
+
         if mask == True:
             ...
         else:
@@ -22,7 +26,10 @@ class BaseSprite(pygame.sprite.Sprite):
             self.rect.center = arg
         elif cmd == 'Rotate':
             #rotate :)
-            ...
+            imageRect = self.imageHolder.get_rect(center = self.rect.center)
+
+            self.image = pygame.transform.rotate(self.imageHolder, arg)
+            self.rect = self.image.get_rect(center = imageRect.center)
         elif cmd == 'Move':
             self.rect.center += arg[0]
             if self.rect.top <= -self.rectBuffer:
@@ -30,8 +37,6 @@ class BaseSprite(pygame.sprite.Sprite):
             elif self.rect.left <= -self.rectBuffer:
                 self.rect.right = arg[1].get_width() + self.rectBuffer
             elif self.rect.bottom >= arg[1].get_height() + self.rectBuffer:
-                #move to top
                 self.rect.top = -self.rectBuffer
             elif self.rect.right >= arg[1].get_width() + self.rectBuffer:
-                #move to left side
                 self.rect.left = -self.rectBuffer
