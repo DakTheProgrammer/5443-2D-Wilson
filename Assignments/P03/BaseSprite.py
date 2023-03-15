@@ -1,6 +1,4 @@
 import pygame
-from pygame.math import Vector2
-import math
 
 class BaseSprite(pygame.sprite.Sprite):
     def __init__(self, img, size, mask = False, loc = (0,0)):
@@ -25,7 +23,6 @@ class BaseSprite(pygame.sprite.Sprite):
         if cmd == 'Location':
             self.rect.center = arg
         elif cmd == 'Rotate':
-            #rotate :)
             imageRect = self.imageHolder.get_rect(center = self.rect.center)
 
             self.image = pygame.transform.rotate(self.imageHolder, arg)
