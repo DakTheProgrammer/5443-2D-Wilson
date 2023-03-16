@@ -1,6 +1,7 @@
 import pygame
 from Background import Background
 from Ship import Ship
+from Asteroid import Asteroid
 
 class GameDriver:
     def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60):
@@ -21,17 +22,20 @@ class GameDriver:
 
         self.__background = Background(
             [
-            'Environment\Backgrounds\Condensed\Starry background  - Layer 01 - Void.png',
-            'Environment\Backgrounds\Condensed\Starry background  - Layer 02 - Stars.png',
-            'Environment\Backgrounds\Condensed\Starry background  - Layer 03 - Stars.png'
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 01 - Void.png',
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 02 - Stars.png',
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 03 - Stars.png'
             ], 9,self.__screen, 4
         )
 
         self.__ship = Ship(self.__screen.get_rect().center)
+        self.__asteroid = Asteroid(self.__screen)
 
 
     def GameLoop(self):
         while self.__running:
+            self.__CheckCollisions()
+            
             self.__Draw()
 
             self.__HandleEvents()
@@ -41,9 +45,9 @@ class GameDriver:
     def __Draw(self):
         self.__screen.fill(self.__backgroundColor)
         self.__background.draw(self.__screen)
-
+        
         self.__ship.draw(self.__screen)
-
+        self.__asteroid.draw(self.__screen)
         pygame.display.flip()
 
     def __HandleEvents(self):
@@ -60,3 +64,7 @@ class GameDriver:
             self.__ship.rotate(clockwise=False)
         if is_key_pressed[pygame.K_w]:
             self.__ship.accelerate()
+            
+    def __CheckCollisions(self):
+        if self.__ship.CheckCollision(self.__asteroid.getSprite()):
+            print('Asteroid!')

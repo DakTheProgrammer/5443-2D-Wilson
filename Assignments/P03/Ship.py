@@ -2,29 +2,30 @@ import pygame
 from pygame.math import Vector2
 from PIL import Image
 from BaseSprite import BaseSprite
+import Util
 
 class Ship:
     def __init__(self, loc):
         self.__imageMul = 1.5
 
         self.__full = pygame.image.load(
-            'Ship\Main Ship\Main Ship - Bases\Main Ship - Base - Full health.png')
+            'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Full health.png')
         self.__slight = pygame.image.load(
-            'Ship\Main Ship\Main Ship - Bases\Main Ship - Base - Slight damage.png')
+            'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Slight damage.png')
         self.__damaged = pygame.image.load(
-            'Ship\Main Ship\Main Ship - Bases\Main Ship - Base - Damaged.png')
+            'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Damaged.png')
         self.__very = pygame.image.load(
-            'Ship\Main Ship\Main Ship - Bases\Main Ship - Base - Very damaged.png')
+            'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Very damaged.png')
 
-        self.__body = BaseSprite(self.__full, self.__scale(self.__full.get_size(), self.__imageMul))
+        self.__body = BaseSprite(self.__full, Util.scale(self.__full.get_size(), self.__imageMul), mask=True)
 
-        engine = pygame.image.load('Ship\Main Ship\Main Ship - Engines\Main Ship - Engines - Base Engine.png')
+        engine = pygame.image.load('Ship/Main Ship/Main Ship - Engines/Main Ship - Engines - Base Engine.png')
 
-        self.__engine = BaseSprite(engine, self.__scale(engine.get_size(), self.__imageMul))
+        self.__engine = BaseSprite(engine, Util.scale(engine.get_size(), self.__imageMul), mask=True)
 
         self.__gunStates = []
 
-        gunImage = Image.open('Ship\Main Ship\Main Ship - Weapons\Main Ship - Weapons - Zapper.png')
+        gunImage = Image.open('Ship/Main Ship/Main Ship - Weapons/Main Ship - Weapons - Zapper.png')
 
         #has 14 frames
         for i in range(14):                
@@ -35,7 +36,7 @@ class Ship:
 
             self.__gunStates.append(img)
 
-        self.__gun = BaseSprite(self.__gunStates[0], self.__scale(self.__gunStates[0].get_size(), self.__imageMul))
+        self.__gun = BaseSprite(self.__gunStates[0], Util.scale(self.__gunStates[0].get_size(), self.__imageMul), mask=True)
 
         self.__ship = pygame.sprite.Group([self.__gun, self.__engine, self.__body])
 
@@ -66,5 +67,7 @@ class Ship:
     def accelerate(self):
         self.__velocity += self.__direction * self.__acceleration
 
-    def __scale(self, tuple, amount):
-        return (tuple[0] * amount, tuple[1] * amount)
+    def CheckCollision(self, sprite):
+        didIt = [False]
+        self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
+        return didIt[0]

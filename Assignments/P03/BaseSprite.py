@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class BaseSprite(pygame.sprite.Sprite):
     def __init__(self, img, size, mask = False, loc = (0,0)):
@@ -15,10 +16,18 @@ class BaseSprite(pygame.sprite.Sprite):
         self.imageHolder = self.image
 
         if mask == True:
-            ...
+            self.__mask = pygame.mask.from_surface(self.image)
         else:
-            ...
+            self.__mask = None
 
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+        #pygame.draw.rect(screen, (255,0,0), self.rect, 1)
+        
+        # if (self.__mask != None):
+        #     pygame.draw.lines(screen, (0,255,0), (100,100), self.__mask.outline())
+
+        
     def update(self, cmd, arg, ret = None):
         if cmd == 'Location':
             self.rect.center = arg
@@ -37,3 +46,13 @@ class BaseSprite(pygame.sprite.Sprite):
                 self.rect.top = -self.rectBuffer
             elif self.rect.right >= arg[1].get_width() + self.rectBuffer:
                 self.rect.left = -self.rectBuffer
+        elif cmd == 'Collide':
+            #how to check for collisions
+            offset = (arg[1][0] - self.rect[0], arg[1][1] - self.rect[1])
+            overlaps = self.__mask.overlap(arg[0], offset)
+            
+            if overlaps:
+                ret[0] = True
+                
+    def getMask(self):
+        return self.__mask
