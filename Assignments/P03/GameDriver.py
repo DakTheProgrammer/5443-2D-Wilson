@@ -2,7 +2,9 @@ import pygame
 from Background import Background
 from Ship import Ship
 from Asteroid import Asteroid
-from Bullet import Bullet
+from HealthBar import HealthBar
+from Scores import Scores 
+
 
 class GameDriver:
     def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60):
@@ -30,9 +32,10 @@ class GameDriver:
         )
 
         self.__ship = Ship(self.__screen.get_rect().center)
-        self.__asteroid = Asteroid(self.__screen)
-
-
+        self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
+        self.__healthBar = HealthBar(self.__screen)
+        self.__scores = Scores()
+        
     def GameLoop(self):
         while self.__running:
             self.__CheckCollisions()
@@ -48,7 +51,12 @@ class GameDriver:
         self.__background.draw(self.__screen)
         
         self.__ship.draw(self.__screen)
-        self.__asteroid.draw(self.__screen)
+        
+        for asteroid in self.__asteroids:
+            asteroid.draw(self.__screen)
+        self.__scores.draw(self.__screen, self.__ship.getScore())
+        self.__healthBar.update(self.__ship.getHealth())    
+        self.__healthBar.draw(self.__screen)
         pygame.display.flip()
 
     def __HandleEvents(self):
@@ -61,8 +69,7 @@ class GameDriver:
                     self.__ship.Shoot()
                     
         is_key_pressed = pygame.key.get_pressed()
-
-
+        
         if is_key_pressed[pygame.K_d]:
             self.__ship.rotate(clockwise=True)
         elif is_key_pressed[pygame.K_a]:
@@ -71,7 +78,25 @@ class GameDriver:
             self.__ship.accelerate()
             
     def __CheckCollisions(self):
-        if self.__ship.CheckCollision(self.__asteroid.getSprite()):
-            print('Asteroid!')
-        if self.__ship.BulletCollision(self.__asteroid.getSprite()):
-            self.__asteroid = Asteroid(self.__screen)
+        shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
+        
+        if shipCollision:
+            self.__newAsteroids(asteroidHit)
+            
+            
+        bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids)
+        
+        if bulletCollision:
+            self.__newAsteroids(asteroidHit)
+            
+                
+    def __newAsteroids(self, asteroid):
+        self.__asteroids.remove(asteroid)
+
+        if asteroid.getScale() > 1:
+            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
+            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
+        else:
+            #max astroids is 2^n
+            if len(self.__asteroids) < 4:
+                self.__asteroids.append(Asteroid(self.__screen, 3))

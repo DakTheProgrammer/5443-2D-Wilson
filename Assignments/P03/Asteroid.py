@@ -5,15 +5,20 @@ from pygame.math import Vector2
 import random
 
 class Asteroid():
-    def __init__(self, screen):
+    def __init__(self, screen, scale, loc = None):
+        self.__scale = scale
         speedMul = 2
         
         image = pygame.image.load("Environment/Asteroids/Asteroid 01 - Base.png")
         
-        self.__location = Vector2(random.randrange(0, screen.get_width()),random.randrange(0, screen.get_height()))
-        self.__sprite = BaseSprite(image, Util.scale(image.get_size(), 3),loc=self.__location, mask=True)
-        self.__velocity = Vector2(random.uniform(-1,1) * speedMul, random.uniform(-1,1) * speedMul)
-        self.__velocity = Vector2(0)
+        if loc == None:
+            self.__location = Vector2(random.randrange(50, screen.get_width() - 50),random.randrange(50, screen.get_height() - 50))
+        else:
+            self.__location = loc
+        
+        self.__sprite = BaseSprite(image, Util.scale(image.get_size(), self.__scale),loc=self.__location, mask=True)
+        self.__velocity = Vector2(random.uniform(-1,1) * speedMul + 1, random.uniform(-1,1) * speedMul + 1)
+        #self.__velocity = Vector2(0)
         
         
         
@@ -25,5 +30,8 @@ class Asteroid():
     def getSprite(self):
         return self.__sprite
         
+    def getLocation(self):
+        return self.__sprite.rect.topleft
     
-        
+    def getScale(self):
+        return self.__scale

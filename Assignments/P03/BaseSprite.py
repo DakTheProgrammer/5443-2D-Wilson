@@ -22,13 +22,14 @@ class BaseSprite(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        #pygame.draw.rect(screen, (255,0,0), self.rect, 1)
+        # pygame.draw.rect(screen, (255,0,0), self.rect, 1)
         
         # if (self.__mask != None):
         #     pygame.draw.lines(screen, (0,255,0), (100,100), self.__mask.outline())
 
     def setImage(self, img, scale):
         self.image = pygame.transform.scale(img, Util.scale(img.get_size(), scale))
+        self.imageHolder = self.image
         
     def update(self, cmd, arg, ret = None):
         if cmd == 'Location':
