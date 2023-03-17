@@ -73,3 +73,5 @@ class GameDriver:
     def __CheckCollisions(self):
         if self.__ship.CheckCollision(self.__asteroid.getSprite()):
             print('Asteroid!')
+        if self.__ship.BulletCollision(self.__asteroid.getSprite()):
+            self.__asteroid = Asteroid(self.__screen)

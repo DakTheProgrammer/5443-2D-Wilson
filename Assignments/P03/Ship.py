@@ -86,4 +86,8 @@ class Ship:
         
         # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
         
-        
+    def BulletCollision(self, obj):
+        for bullet in self.__bullets:
+            if bullet.CheckCollision(obj):
+                self.__bullets.remove(bullet)
+                return True

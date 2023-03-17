@@ -27,7 +27,7 @@ class Bullet():
 
             self.__bulletImages.append(img)
             
-        self.sprite = BaseSprite(self.__bulletImages[0],Util.scale(self.__bulletImages[0].get_size(), self.imgMul))
+        self.sprite = BaseSprite(self.__bulletImages[0],Util.scale(self.__bulletImages[0].get_size(), self.imgMul),mask = True)
         
         self.__currentFrame = 0
         # *6 so there are 6 intermediat angeles to shoot from per section of 90 degrees
@@ -59,3 +59,7 @@ class Bullet():
 
         self.sprite.update('Rotate', self.angle)
         
+    def CheckCollision(self, sprite):
+        didIt = [False]
+        self.sprite.update('Collide', [sprite.getMask(), sprite.rect], didIt)
+        return didIt[0]
