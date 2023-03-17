@@ -1,5 +1,5 @@
 import pygame
-import random
+import Util
 
 class BaseSprite(pygame.sprite.Sprite):
     def __init__(self, img, size, mask = False, loc = (0,0)):
@@ -27,6 +27,8 @@ class BaseSprite(pygame.sprite.Sprite):
         # if (self.__mask != None):
         #     pygame.draw.lines(screen, (0,255,0), (100,100), self.__mask.outline())
 
+    def setImage(self, img, scale):
+        self.image = pygame.transform.scale(img, Util.scale(img.get_size(), scale))
         
     def update(self, cmd, arg, ret = None):
         if cmd == 'Location':

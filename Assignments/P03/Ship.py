@@ -2,6 +2,8 @@ import pygame
 from pygame.math import Vector2
 from PIL import Image
 from BaseSprite import BaseSprite
+from Bullet import Bullet
+from copy import deepcopy
 import Util
 
 class Ship:
@@ -52,11 +54,15 @@ class Ship:
         self.__acceleration = 0.25
 
         self.__maneuverability = 3
+        
+        self.__bullets = []
 
     def draw(self, screen):
         self.__ship.update('Move', [self.__velocity, screen])
         self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
-        
+        for bullet in self.__bullets:
+            bullet.draw(screen)
+            
         self.__ship.draw(screen)
 
     def rotate(self, clockwise = True):
@@ -71,3 +77,13 @@ class Ship:
         didIt = [False]
         self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
         return didIt[0]
+    
+    def Shoot(self):
+        
+        self.__bullets.append(Bullet(self.__gun.rect.center, deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+        
+        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-30), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+        
+        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+        
+        
