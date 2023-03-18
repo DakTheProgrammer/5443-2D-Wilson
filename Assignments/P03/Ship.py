@@ -126,6 +126,7 @@ class Ship:
                     self.__gunCurrentFrame = 0
                     self.__gun.setImage(self.__gunStates[self.__gunCurrentFrame], self.__imageMul)
                     self.__bullets.append(Bullet(self.__gun.rect.center, deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+                    pygame.mixer.Sound('Sounds/laser.wav').play().set_volume(.1)
             
             self.__gunBuffer += 1
             
@@ -159,6 +160,7 @@ class Ship:
         if pygame.time.get_ticks() - self.__startTime >= 10000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
+                pygame.mixer.Sound('Sounds/player-boost.wav').play().set_volume(.02)
                 self.__onHealthChange()
             self.__startTime = pygame.time.get_ticks()
 
@@ -177,6 +179,7 @@ class Ship:
             didIt = [False]
             self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
             if didIt[0] == True:
+                pygame.mixer.Sound('Sounds/static.wav').play().set_volume(.1)
                 self.__health -= 10
                 self.__score -= 5
                 self.__onHealthChange()
@@ -216,6 +219,7 @@ class Ship:
             self.__body.setImage(self.__bodyStates[2], self.__imageMul)
         elif self.__health >= 0:
             self.__body.setImage(self.__bodyStates[3], self.__imageMul)
+            
         else:
             #game over?
             ...

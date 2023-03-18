@@ -10,7 +10,10 @@ class GameDriver:
     def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60):
         ########################################################
         pygame.init()
-
+        pygame.mixer.init()
+        pygame.mixer.music.load('Sounds/ambient-dream.mp3')
+        pygame.mixer.music.set_volume(.07)
+        pygame.mixer.music.play(-1)
         self.__backgroundColor = backgroundColor
         
         self.__screen = pygame.display.set_mode((height,width))
@@ -79,7 +82,7 @@ class GameDriver:
             
     def __CheckCollisions(self):
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
-        
+       
         if shipCollision:
             self.__newAsteroids(asteroidHit)
             
@@ -88,6 +91,7 @@ class GameDriver:
         
         if bulletCollision:
             self.__newAsteroids(asteroidHit)
+            pygame.mixer.Sound('Sounds/explosion.wav').play().set_volume(.3)
             
                 
     def __newAsteroids(self, asteroid):
@@ -98,5 +102,5 @@ class GameDriver:
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
         else:
             #max astroids is 2^n
-            if len(self.__asteroids) < 4:
+            if len(self.__asteroids) < 6:
                 self.__asteroids.append(Asteroid(self.__screen, 3))
