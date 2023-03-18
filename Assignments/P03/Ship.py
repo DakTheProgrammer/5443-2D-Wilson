@@ -109,9 +109,9 @@ class Ship:
         self.__accelerating = False
         
         self.__startTime = pygame.time.get_ticks()
-        
+
         self.__shipDamage = pygame.mixer.Sound('Sounds/static.wav')
-        self.__boostHealth = pygame.mixer.Sound('Sounds/player-boost.wav')
+        #self.__boostHealth = pygame.mixer.Sound('Sounds/playerboost.wav')
         self.__fireBullet = pygame.mixer.Sound('Sounds/laser.wav')
         
 
@@ -166,8 +166,8 @@ class Ship:
         if pygame.time.get_ticks() - self.__startTime >= 10000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
-                pygame.mixer.Channel(2).set_volume(.02)
-                pygame.mixer.Channel(2).play(self.__boostHealth)
+                # pygame.mixer.Channel(2).set_volume(.02)
+                # pygame.mixer.Channel(2).play(self.__boostHealth)
                 self.__onHealthChange()
             self.__startTime = pygame.time.get_ticks()
 
