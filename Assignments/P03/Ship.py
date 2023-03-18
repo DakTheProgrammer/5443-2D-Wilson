@@ -131,7 +131,8 @@ class Ship:
                     self.__gunCurrentFrame = 0
                     self.__gun.setImage(self.__gunStates[self.__gunCurrentFrame], self.__imageMul)
                     self.__bullets.append(Bullet(self.__gun.rect.center, deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
-                    self.__fireBullet.play().set_volume(.1)
+                    pygame.mixer.Channel(1).set_volume(.1)
+                    pygame.mixer.Channel(1).play(self.__fireBullet)
             
             self.__gunBuffer += 1
             
@@ -165,7 +166,8 @@ class Ship:
         if pygame.time.get_ticks() - self.__startTime >= 10000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
-                self.__boostHealth.play().set_volume(.02)
+                pygame.mixer.Channel(2).set_volume(.02)
+                pygame.mixer.Channel(2).play(self.__boostHealth)
                 self.__onHealthChange()
             self.__startTime = pygame.time.get_ticks()
 
@@ -184,7 +186,8 @@ class Ship:
             didIt = [False]
             self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
             if didIt[0] == True:
-                self.__shipDamage.play().set_volume(.1)
+                pygame.mixer.Channel(3).set_volume(.1)
+                pygame.mixer.Channel(3).play(self.__shipDamage)
                 self.__health -= 10
                 self.__score -= 5
                 self.__onHealthChange()

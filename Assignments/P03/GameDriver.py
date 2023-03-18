@@ -21,6 +21,7 @@ class GameDriver:
         self.__fps = fps
         self.__delta = 0
         self.__running = True
+        self.__asteroidCrash = pygame.mixer.Sound('Sounds/explosion.wav')
 
         pygame.display.set_caption(title)
 
@@ -91,7 +92,8 @@ class GameDriver:
         
         if bulletCollision:
             self.__newAsteroids(asteroidHit)
-            pygame.mixer.Sound('Sounds/explosion.wav').play().set_volume(.3)
+            pygame.mixer.Channel(0).set_volume(.3)
+            pygame.mixer.Channel(0).play(self.__asteroidCrash)
             
                 
     def __newAsteroids(self, asteroid):
