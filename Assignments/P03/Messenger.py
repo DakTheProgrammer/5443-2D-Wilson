@@ -24,11 +24,10 @@ class Messenger:
         self.commsListener = CommsListener(**self.creds)
         self.commsSender = CommsSender(**self.creds)
 
-    def send(self, **kwargs):
+    def send(self, target, body):
         """ """
-        target = kwargs.get("target", "broadcast")
         self.commsSender.threadedSend(
-            target=target, sender=self.user, body=json.dumps(kwargs), debug=False
+            target=target, sender=self.user, body=json.dumps(body), debug=False
         )
 
     def setCallback(self, callBack):

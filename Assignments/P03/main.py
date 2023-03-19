@@ -18,10 +18,9 @@ if len(sys.argv) > 1:
         print('\n\nShould look like: `python main.py exchange username`')
         sys.exit()
 
-    Messenger(creds)
+    multiplayer = Messenger(creds)
 
-    game = GameDriver('Game')
-    print('Multi')
+    game = GameDriver('Game', multiplayer=multiplayer)
 else:
     game = GameDriver('Game')
 

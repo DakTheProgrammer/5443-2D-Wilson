@@ -7,7 +7,7 @@ from Scores import Scores
 
 
 class GameDriver:
-    def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60):
+    def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60, multiplayer = None):
         ########################################################
         pygame.init()
         pygame.mixer.init()
@@ -25,6 +25,12 @@ class GameDriver:
 
         pygame.display.set_caption(title)
 
+
+        self.__messenger = multiplayer
+        
+        if multiplayer != None:
+            self.__messenger.setCallback(self.__receiveMessage)
+
         #########################################################
 
         self.__background = Background(
@@ -39,6 +45,8 @@ class GameDriver:
         self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores()
+
+        self.__sendMessage({'Message': self.__messenger.user + ' has joined the game'})
         
     def GameLoop(self):
         while self.__running:
@@ -103,6 +111,12 @@ class GameDriver:
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
         else:
-            #max astroids is 2^n
+            #max astroid's is 2^n
             if len(self.__asteroids) < 6:
                 self.__asteroids.append(Asteroid(self.__screen, 3))
+
+    def __receiveMessage(self, ch, method, properties, body):
+        print(body)
+    
+    def __sendMessage(self, bodyDic):
+        self.__messenger.send("broadcast", bodyDic)
