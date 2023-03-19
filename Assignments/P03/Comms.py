@@ -1,26 +1,11 @@
 """
 """
 import json
-import os
 import sys
 import time
 import pika
-import random
 from threading import Thread
 from rich import print
-import requests
-
-import subprocess
-
-
-# # Execute in command line
-# def countConnections():
-#     command = "curl -i -u admin:1922msuQAZ!! http://terrywgriffin:15672/api/queues/"
-#     proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-#     script_response = proc.stdout.read().split("\n")
-#     resp = json.loads(script_response[7])
-#     return resp
-
 
 def isJson(myjson):
     try:
@@ -235,109 +220,3 @@ class CommsSender(Comms):
 
     def closeConnection(self):
         self.connection.close()
-
-
-def usage():
-    print("Error: You need to choose `send` or `listen` and optionally `teamName`!")
-    print("Usage: python CommsClass <send,listen>")
-    sys.exit()
-
-
-def mykwargs(argv):
-    """
-    Processes argv list into plain args and kwargs.
-    Just easier than using a library like argparse for small things.
-    Example:
-        python file.py arg1 arg2 arg3=val1 arg4=val2 -arg5 -arg6 --arg7
-        Would create:
-            args[arg1, arg2, -arg5, -arg6, --arg7]
-            kargs{arg3 : val1, arg4 : val2}
-        Params with dashes (flags) can now be processed seperately
-    Shortfalls:
-        spaces between k=v would result in bad params
-    Returns:
-        tuple  (args,kargs)
-    """
-    args = []
-    kwargs = {}
-
-    for arg in argv:
-        if "=" in arg:
-            key, val = arg.split("=")
-            kwargs[key] = val
-        else:
-            args.append(arg)
-    return args, kwargs
-
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        usage()
-
-    args, kwargs = mykwargs(sys.argv)
-
-    user = kwargs.get("user", "player-1")
-    passwd = user + "2023!!!!!"
-    # passwd = kwargs.get('passwd','player-12023!!!')
-    target = kwargs.get("target", "player-2")
-    # cmd = kwargs.get('cmd','message')
-    # body = kwargs.get('body','hello world')
-    method = kwargs.get("method", "listen")
-    exchange = kwargs.get("exchange", "game1")
-
-    creds = {
-        "exchange": exchange,
-        "port": "5672",
-        "host": "terrywgriffin.com",
-        "user": user,
-        "password": passwd,  # user.capitalize() * 3,
-    }
-
-    if method == "send":
-        exampleMessages = [
-            {"cmd": "message", "body": {"messageTxt": "hello world"}},
-            {
-                "cmd": "move",
-                "body": {
-                    "startLon": 34.1234,
-                    "startLat": -98.452,
-                    "endLon": 34.1234,
-                    "endLat": -98.452,
-                },
-            },
-            {"cmd": "move", "body": {"dx": -4, "dy": 4}},
-            {"cmd": "fire", "body": {"angle": 23, "velocity": 320}},
-            {"cmd": "move", "body": {"dx": -4, "dy": 4, "angle": 231}},
-        ]
-
-        users = ["player-1", "player-2", "player-3", "player-4", "player-5"]
-        vhosts = ["vhost1", "vhost2", "vhost3", "vhost4", "vhost5"]
-
-        senders = []
-
-        for i in range(1, 10):
-            id = (i % 2) + 1
-            user = f"player-{id}"
-            creds["user"] = user
-            creds["password"] = user + "2023!!!!!"
-
-            creds["exchange"] = f"game{id}"
-            print(creds)
-            senders.append(CommsSender(**creds))
-
-            # cmd = random.choice(body[cmd])
-            # data = random.choice(body[cmd])
-            senders[-1].send(
-                target=user,
-                sender=user,
-                body=json.dumps(random.choice(exampleMessages)),
-            )
-            time.sleep(2)
-
-    else:
-        print("Comms Listener starting. To exit press CTRL+C ...")
-
-        commsListener = CommsListener(**creds)
-        # m = MultiComms('player-4','game1')
-        commsListener.bindKeysToQueue([f"#.{user}.#", "#.broadcast.#"])
-        commsListener.startConsuming()
