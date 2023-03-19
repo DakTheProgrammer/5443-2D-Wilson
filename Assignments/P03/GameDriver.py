@@ -1,4 +1,5 @@
 import pygame
+import ast
 from Background import Background
 from Ship import Ship
 from Asteroid import Asteroid
@@ -46,8 +47,10 @@ class GameDriver:
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores()
 
-        self.__sendMessage({'Message': self.__messenger.user + ' has joined the game'})
-        
+        self.__sendMessage(
+            {'Type': 'Join',
+             'Message': self.__messenger.user + ' has joined the game!'})
+
     def GameLoop(self):
         while self.__running:
             self.__CheckCollisions()
@@ -116,7 +119,13 @@ class GameDriver:
                 self.__asteroids.append(Asteroid(self.__screen, 3))
 
     def __receiveMessage(self, ch, method, properties, body):
-        print(body)
+        #converts bytes to dictionary
+        bodyDic = ast.literal_eval(body.decode('utf-8'))
+
+        if bodyDic['Type'] == 'Join':
+            print()
+            print(bodyDic['Message'])
+        
     
     def __sendMessage(self, bodyDic):
         self.__messenger.send("broadcast", bodyDic)
