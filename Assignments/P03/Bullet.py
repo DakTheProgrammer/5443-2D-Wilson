@@ -30,7 +30,7 @@ class Bullet():
         self.sprite = BaseSprite(self.__bulletImages[0],Util.scale(self.__bulletImages[0].get_size(), self.imgMul),mask = True)
         
         self.__currentFrame = 0
-        # *6 so there are 6 intermediat angeles to shoot from per section of 90 degrees
+        # *6 so there are 6 intermediate angeles to shoot from per section of 90 degrees
         self.__velocity = direction * 6
         self.sprite.rect.center = gun
         self.angle = angle
