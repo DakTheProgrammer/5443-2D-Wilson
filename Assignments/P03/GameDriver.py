@@ -8,7 +8,7 @@ from Scores import Scores
 
 
 class GameDriver:
-    def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60, multiplayer = None):
+    def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 60, multiplayer = None):
         #Pygame stuff:
         ########################################################
         pygame.init()
