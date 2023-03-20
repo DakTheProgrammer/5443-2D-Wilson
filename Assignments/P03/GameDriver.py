@@ -101,10 +101,15 @@ class GameDriver:
         
         if is_key_pressed[pygame.K_d]:
             self.__ship.rotate(clockwise=True)
+            self.__sendMessage({'Type': 'Rotate',
+                                'Clockwise': 1})
         elif is_key_pressed[pygame.K_a]:
             self.__ship.rotate(clockwise=False)
+            self.__sendMessage({'Type': 'Rotate',
+                                'Clockwise': 0})
         if is_key_pressed[pygame.K_w]:
             self.__ship.accelerate()
+            self.__sendMessage({'Type': 'Accelerate'})
             
     def __CheckCollisions(self):
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
@@ -133,8 +138,10 @@ class GameDriver:
                 self.__asteroids.append(Asteroid(self.__screen, 3))
 
     def __receiveMessage(self, ch, method, properties, body):
+        #print(body)
         #converts bytes to dictionary
         bodyDic = ast.literal_eval(body.decode('utf-8'))
+        #print(bodyDic)
 
         #if a player joins and they aren't yourself (broadcast also sends to self) and they aren't already in the game
         if bodyDic['Type'] == 'Join' and bodyDic['from'] != self.__messenger.user and bodyDic['from'] not in self.__playerIds:
@@ -144,12 +151,21 @@ class GameDriver:
             self.__playerIds.append(bodyDic['from'])
 
             #this is temp
-            import random
-            self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
+            #import random
+            #self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
+            self.__otherPlayers.append(Ship(self.__screen.get_rect().center))
+        
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
             self.__sendMessage({'Type': 'Join',
                                 'Message': self.__messenger.user + ' is in the game!'})
+        #if player accelerates accelerate the given ship    
+        elif bodyDic['Type'] == 'Accelerate'and bodyDic['from'] != self.__messenger.user:
+            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].accelerate()
+        elif bodyDic['Type'] == 'Rotate' and bodyDic['from'] != self.__messenger.user:
+            print(bool(bodyDic['Clockwise']))
+            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(bodyDic['Clockwise']))
+
         
     
     def __sendMessage(self, bodyDic):
