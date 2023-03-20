@@ -9,6 +9,7 @@ from Scores import Scores
 
 class GameDriver:
     def __init__(self, title, backgroundColor = (255,255,255), height = 800, width = 800, fps = 60, multiplayer = None):
+        #Pygame stuff:
         ########################################################
         pygame.init()
         pygame.mixer.init()
@@ -26,14 +27,8 @@ class GameDriver:
 
         pygame.display.set_caption(title)
 
-
-        self.__messenger = multiplayer
-        
-        if multiplayer != None:
-            self.__messenger.setCallback(self.__receiveMessage)
-
-        #########################################################
-
+        #Game logic
+        ########################################################
         self.__background = Background(
             [
             'Environment/Backgrounds/Condensed/Starry background  - Layer 01 - Void.png',
@@ -47,9 +42,24 @@ class GameDriver:
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores()
 
-        self.__sendMessage(
-            {'Type': 'Join',
-             'Message': self.__messenger.user + ' has joined the game!'})
+        #Message passing:
+        #####################################################################
+        #sends a message that someone new has joined the game
+        self.__messenger = multiplayer
+        
+        if multiplayer != None:
+            self.__messenger.setCallback(self.__receiveMessage)
+        
+            self.__sendMessage(
+                {'Type': 'Join',
+                'Message': self.__messenger.user + ' has joined the game!'})
+            
+            #sends a message asking for what players are already in the game
+            self.__sendMessage(
+                {'Type': 'Who'})
+            
+            self.__otherPlayers = []
+            self.__playerIds = []
 
     def GameLoop(self):
         while self.__running:
@@ -64,6 +74,9 @@ class GameDriver:
     def __Draw(self):
         self.__screen.fill(self.__backgroundColor)
         self.__background.draw(self.__screen)
+        
+        for player in self.__otherPlayers:
+            player.draw(self.__screen)
         
         self.__ship.draw(self.__screen)
         
@@ -122,9 +135,20 @@ class GameDriver:
         #converts bytes to dictionary
         bodyDic = ast.literal_eval(body.decode('utf-8'))
 
-        if bodyDic['Type'] == 'Join':
+        #if a player joins and they aren't yourself (broadcast also sends to self) and they aren't already in the game
+        if bodyDic['Type'] == 'Join' and bodyDic['from'] != self.__messenger.user and bodyDic['from'] not in self.__playerIds:
             print()
             print(bodyDic['Message'])
+
+            self.__playerIds.append(bodyDic['from'])
+
+            #this is temp
+            import random
+            self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
+        #if someone joins the game and requests what users are already in the game
+        elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
+            self.__sendMessage({'Type': 'Join',
+                                'Message': self.__messenger.user + ' is in the game!'})
         
     
     def __sendMessage(self, bodyDic):
