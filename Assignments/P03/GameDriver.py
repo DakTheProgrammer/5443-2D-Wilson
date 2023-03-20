@@ -58,8 +58,9 @@ class GameDriver:
             self.__sendMessage(
                 {'Type': 'Who'})
             
-            self.__otherPlayers = []
             self.__playerIds = []
+
+        self.__otherPlayers = []
 
     def GameLoop(self):
         while self.__running:
@@ -128,7 +129,7 @@ class GameDriver:
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
         else:
             #max astroid's is 2^n
-            if len(self.__asteroids) < 6:
+            if len(self.__asteroids) < 1:
                 self.__asteroids.append(Asteroid(self.__screen, 3))
 
     def __receiveMessage(self, ch, method, properties, body):
