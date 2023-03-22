@@ -26,8 +26,8 @@ class Messenger:
 
     def send(self, target, body):
         """ """
-        self.commsSender.threadedSend(
-            target=target, sender=self.user, body=json.dumps(body), debug=False
+        self.commsSender.send(
+            target=target, sender=self.user, body=json.dumps(body), closeConnection=False
         )
 
     def setCallback(self, callBack):

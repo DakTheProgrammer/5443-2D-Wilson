@@ -163,7 +163,6 @@ class GameDriver:
         elif bodyDic['Type'] == 'Accelerate'and bodyDic['from'] != self.__messenger.user:
             self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].accelerate()
         elif bodyDic['Type'] == 'Rotate' and bodyDic['from'] != self.__messenger.user:
-            print(bool(bodyDic['Clockwise']))
             self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(bodyDic['Clockwise']))
 
         

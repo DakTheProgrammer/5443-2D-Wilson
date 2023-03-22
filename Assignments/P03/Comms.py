@@ -207,6 +207,8 @@ class CommsSender(Comms):
         if debug:
             print(f"Calling send via Thread")
 
+        self.send(target, sender, body, closeConnection)
+
         Thread(
             target=self.send,
             args=(
