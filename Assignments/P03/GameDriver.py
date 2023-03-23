@@ -41,6 +41,7 @@ class GameDriver:
         self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores()
+        
 
         #Message passing:
         #####################################################################
@@ -96,20 +97,22 @@ class GameDriver:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.__ship.Shoot()
-                    
+                    self.__sendMessage({'Type': 'Shoot'})
+                     
         is_key_pressed = pygame.key.get_pressed()
         
-        if is_key_pressed[pygame.K_d]:
+        if is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]:
             self.__ship.rotate(clockwise=True)
             self.__sendMessage({'Type': 'Rotate',
                                 'Clockwise': 1})
-        elif is_key_pressed[pygame.K_a]:
+        elif is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]:
             self.__ship.rotate(clockwise=False)
             self.__sendMessage({'Type': 'Rotate',
                                 'Clockwise': 0})
-        if is_key_pressed[pygame.K_w]:
+        if is_key_pressed[pygame.K_w] or is_key_pressed[pygame.K_UP]:
             self.__ship.accelerate()
             self.__sendMessage({'Type': 'Accelerate'})
+            
             
     def __CheckCollisions(self):
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
@@ -164,8 +167,12 @@ class GameDriver:
             self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].accelerate()
         elif bodyDic['Type'] == 'Rotate' and bodyDic['from'] != self.__messenger.user:
             self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(bodyDic['Clockwise']))
-
-        
+        elif bodyDic['Type'] == 'Shoot' and bodyDic['from'] != self.__messenger.user:
+            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
+            
+        return self.__playerIds
     
     def __sendMessage(self, bodyDic):
         self.__messenger.send("broadcast", bodyDic)
+        
+   

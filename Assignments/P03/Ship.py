@@ -234,3 +234,4 @@ class Ship:
             
     def getScore(self):
         return self.__score
+    
