@@ -194,8 +194,3 @@ class GameDriver:
             
     def __sendMessage(self, bodyDic):
         self.__messenger.send("broadcast", bodyDic)
-        
-    def getPlayer(self):
-        return self.__messenger.user
-        
-   
