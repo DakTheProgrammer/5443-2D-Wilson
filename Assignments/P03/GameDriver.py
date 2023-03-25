@@ -90,6 +90,12 @@ class GameDriver:
         pygame.display.flip()
 
     def __HandleEvents(self):
+        sendMessage = False
+        Message = {
+            'Type': 'Event',
+            'Events' : []
+        }
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.__running = False
@@ -97,21 +103,35 @@ class GameDriver:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.__ship.Shoot()
-                    self.__sendMessage({'Type': 'Shoot'})
+                    sendMessage = True
+                    Message['Events'].append({'Type': 'Shoot'})
+                    #self.__sendMessage({'Type': 'Shoot'})
                      
         is_key_pressed = pygame.key.get_pressed()
         
         if is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]:
             self.__ship.rotate(clockwise=True)
-            self.__sendMessage({'Type': 'Rotate',
+            sendMessage = True
+            Message['Events'].append({'Type': 'Rotate',
                                 'Clockwise': 1})
+            # self.__sendMessage({'Type': 'Rotate',
+            #                     'Clockwise': 1})
         elif is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]:
             self.__ship.rotate(clockwise=False)
-            self.__sendMessage({'Type': 'Rotate',
+            sendMessage = True
+            Message['Events'].append({'Type': 'Rotate',
                                 'Clockwise': 0})
+            # self.__sendMessage({'Type': 'Rotate',
+            #                     'Clockwise': 0})
         if is_key_pressed[pygame.K_w] or is_key_pressed[pygame.K_UP]:
             self.__ship.accelerate()
-            self.__sendMessage({'Type': 'Accelerate'})
+            sendMessage = True
+            Message['Events'].append({'Type': 'Accelerate'})
+            #self.__sendMessage({'Type': 'Accelerate'})
+
+        if sendMessage == True:
+            self.__sendMessage(Message)
+
             
             
     def __CheckCollisions(self):
@@ -157,18 +177,19 @@ class GameDriver:
             #import random
             #self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
             self.__otherPlayers.append(Ship(self.__screen.get_rect().center))
-        
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
             self.__sendMessage({'Type': 'Join',
                                 'Message': self.__messenger.user + ' is in the game!'})
-        #if player accelerates accelerate the given ship    
-        elif bodyDic['Type'] == 'Accelerate'and bodyDic['from'] != self.__messenger.user:
-            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].accelerate()
-        elif bodyDic['Type'] == 'Rotate' and bodyDic['from'] != self.__messenger.user:
-            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(bodyDic['Clockwise']))
-        elif bodyDic['Type'] == 'Shoot' and bodyDic['from'] != self.__messenger.user:
-            self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
+        elif bodyDic['Type'] == 'Event' and bodyDic['from'] != self.__messenger.user:
+            for dics in bodyDic['Events']:
+                #if player accelerates accelerate the given ship 
+                if dics['Type'] == 'Accelerate':
+                    self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].accelerate()
+                if dics['Type'] == 'Rotate':
+                    self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(dics['Clockwise']))
+                if dics['Type'] == 'Shoot':
+                    self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
             
         return self.__playerIds
     
