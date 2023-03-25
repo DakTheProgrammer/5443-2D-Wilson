@@ -62,7 +62,8 @@ class GameDriver:
             self.__playerIds = []
 
         self.__otherPlayers = []
-
+        
+        
     def GameLoop(self):
         while self.__running:
             self.__CheckCollisions()
@@ -84,7 +85,7 @@ class GameDriver:
         
         for asteroid in self.__asteroids:
             asteroid.draw(self.__screen)
-        self.__scores.draw(self.__screen, self.__ship.getScore())
+        self.__scores.draw(self.__screen, self.__ship.getScore(), self.__messenger.user)
         self.__healthBar.update(self.__ship.getHealth())    
         self.__healthBar.draw(self.__screen)
         pygame.display.flip()
@@ -191,9 +192,10 @@ class GameDriver:
                 if dics['Type'] == 'Shoot':
                     self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
             
-        return self.__playerIds
-    
     def __sendMessage(self, bodyDic):
         self.__messenger.send("broadcast", bodyDic)
+        
+    def getPlayer(self):
+        return self.__messenger.user
         
    
