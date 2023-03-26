@@ -7,21 +7,37 @@ from copy import deepcopy
 import Util
 
 class Ship:
-    def __init__(self, loc):
+    def __init__(self, loc, player):
         self.__health = 100
         self.__score = 0
         self.__imageMul = 1.5
-
+        self.__Colors = [(255,255,255),(0,255,255),(153,0,255),(255,0,0),(0,255,0),(0,0,255),(255,0,255),(255,153,153),(0,128,0),(255,128,0)]
         self.__bodyStates = []
         
-        self.__bodyStates.append(pygame.image.load(
+        self.__bodyStates.append(Image.open(
             'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Full health.png'))
-        self.__bodyStates.append(pygame.image.load(
+        self.__bodyStates.append(Image.open(
             'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Slight damage.png'))
-        self.__bodyStates.append(pygame.image.load(
+        self.__bodyStates.append(Image.open(
             'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Damaged.png'))
-        self.__bodyStates.append(pygame.image.load(
+        self.__bodyStates.append(Image.open(
             'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Very damaged.png'))
+        
+        for i in range(len(self.__bodyStates)):
+            image = self.__bodyStates[i].convert("RGBA")
+            imageData = image.getdata()
+            new_image_data = []
+            
+            for item in imageData:
+                # change all white (also shades of whites) pixels to yellow
+                if item[0] in list(range(190, 256)):
+                    new_image_data.append(self.__Colors[player])
+                else:
+                    new_image_data.append(item)
+                    
+            # update image data
+            image.putdata(new_image_data)
+            self.__bodyStates[i] = pygame.image.fromstring(image.tobytes(), image.size, image.mode)
 
         self.__body = BaseSprite(self.__bodyStates[0], Util.scale(self.__bodyStates[0].get_size(), self.__imageMul), mask=True)
 

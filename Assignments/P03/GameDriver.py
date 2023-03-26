@@ -57,7 +57,7 @@ class GameDriver:
             ], 9,self.__screen, 4
         )
 
-        self.__ship = Ship(self.__screen.get_rect().center)
+        self.__ship = Ship(self.__screen.get_rect().center, len(self.__otherPlayers))
         self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores(self.__messenger.user)
@@ -131,8 +131,6 @@ class GameDriver:
 
         if sendMessage == True:
             self.__sendMessage(Message)
-
-            
             
     def __CheckCollisions(self):
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
@@ -178,7 +176,7 @@ class GameDriver:
             #this is temp
             #import random
             #self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
-            self.__otherPlayers.append(Ship(self.__screen.get_rect().center))
+            self.__otherPlayers.append(Ship(self.__screen.get_rect().center, len(self.__otherPlayers)+1))
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
             self.__sendMessage({'Type': 'Join',
