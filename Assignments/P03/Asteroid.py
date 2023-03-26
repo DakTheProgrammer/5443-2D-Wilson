@@ -5,7 +5,7 @@ from pygame.math import Vector2
 import random
 
 class Asteroid():
-    def __init__(self, screen, scale, loc = None):
+    def __init__(self, screen, scale, loc = None, vel = None):
         self.__scale = scale
         speedMul = 2
         
@@ -17,8 +17,10 @@ class Asteroid():
             self.__location = loc
         
         self.__sprite = BaseSprite(image, Util.scale(image.get_size(), self.__scale),loc=self.__location, mask=True)
-        self.__velocity = Vector2(random.uniform(-1,1) * speedMul + 1, random.uniform(-1,1) * speedMul + 1)
-        #self.__velocity = Vector2(0)
+        if vel == None:
+            self.__velocity = Vector2(random.uniform(-1,1) * speedMul + 1, random.uniform(-1,1) * speedMul + 1)
+        else:
+            self.__velocity = Vector2(vel)
         
         
         
@@ -34,4 +36,10 @@ class Asteroid():
         return self.__sprite.rect.topleft
     
     def getScale(self):
+        return self.__scale
+    
+    def getVelocity(self):
+        return self.__velocity.x, self.__velocity.y
+    
+    def getSize(self):
         return self.__scale

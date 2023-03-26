@@ -10,8 +10,8 @@ from Scores import Scores
 
 class GameDriver:
     def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 60, multiplayer = None):
-        #Pygame stuff:
-        ########################################################
+        self.__host = False
+
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.load('Sounds/ambient-dream.mp3')
@@ -29,31 +29,31 @@ class GameDriver:
         pygame.display.set_caption(title)
 
         #always 0 bc player one, spawns at random location inside buffer
-        self.__ship = Ship((random.randrange(100, self.__screen.get_width() - 100), random.randrange(300, self.__screen.get_width() - 300)), 0)
+        self.__ship = Ship((random.randrange(100, self.__screen.get_width() - 100), random.randrange(100, self.__screen.get_height() - 100)), 0)
+        self.__asteroids = []
+        self.__healthBar = HealthBar(self.__screen)
 
-        #Message passing:
-        #####################################################################
         #sends a message that someone new has joined the game
         self.__messenger = multiplayer
+
+        self.__scores = Scores(self.__messenger.user)
         
         if multiplayer != None:
             self.__messenger.setCallback(self.__receiveMessage)
         
+            #sends a message asking for what players are already in the game
+            self.__sendMessage(
+                {'Type': 'Who'})
+
             self.__sendMessage(
                 {'Type': 'Join',
                 'Message': self.__messenger.user + ' has joined the game!',
                 'Ship': [self.__ship.getLocation(), self.__ship.getVelocity()]})
             
-            #sends a message asking for what players are already in the game
-            self.__sendMessage(
-                {'Type': 'Who'})
-            
             self.__playerIds = []
 
         self.__otherPlayers = []
 
-        #Game logic
-        ########################################################
         self.__background = Background(
             [
             'Environment/Backgrounds/Condensed/Starry background  - Layer 01 - Void.png',
@@ -62,12 +62,6 @@ class GameDriver:
             ], 9,self.__screen, 4
         )
 
-        
-        self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
-        self.__healthBar = HealthBar(self.__screen)
-        self.__scores = Scores(self.__messenger.user)
-  
-        
     def GameLoop(self):
         while self.__running:
             self.__CheckCollisions()
@@ -176,14 +170,28 @@ class GameDriver:
             print('\n' + str(bodyDic['Message']))
 
             self.__playerIds.append(bodyDic['from'])
+            print(bodyDic['from'])
             self.__scores.addPlayer(bodyDic['from'])
 
             self.__otherPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
+            if len(self.__playerIds) == 0 and self.__host == False:
+                self.__host = True
+                self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
+
             self.__sendMessage({'Type': 'Join',
                                 'Message': self.__messenger.user + ' is in the game!',
                                 'Ship': [self.__ship.getLocation(), self.__ship.getVelocity()]})
+            
+            if self.__host:
+                toSend = []
+
+                for roid in self.__asteroids:
+                    toSend.append([roid.getSize(), roid.getLocation(), roid.getVelocity()])
+
+                self.__sendMessage({'Type': 'Asteroids',
+                                    'Info': toSend})
         elif bodyDic['Type'] == 'Event' and bodyDic['from'] != self.__messenger.user:
             for dics in bodyDic['Events']:
                 #if player accelerates accelerate the given ship 
@@ -193,6 +201,10 @@ class GameDriver:
                     self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(dics['Clockwise']))
                 if dics['Type'] == 'Shoot':
                     self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
+        elif bodyDic['Type'] == 'Asteroids' and bodyDic['from'] != self.__messenger.user and self.__asteroids == []:
+            for info in bodyDic['Info']:
+                self.__asteroids.append(Asteroid(self.__screen, info[0], info[1], info[2]))
+            
             
     def __sendMessage(self, bodyDic):
         self.__messenger.send("broadcast", bodyDic)
