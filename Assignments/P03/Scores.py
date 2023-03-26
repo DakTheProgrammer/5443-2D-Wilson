@@ -1,13 +1,29 @@
 import pygame
 
 class Scores():
-    def __init__(self):
+    def __init__(self, player):
         
         self.__font = pygame.font.Font('Fonts/Lora-Bold.ttf', 20)
         self.__font.set_underline(1)
         self.__italic = pygame.font.Font('Fonts/Lora-MediumItalic.ttf', 18)
-
-    def draw(self, screen, score, user):
+        self.__user = []
+        self.addPlayer(player)
+        
+    def addPlayer(self, Id):
+        self.__user.append([Id,0])
+        
+        
+    def update(self, Id, Score):
+        for tup in self.__user:
+            if tup[0] == Id:
+                tup[1] = Score
+                self.__user.sort(key=lambda tup: tup[1], reverse=True)
+                break
+        
+    def draw(self, screen):
         screen.blit(self.__font.render("SCORE BOARD", 1, (255,255,255)), (15, 5))
-        screen.blit(self.__italic.render(str(user) +": " +str(score), 1, (255,255,255)), (15,28))
+        pos = 28
+        for player in self.__user:
+            screen.blit(self.__italic.render(str(player[0]) +": "+ str(player[1]), 1, (255,255,255)), (15,pos))
+            pos += 22
         

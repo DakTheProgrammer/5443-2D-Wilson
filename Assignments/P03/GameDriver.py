@@ -26,24 +26,8 @@ class GameDriver:
         self.__asteroidCrash = pygame.mixer.Sound('Sounds/explosion.wav')
 
         pygame.display.set_caption(title)
-
-        #Game logic
-        ########################################################
-        self.__background = Background(
-            [
-            'Environment/Backgrounds/Condensed/Starry background  - Layer 01 - Void.png',
-            'Environment/Backgrounds/Condensed/Starry background  - Layer 02 - Stars.png',
-            'Environment/Backgrounds/Condensed/Starry background  - Layer 03 - Stars.png'
-            ], 9,self.__screen, 4
-        )
-
-        self.__ship = Ship(self.__screen.get_rect().center)
-        self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
-        self.__healthBar = HealthBar(self.__screen)
-        self.__scores = Scores()
         
-
-        #Message passing:
+                #Message passing:
         #####################################################################
         #sends a message that someone new has joined the game
         self.__messenger = multiplayer
@@ -62,7 +46,22 @@ class GameDriver:
             self.__playerIds = []
 
         self.__otherPlayers = []
-        
+
+        #Game logic
+        ########################################################
+        self.__background = Background(
+            [
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 01 - Void.png',
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 02 - Stars.png',
+            'Environment/Backgrounds/Condensed/Starry background  - Layer 03 - Stars.png'
+            ], 9,self.__screen, 4
+        )
+
+        self.__ship = Ship(self.__screen.get_rect().center)
+        self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
+        self.__healthBar = HealthBar(self.__screen)
+        self.__scores = Scores(self.__messenger.user)
+  
         
     def GameLoop(self):
         while self.__running:
@@ -85,7 +84,7 @@ class GameDriver:
         
         for asteroid in self.__asteroids:
             asteroid.draw(self.__screen)
-        self.__scores.draw(self.__screen, self.__ship.getScore(), self.__messenger.user)
+        self.__scores.draw(self.__screen)
         self.__healthBar.update(self.__ship.getHealth())    
         self.__healthBar.draw(self.__screen)
         pygame.display.flip()
@@ -140,12 +139,14 @@ class GameDriver:
        
         if shipCollision:
             self.__newAsteroids(asteroidHit)
+            self.__scores.update(self.__messenger.user, self.__ship.getScore())
             
             
         bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids)
         
         if bulletCollision:
             self.__newAsteroids(asteroidHit)
+            self.__scores.update(self.__messenger.user, self.__ship.getScore())
             pygame.mixer.Channel(0).set_volume(.3)
             pygame.mixer.Channel(0).play(self.__asteroidCrash)
             
@@ -173,7 +174,7 @@ class GameDriver:
             print(bodyDic['Message'])
 
             self.__playerIds.append(bodyDic['from'])
-
+            self.__scores.addPlayer(bodyDic['from'])
             #this is temp
             #import random
             #self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
