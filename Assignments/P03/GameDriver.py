@@ -1,5 +1,6 @@
 import pygame
 import ast
+import random
 from Background import Background
 from Ship import Ship
 from Asteroid import Asteroid
@@ -26,8 +27,11 @@ class GameDriver:
         self.__asteroidCrash = pygame.mixer.Sound('Sounds/explosion.wav')
 
         pygame.display.set_caption(title)
-        
-                #Message passing:
+
+        #always 0 bc player one, spawns at random location inside buffer
+        self.__ship = Ship((random.randrange(100, self.__screen.get_width() - 100), random.randrange(300, self.__screen.get_width() - 300)), 0)
+
+        #Message passing:
         #####################################################################
         #sends a message that someone new has joined the game
         self.__messenger = multiplayer
@@ -37,7 +41,8 @@ class GameDriver:
         
             self.__sendMessage(
                 {'Type': 'Join',
-                'Message': self.__messenger.user + ' has joined the game!'})
+                'Message': self.__messenger.user + ' has joined the game!',
+                'Ship': [self.__ship.getLocation(), self.__ship.getVelocity()]})
             
             #sends a message asking for what players are already in the game
             self.__sendMessage(
@@ -57,7 +62,7 @@ class GameDriver:
             ], 9,self.__screen, 4
         )
 
-        self.__ship = Ship(self.__screen.get_rect().center, len(self.__otherPlayers))
+        
         self.__asteroids = [Asteroid(self.__screen, 3), Asteroid(self.__screen, 3)]
         self.__healthBar = HealthBar(self.__screen)
         self.__scores = Scores(self.__messenger.user)
@@ -168,19 +173,17 @@ class GameDriver:
 
         #if a player joins and they aren't yourself (broadcast also sends to self) and they aren't already in the game
         if bodyDic['Type'] == 'Join' and bodyDic['from'] != self.__messenger.user and bodyDic['from'] not in self.__playerIds:
-            print()
-            print(bodyDic['Message'])
+            print('\n' + str(bodyDic['Message']))
 
             self.__playerIds.append(bodyDic['from'])
             self.__scores.addPlayer(bodyDic['from'])
-            #this is temp
-            #import random
-            #self.__otherPlayers.append(Ship((random.randint(100, self.__screen.get_width() - 100),random.randint(100, self.__screen.get_width() - 100))))
-            self.__otherPlayers.append(Ship(self.__screen.get_rect().center, len(self.__otherPlayers)+1))
+
+            self.__otherPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
             self.__sendMessage({'Type': 'Join',
-                                'Message': self.__messenger.user + ' is in the game!'})
+                                'Message': self.__messenger.user + ' is in the game!',
+                                'Ship': [self.__ship.getLocation(), self.__ship.getVelocity()]})
         elif bodyDic['Type'] == 'Event' and bodyDic['from'] != self.__messenger.user:
             for dics in bodyDic['Events']:
                 #if player accelerates accelerate the given ship 

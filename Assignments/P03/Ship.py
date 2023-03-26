@@ -7,7 +7,7 @@ from copy import deepcopy
 import Util
 
 class Ship:
-    def __init__(self, loc, player):
+    def __init__(self, loc, player, vel = 0):
         self.__health = 100
         self.__score = 0
         self.__imageMul = 1.5
@@ -102,7 +102,7 @@ class Ship:
 
         self.__up = Vector2(0,-1)
 
-        self.__velocity = Vector2(0)
+        self.__velocity = Vector2(vel)
 
         self.__direction = Vector2(self.__up)
 
@@ -250,4 +250,10 @@ class Ship:
             
     def getScore(self):
         return self.__score
+    
+    def getLocation(self):
+        return self.__body.rect.center
+    
+    def getVelocity(self):
+        return self.__velocity.x, self.__velocity.y
     
