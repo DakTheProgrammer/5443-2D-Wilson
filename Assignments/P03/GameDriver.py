@@ -152,11 +152,13 @@ class GameDriver:
         self.__asteroids.remove(asteroid)
 
         if asteroid.getScale() > 1:
-            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
-            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation()))
+            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), -asteroid.getVelocity()))
+            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), asteroid.getVelocity()))
         else:
             #max astroid's is 2^n
+            #need host to send new asteroids
             if len(self.__asteroids) < 1:
+                self.__asteroids.append(Asteroid(self.__screen, 3))
                 self.__asteroids.append(Asteroid(self.__screen, 3))
 
     def __receiveMessage(self, ch, method, properties, body):
