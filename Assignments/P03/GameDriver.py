@@ -152,7 +152,7 @@ class GameDriver:
         self.__asteroids.remove(asteroid)
 
         if asteroid.getScale() > 1:
-            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), -asteroid.getVelocity()))
+            self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), -pygame.math.Vector2(asteroid.getVelocity())))
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), asteroid.getVelocity()))
         else:
             #max astroid's is 2^n
