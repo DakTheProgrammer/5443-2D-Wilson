@@ -11,8 +11,9 @@ class Ship:
         self.__health = 100
         self.__score = 0
         self.__imageMul = 1.5
-        self.__Colors = [(251,250,245),(199,206,250),(255,255,186),(186,225,255),(181,234,215),(255,183,178),(226,240,203),(224,187,228),(229,204,255),(236,221,185)]
+        Colors = [(251,250,245),(199,206,250),(255,255,186),(186,225,255),(181,234,215),(255,183,178),(226,240,203),(224,187,228),(229,204,255),(236,221,185)]
         self.__bodyStates = []
+        self.__color = Colors[player]
         
         self.__bodyStates.append(Image.open(
             'Ship/Main Ship/Main Ship - Bases/Main Ship - Base - Full health.png'))
@@ -31,7 +32,7 @@ class Ship:
             for item in imageData:
                 # change all white (also shades of whites) pixels to yellow
                 if item[0] in list(range(190, 256)):
-                    new_image_data.append(self.__Colors[player])
+                    new_image_data.append(self.__color)
                 else:
                     new_image_data.append(item)
                     
@@ -257,3 +258,5 @@ class Ship:
     def getVelocity(self):
         return self.__velocity.x, self.__velocity.y
     
+    def getColor(self):
+        return self.__color

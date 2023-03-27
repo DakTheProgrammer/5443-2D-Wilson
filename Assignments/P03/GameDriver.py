@@ -36,7 +36,7 @@ class GameDriver:
         #sends a message that someone new has joined the game
         self.__messenger = multiplayer
 
-        self.__scores = Scores(self.__messenger.user)
+        self.__scores = Scores(self.__messenger.user, self.__ship.getColor())
         
         if multiplayer != None:
             self.__messenger.setCallback(self.__receiveMessage)
@@ -170,12 +170,13 @@ class GameDriver:
         #if a player joins and they aren't yourself (broadcast also sends to self) and they aren't already in the game
         if bodyDic['Type'] == 'Join' and bodyDic['from'] != self.__messenger.user and bodyDic['from'] not in self.__playerIds:
             print('\n' + str(bodyDic['Message']))
+            
+            self.__otherPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
 
             self.__playerIds.append(bodyDic['from'])
-            print(bodyDic['from'])
-            self.__scores.addPlayer(bodyDic['from'])
+            #print(bodyDic['from'])
+            self.__scores.addPlayer(bodyDic['from'], self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].getColor())
 
-            self.__otherPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
         #if someone joins the game and requests what users are already in the game
         elif bodyDic['Type'] == 'Who' and bodyDic['from'] != self.__messenger.user:
             if len(self.__playerIds) == 0 and self.__host == False:
