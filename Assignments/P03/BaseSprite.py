@@ -40,7 +40,7 @@ class BaseSprite(pygame.sprite.Sprite):
             self.image = pygame.transform.rotate(self.imageHolder, arg)
             self.rect = self.image.get_rect(center = imageRect.center)
         elif cmd == 'Move':
-            self.rect.center += arg[0]
+            self.rect.center += arg[0] * arg[2]
             if self.rect.top <= -self.rectBuffer:
                 self.rect.bottom = arg[1].get_height() + self.rectBuffer
             elif self.rect.left <= -self.rectBuffer:

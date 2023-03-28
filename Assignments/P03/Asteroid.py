@@ -24,8 +24,8 @@ class Asteroid():
         
         
         
-    def draw(self, screen):
-        self.__sprite.update('Move', [self.__velocity, screen])
+    def draw(self, screen, delta):
+        self.__sprite.update('Move', [self.__velocity, screen, delta])
 
         self.__sprite.draw(screen)
         

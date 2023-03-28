@@ -132,7 +132,7 @@ class Ship:
         self.__fireBullet = pygame.mixer.Sound('Sounds/laser.wav')
         
 
-    def draw(self, screen):  
+    def draw(self, screen, delta):  
         for bullet in self.__bullets:
             bullet.draw(screen)
         
@@ -174,7 +174,7 @@ class Ship:
             self.__accelBuffer += 1 
             self.__accelerating = False
             
-        self.__ship.update('Move', [self.__velocity, screen])
+        self.__ship.update('Move', [self.__velocity, screen, delta])
         self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
             
         self.__ship.draw(screen)
@@ -224,7 +224,17 @@ class Ship:
         
         # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
         
-    def BulletCollision(self, asteroids):
+    def BulletCollision(self, asteroids, players):
+        for ship in players:
+            if ship != self:
+                obj = ship.getSprite()
+                for bullet in self.__bullets:
+                    if bullet.CheckCollision(obj):
+                        self.__bullets.remove(bullet)
+                        ship.gotShot()
+                        self.__score += 100
+                        return True, None
+        
         for asteroid in asteroids:
             obj = asteroid.getSprite()
             for bullet in self.__bullets:
@@ -260,3 +270,9 @@ class Ship:
     
     def getColor(self):
         return self.__color
+    
+    def getSprite(self):
+        return self.__body
+    
+    def gotShot(self):
+        self.__health -= 50

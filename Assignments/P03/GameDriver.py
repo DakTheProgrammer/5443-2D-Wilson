@@ -1,6 +1,7 @@
 import pygame
 import ast
 import random
+from copy import deepcopy
 from Background import Background
 from Ship import Ship
 from Asteroid import Asteroid
@@ -53,6 +54,7 @@ class GameDriver:
             self.__playerIds = []
 
         self.__otherPlayers = []
+        self.__allPlayers = [self.__ship]
 
         self.__background = Background(
             [
@@ -77,12 +79,12 @@ class GameDriver:
         self.__background.draw(self.__screen)
         
         for player in self.__otherPlayers:
-            player.draw(self.__screen)
+            player.draw(self.__screen, self.__delta)
         
-        self.__ship.draw(self.__screen)
+        self.__ship.draw(self.__screen, self.__delta)
         
         for asteroid in self.__asteroids:
-            asteroid.draw(self.__screen)
+            asteroid.draw(self.__screen, self.__delta)
         self.__scores.draw(self.__screen)
         self.__healthBar.update(self.__ship.getHealth())    
         self.__healthBar.draw(self.__screen)
@@ -131,7 +133,7 @@ class GameDriver:
         if sendMessage == True:
             self.__sendMessage(Message)
             
-    def __CheckCollisions(self):    
+    def __CheckCollisions(self):
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
        
         if shipCollision:
@@ -139,11 +141,14 @@ class GameDriver:
             self.__scores.update(self.__messenger.user, self.__ship.getScore())
             
             
-        bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids)
+        bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids, self.__allPlayers)
         
         if bulletCollision:
-            self.__newAsteroids(asteroidHit)
+            if asteroidHit != None:
+                self.__newAsteroids(asteroidHit)
+            
             self.__scores.update(self.__messenger.user, self.__ship.getScore())
+                
             pygame.mixer.Channel(0).set_volume(.3)
             pygame.mixer.Channel(0).play(self.__asteroidCrash)
             
@@ -155,17 +160,18 @@ class GameDriver:
                 self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
                 
                 
-            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids)
+            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids, self.__otherPlayers)
             
             if bulletCollision:
-                self.__newAsteroids(asteroidHit)
+                if asteroidHit != None:
+                    self.__newAsteroids(asteroidHit)
                 self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
                 pygame.mixer.Channel(0).set_volume(.3)
                 pygame.mixer.Channel(0).play(self.__asteroidCrash)
                 
     def __newAsteroids(self, asteroid):
         self.__asteroids.remove(asteroid)
-
+        # 
         if asteroid.getScale() > 1:
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), -pygame.math.Vector2(asteroid.getVelocity())))
             self.__asteroids.append(Asteroid(self.__screen, asteroid.getScale() - 1, asteroid.getLocation(), asteroid.getVelocity()))
@@ -187,6 +193,8 @@ class GameDriver:
             print('\n' + str(bodyDic['Message']))
             
             self.__otherPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
+            self.__allPlayers.append(Ship(bodyDic['Ship'][0], len(self.__otherPlayers)+1, bodyDic['Ship'][1]))
+            
 
             self.__playerIds.append(bodyDic['from'])
             #print(bodyDic['from'])
