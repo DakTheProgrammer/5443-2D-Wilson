@@ -131,7 +131,7 @@ class GameDriver:
         if sendMessage == True:
             self.__sendMessage(Message)
             
-    def __CheckCollisions(self):
+    def __CheckCollisions(self):    
         shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
        
         if shipCollision:
@@ -147,6 +147,21 @@ class GameDriver:
             pygame.mixer.Channel(0).set_volume(.3)
             pygame.mixer.Channel(0).play(self.__asteroidCrash)
             
+        for ship in self.__otherPlayers:
+            shipCollision, asteroidHit = ship.AsteroidCollision(self.__asteroids)
+        
+            if shipCollision:
+                self.__newAsteroids(asteroidHit)
+                self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
+                
+                
+            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids)
+            
+            if bulletCollision:
+                self.__newAsteroids(asteroidHit)
+                self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
+                pygame.mixer.Channel(0).set_volume(.3)
+                pygame.mixer.Channel(0).play(self.__asteroidCrash)
                 
     def __newAsteroids(self, asteroid):
         self.__asteroids.remove(asteroid)
