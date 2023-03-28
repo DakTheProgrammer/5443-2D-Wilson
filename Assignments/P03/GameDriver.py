@@ -72,7 +72,7 @@ class GameDriver:
 
             self.__HandleEvents()
 
-            self.__delta = self.__clock.tick(self.__fps)
+            self.__delta = self.__clock.tick(self.__fps) / 15.0
 
     def __Draw(self):
         self.__screen.fill(self.__backgroundColor)
