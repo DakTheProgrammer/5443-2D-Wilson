@@ -134,41 +134,25 @@ class GameDriver:
             self.__sendMessage(Message)
             
     def __CheckCollisions(self):
-        shipCollision, asteroidHit = self.__ship.AsteroidCollision(self.__asteroids)
-       
-        if shipCollision:
-            self.__newAsteroids(asteroidHit)
-            self.__scores.update(self.__messenger.user, self.__ship.getScore())
-            
-            
-        bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids, self.__allPlayers)
-        print(self.__allPlayers)
-        if bulletCollision:
-            if asteroidHit != None:
-                self.__newAsteroids(asteroidHit)
-            
-            self.__scores.update(self.__messenger.user, self.__ship.getScore())
-                
-            pygame.mixer.Channel(0).set_volume(.3)
-            pygame.mixer.Channel(0).play(self.__asteroidCrash)
-            
-        # for ship in self.__otherPlayers:
-        #     shipCollision, asteroidHit = ship.AsteroidCollision(self.__asteroids)
+        for ship in self.__allPlayers:
+            shipCollision, asteroidHit = ship.AsteroidCollision(self.__asteroids)
         
-        #     if shipCollision:
-        #         self.__newAsteroids(asteroidHit)
-        #         self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
+            if shipCollision:
+                self.__newAsteroids(asteroidHit)
+                self.__scores.update(self.__messenger.user, ship.getScore())
                 
                 
-        #     bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids, self.__otherPlayers)
-            
-        #     if bulletCollision:
-        #         if asteroidHit != None:
-        #             self.__newAsteroids(asteroidHit)
-        #         self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
-        #         pygame.mixer.Channel(0).set_volume(.3)
-        #         pygame.mixer.Channel(0).play(self.__asteroidCrash)
+            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids, self.__allPlayers)
+
+            if bulletCollision:
+                if asteroidHit != None:
+                    self.__newAsteroids(asteroidHit)
                 
+                self.__scores.update(self.__messenger.user, ship.getScore())
+                    
+                pygame.mixer.Channel(0).set_volume(.3)
+                pygame.mixer.Channel(0).play(self.__asteroidCrash)
+                    
     def __newAsteroids(self, asteroid):
         self.__asteroids.remove(asteroid)
         # 
