@@ -142,7 +142,7 @@ class GameDriver:
             
             
         bulletCollision, asteroidHit = self.__ship.BulletCollision(self.__asteroids, self.__allPlayers)
-        
+        print(self.__allPlayers)
         if bulletCollision:
             if asteroidHit != None:
                 self.__newAsteroids(asteroidHit)
