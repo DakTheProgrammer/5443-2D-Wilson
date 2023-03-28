@@ -159,7 +159,10 @@ class GameDriver:
                 if asteroidHit != None:
                     self.__newAsteroids(asteroidHit)
                 
-                self.__scores.update(self.__messenger.user, ship.getScore())
+                if ship in self.__otherPlayers:
+                    self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
+                else:
+                    self.__scores.update(self.__messenger.user, ship.getScore())
                     
                 pygame.mixer.Channel(0).set_volume(.3)
                 pygame.mixer.Channel(0).play(self.__asteroidCrash)
