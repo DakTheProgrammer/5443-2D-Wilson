@@ -275,4 +275,5 @@ class Ship:
         return self.__body
     
     def gotShot(self):
-        self.__health -= 50
+        self.__health -= 20
+        self.__onHealthChange()
