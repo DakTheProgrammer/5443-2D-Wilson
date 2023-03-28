@@ -180,7 +180,7 @@ class Ship:
         self.__ship.draw(screen)
         
         #heal by 10 every 10 seconds
-        if pygame.time.get_ticks() - self.__startTime >= 10000:
+        if pygame.time.get_ticks() - self.__startTime >= 1000000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
                 #pygame.mixer.Channel(2).set_volume(.08)
