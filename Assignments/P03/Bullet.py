@@ -31,7 +31,7 @@ class Bullet():
         
         self.__currentFrame = 0
         # *6 so there are 6 intermediate angeles to shoot from per section of 90 degrees
-        self.__velocity = direction * 6
+        self.__velocity = direction * 12
         self.sprite.rect.center = gun
         self.angle = angle
         

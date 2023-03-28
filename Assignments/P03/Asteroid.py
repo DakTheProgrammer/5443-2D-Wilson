@@ -12,7 +12,8 @@ class Asteroid():
         image = pygame.image.load("Environment/Asteroids/Asteroid 01 - Base.png")
         
         if loc == None:
-            self.__location = Vector2(random.randrange(image.get_size()[0], screen.get_width()) / 3,random.randrange(image.get_size()[1], screen.get_height() - 50) / 3)
+            self.__location = Vector2(random.randrange(0, 700),random.randrange(0, 500))
+            
         else:
             self.__location = loc
         
