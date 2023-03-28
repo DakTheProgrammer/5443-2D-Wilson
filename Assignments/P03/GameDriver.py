@@ -107,6 +107,11 @@ class GameDriver:
                     sendMessage = True
                     Message['Events'].append({'Type': 'Shoot'})
                     #self.__sendMessage({'Type': 'Shoot'})
+                if event.key == pygame.K_s and event.key == pygame.K_DOWN:
+                    self.__ship.Stop()
+                    sendMessage = True
+                    Message['Events'].append({'Type': 'Stop'})
+                    
                      
         is_key_pressed = pygame.key.get_pressed()
         
@@ -129,6 +134,7 @@ class GameDriver:
             sendMessage = True
             Message['Events'].append({'Type': 'Accelerate'})
             #self.__sendMessage({'Type': 'Accelerate'})
+        
 
         if sendMessage == True:
             self.__sendMessage(Message)
@@ -225,6 +231,8 @@ class GameDriver:
                     self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].rotate(clockwise=bool(dics['Clockwise']))
                 if dics['Type'] == 'Shoot':
                     self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Shoot()
+                if dics['Type'] == 'Stop':
+                    self.__otherPlayers[self.__playerIds.index(bodyDic['from'])].Stop()
         elif bodyDic['Type'] == 'Asteroids' and bodyDic['from'] != self.__messenger.user and self.__asteroids == []:
             for info in bodyDic['Info']:
                 self.__asteroids.append(Asteroid(self.__screen, info[0], info[1], info[2]))

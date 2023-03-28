@@ -181,7 +181,7 @@ class Ship:
         self.__ship.draw(screen)
         
         #heal by 10 every 10 seconds
-        if pygame.time.get_ticks() - self.__startTime >= 1000000:
+        if pygame.time.get_ticks() - self.__startTime >= 20000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
                 #pygame.mixer.Channel(2).set_volume(.08)
@@ -224,6 +224,8 @@ class Ship:
         # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-30), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
         
         # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+    def Stop(self):
+        self.__velocity = Vector2(0)    
         
     def BulletCollision(self, asteroids, players):
         for ship in players:
@@ -241,7 +243,8 @@ class Ship:
             for bullet in self.__bullets:
                 if bullet.CheckCollision(obj):
                     self.__bullets.remove(bullet)
-                    self.__score += 10
+                    self.__health += 10
+                    self.__onHealthChange()
                     return True, asteroid
                 
         return False, None
