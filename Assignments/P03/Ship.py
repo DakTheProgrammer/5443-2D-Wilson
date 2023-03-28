@@ -226,13 +226,14 @@ class Ship:
         
     def BulletCollision(self, asteroids, players):
         for ship in players:
-            obj = ship.getSprite()
-            for bullet in self.__bullets:
-                if bullet.CheckCollision(obj):
-                    self.__bullets.remove(bullet)
-                    ship.gotShot()
-                    self.__score += 100
-                    return True, None
+            if ship != self:
+                obj = ship.getSprite()
+                for bullet in self.__bullets:
+                    if bullet.CheckCollision(obj):
+                        self.__bullets.remove(bullet)
+                        ship.gotShot()
+                        self.__score += 100
+                        return True, None
         
         for asteroid in asteroids:
             obj = asteroid.getSprite()

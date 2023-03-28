@@ -134,16 +134,21 @@ class GameDriver:
             self.__sendMessage(Message)
             
     def __CheckCollisions(self):
-        for ship in self.__allPlayers:
+        temp = []
+            
+        for players in self.__otherPlayers:
+            temp.append(players)
+        temp.append(self.__ship)
+            
+        for ship in temp:
             shipCollision, asteroidHit = ship.AsteroidCollision(self.__asteroids)
-        
+    
             if shipCollision:
                 self.__newAsteroids(asteroidHit)
-                self.__scores.update(self.__messenger.user, ship.getScore())
-                
-                
-            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids, self.__allPlayers)
-
+                self.__scores.update(self.__messenger.user, self.__ship.getScore())
+            
+            bulletCollision, asteroidHit = ship.BulletCollision(self.__asteroids, temp)
+            
             if bulletCollision:
                 if asteroidHit != None:
                     self.__newAsteroids(asteroidHit)
