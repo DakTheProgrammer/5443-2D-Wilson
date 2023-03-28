@@ -8,6 +8,7 @@ import Util
 
 class Ship:
     def __init__(self, loc, player, vel = 0):
+        self.__spawnLoc = loc
         self.__health = 100
         self.__score = 0
         self.__imageMul = 1.5
@@ -252,12 +253,15 @@ class Ship:
             self.__body.setImage(self.__bodyStates[1], self.__imageMul)
         elif self.__health >= 25:
             self.__body.setImage(self.__bodyStates[2], self.__imageMul)
-        elif self.__health >= 0:
+        elif self.__health > 0:
             self.__body.setImage(self.__bodyStates[3], self.__imageMul)
             
         else:
-            #game over?
-            ...
+            self.__ship.update('Location', self.__spawnLoc)
+            self.__health = 100
+            self.__onHealthChange()
+            self.__score -= 100
+            self.__velocity = Vector2(0)
             
     def getScore(self):
         return self.__score

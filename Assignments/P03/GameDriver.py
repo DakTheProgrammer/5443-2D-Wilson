@@ -167,9 +167,18 @@ class GameDriver:
         else:
             #max astroid's is 2^n
             #need host to send new asteroids
-            if len(self.__asteroids) < 1:
-                self.__asteroids.append(Asteroid(self.__screen, 3))
-                self.__asteroids.append(Asteroid(self.__screen, 3))
+            if self.__host:
+                if len(self.__asteroids) < 1:
+                    self.__asteroids.append(Asteroid(self.__screen, 3))
+                    self.__asteroids.append(Asteroid(self.__screen, 3))
+                    
+                    toSend = []
+
+                    for roid in self.__asteroids:
+                        toSend.append([roid.getSize(), roid.getLocation(), roid.getVelocity()])
+
+                    self.__sendMessage({'Type': 'Asteroids',
+                                        'Info': toSend})
 
     def __receiveMessage(self, ch, method, properties, body):
         #print(body)
