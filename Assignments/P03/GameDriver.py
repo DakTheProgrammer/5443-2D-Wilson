@@ -10,7 +10,7 @@ from Scores import Scores
 
 
 class GameDriver:
-    def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 60, multiplayer = None):
+    def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 30, multiplayer = None):
         self.__host = False
 
         pygame.init()
