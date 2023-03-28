@@ -107,7 +107,7 @@ class GameDriver:
                     sendMessage = True
                     Message['Events'].append({'Type': 'Shoot'})
                     #self.__sendMessage({'Type': 'Shoot'})
-                if event.key == pygame.K_s and event.key == pygame.K_DOWN:
+                if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     self.__ship.Stop()
                     sendMessage = True
                     Message['Events'].append({'Type': 'Stop'})
