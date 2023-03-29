@@ -16,7 +16,7 @@ class GameDriver:
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.load('Sounds/ambient-dream.mp3')
-        pygame.mixer.music.set_volume(.06)
+        pygame.mixer.music.set_volume(.05)
         pygame.mixer.music.play(-1)
         self.__backgroundColor = backgroundColor
         

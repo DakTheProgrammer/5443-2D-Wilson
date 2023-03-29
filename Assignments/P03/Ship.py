@@ -171,7 +171,7 @@ class Ship:
                     self.__gunCurrentFrame = 0
                     self.__gun.setImage(self.__gunStates[self.__gunCurrentFrame], self.__imageMul)
                     self.__bullets.append(Bullet(self.__gun.rect.center, deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
-                    pygame.mixer.Channel(1).set_volume(.1)
+                    pygame.mixer.Channel(1).set_volume(.07)
                     pygame.mixer.Channel(1).play(self.__fireBullet)
             
             self.__gunBuffer += 1
@@ -197,6 +197,14 @@ class Ship:
             self.__accelBuffer += 1 
             self.__accelerating = False
             
+        
+
+        # self.__ship.update('Explode', [self.__position, screen])
+        self.__ship.update('Move', [self.__velocity, screen, delta])
+        self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
+            
+        self.__ship.draw(screen)
+        
         if self.__exploding == True: 
             if self.__expBuffer == self.__expBufferMax:
                         self.__expBuffer = 0
@@ -209,17 +217,8 @@ class Ship:
             self.__explode.update('Location', self.__position)
             self.__expBuffer += 1
             self.__explode.draw(screen)
+        
 
-        # self.__ship.update('Explode', [self.__position, screen])
-        self.__ship.update('Move', [self.__velocity, screen, delta])
-        self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
-            
-        self.__ship.draw(screen)
-        
-        
-            
-        
-        
         #heal by 10 every 20 seconds
         if pygame.time.get_ticks() - self.__startTime >= 20000:
             if self.__health <= 90 and self.__health > 0:
@@ -244,7 +243,7 @@ class Ship:
             didIt = [False]
             self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
             if didIt[0] == True:
-                pygame.mixer.Channel(3).set_volume(.08)
+                pygame.mixer.Channel(3).set_volume(.05)
                 pygame.mixer.Channel(3).play(self.__shipDamage)
                 self.__health -= 10
                 self.__score -= 5
@@ -329,4 +328,5 @@ class Ship:
         pygame.mixer.Channel(3).set_volume(.1)
         pygame.mixer.Channel(3).play(self.__shipDamage)
         self.__health -= 20
+        self.__score -= 10
         self.__onHealthChange()
