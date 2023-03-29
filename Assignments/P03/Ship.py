@@ -53,7 +53,7 @@ class Ship:
         for i in range(self.__expFrames):                
             #crops to the best size for screen
             img = expImage.crop(((expImage.size[0] / self.__expFrames) * i, 0, (expImage.size[0] / self.__expFrames) * (i + 1), expImage.size[1]))
-
+            
             img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
 
             self.__expStates.append(img)
@@ -204,12 +204,12 @@ class Ship:
                             self.__explode.setImage(self.__expStates[self.__expCurrentFrame], self.__imageMul)
                             self.__expCurrentFrame += 1 
                         else:
+                            self.__exploding = False
                             self.__expCurrentFrame = 0
-                            
+            self.__explode.update('Location', self.__position)
             self.__expBuffer += 1
-            self.__ship.add(self.__explode) 
-            self.__exploding = False
-            
+            self.__explode.draw(screen)
+
         # self.__ship.update('Explode', [self.__position, screen])
         self.__ship.update('Move', [self.__velocity, screen, delta])
         self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
@@ -300,9 +300,10 @@ class Ship:
             self.__body.setImage(self.__bodyStates[3], self.__imageMul)
             
         elif self.__health <= 0:
-            self.__exploding == True
+            self.__exploding = True
             pygame.mixer.Channel(4).set_volume(.2)
             pygame.mixer.Channel(4).play(self.__shipExplode)
+            self.__position = self.__body.rect.center
             self.__ship.update('Location', self.__spawnLoc)
             self.__health = 100
             self.__score -= 100

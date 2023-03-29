@@ -57,8 +57,5 @@ class BaseSprite(pygame.sprite.Sprite):
             if overlaps:
                 ret[0] = True
                 
-        elif cmd == 'Explode':
-            ...
-                
     def getMask(self):
         return self.__mask
