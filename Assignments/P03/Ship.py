@@ -42,6 +42,23 @@ class Ship:
             self.__bodyStates[i] = pygame.image.fromstring(image.tobytes(), image.size, image.mode)
 
         self.__body = BaseSprite(self.__bodyStates[0], Util.scale(self.__bodyStates[0].get_size(), self.__imageMul), mask=True)
+        
+        self.__expStates = []
+        
+        expImage = Image.open('Ship/explode1.png')
+        
+        self.__expFrames = 4
+        self.__expCurrentFrame = 0
+        
+        for i in range(self.__expFrames):                
+            #crops to the best size for screen
+            img = expImage.crop(((expImage.size[0] / self.__expFrames) * i, 0, (expImage.size[0] / self.__expFrames) * (i + 1), expImage.size[1]))
+
+            img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
+
+            self.__expStates.append(img)
+            
+        self.__explode = BaseSprite(self.__expStates[0], Util.scale(self.__expStates[0].get_size(), self.__imageMul), mask=False)
 
         engine = pygame.image.load('Ship/Main Ship/Main Ship - Engines/Main Ship - Engines - Base Engine.png')
 
@@ -76,6 +93,7 @@ class Ship:
             img = pygame.image.fromstring(img.tobytes(), img.size, img.mode)
 
             self.__accelStates.append(img)
+            
             
         self.__engineThrust = BaseSprite(self.__idleStates[0], Util.scale(self.__idleStates[0].get_size(), self.__imageMul), mask=True)
             
@@ -114,6 +132,9 @@ class Ship:
         
         self.__bullets = []
         
+        self.__expBuffer = 0
+        self.__expBufferMax = 5
+        
         self.__gunBuffer = 0
         self.__gunBufferMax = 4
         
@@ -125,15 +146,16 @@ class Ship:
         
         self.__shooting = False
         self.__accelerating = False
+        self.__exploding = False 
         
         self.__startTime = pygame.time.get_ticks()
 
         self.__shipDamage = pygame.mixer.Sound('Sounds/static.wav')
         #self.__boostHealth = pygame.mixer.Sound('Sounds/coin.mp3')
         self.__fireBullet = pygame.mixer.Sound('Sounds/laser.wav')
-        
-
-    def draw(self, screen, delta):  
+        self.__shipExplode = pygame.mixer.Sound('Sounds/explosion-debris.wav')
+    def draw(self, screen, delta): 
+   
         for bullet in self.__bullets:
             bullet.draw(screen)
         
@@ -175,12 +197,30 @@ class Ship:
             self.__accelBuffer += 1 
             self.__accelerating = False
             
+        if self.__exploding == True: 
+            if self.__expBuffer == self.__expBufferMax:
+                        self.__expBuffer = 0
+                        if self.__expCurrentFrame != self.__expFrames - 1:        
+                            self.__explode.setImage(self.__expStates[self.__expCurrentFrame], self.__imageMul)
+                            self.__expCurrentFrame += 1 
+                        else:
+                            self.__expCurrentFrame = 0
+                            
+            self.__expBuffer += 1
+            self.__ship.add(self.__explode) 
+            self.__exploding = False
+            
+        # self.__ship.update('Explode', [self.__position, screen])
         self.__ship.update('Move', [self.__velocity, screen, delta])
         self.__ship.update('Rotate', self.__direction.angle_to(self.__up))
             
         self.__ship.draw(screen)
         
-        #heal by 10 every 10 seconds
+        
+            
+        
+        
+        #heal by 10 every 20 seconds
         if pygame.time.get_ticks() - self.__startTime >= 20000:
             if self.__health <= 90 and self.__health > 0:
                 self.__health += 10
@@ -204,7 +244,7 @@ class Ship:
             didIt = [False]
             self.__ship.update('Collide', [sprite.getMask(), sprite.rect], didIt)
             if didIt[0] == True:
-                pygame.mixer.Channel(3).set_volume(.1)
+                pygame.mixer.Channel(3).set_volume(.08)
                 pygame.mixer.Channel(3).play(self.__shipDamage)
                 self.__health -= 10
                 self.__score -= 5
@@ -259,13 +299,16 @@ class Ship:
         elif self.__health > 0:
             self.__body.setImage(self.__bodyStates[3], self.__imageMul)
             
-        else:
+        elif self.__health <= 0:
+            self.__exploding == True
+            pygame.mixer.Channel(4).set_volume(.2)
+            pygame.mixer.Channel(4).play(self.__shipExplode)
             self.__ship.update('Location', self.__spawnLoc)
             self.__health = 100
-            self.__onHealthChange()
             self.__score -= 100
             self.__velocity = Vector2(0)
-            
+            self.__onHealthChange()
+           
     def getScore(self):
         return self.__score
     
@@ -282,5 +325,7 @@ class Ship:
         return self.__body
     
     def gotShot(self):
+        pygame.mixer.Channel(3).set_volume(.1)
+        pygame.mixer.Channel(3).play(self.__shipDamage)
         self.__health -= 20
         self.__onHealthChange()

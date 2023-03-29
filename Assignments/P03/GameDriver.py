@@ -16,7 +16,7 @@ class GameDriver:
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.load('Sounds/ambient-dream.mp3')
-        pygame.mixer.music.set_volume(.07)
+        pygame.mixer.music.set_volume(.06)
         pygame.mixer.music.play(-1)
         self.__backgroundColor = backgroundColor
         
@@ -158,14 +158,14 @@ class GameDriver:
             if bulletCollision:
                 if asteroidHit != None:
                     self.__newAsteroids(asteroidHit)
-                
+                    pygame.mixer.Channel(0).set_volume(.3)
+                    pygame.mixer.Channel(0).play(self.__asteroidCrash)
                 if ship in self.__otherPlayers:
                     self.__scores.update(self.__playerIds[self.__otherPlayers.index(ship)], ship.getScore())
                 else:
                     self.__scores.update(self.__messenger.user, ship.getScore())
                     
-                pygame.mixer.Channel(0).set_volume(.3)
-                pygame.mixer.Channel(0).play(self.__asteroidCrash)
+                
                     
     def __newAsteroids(self, asteroid):
         self.__asteroids.remove(asteroid)
