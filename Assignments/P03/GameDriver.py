@@ -225,7 +225,7 @@ class GameDriver:
 
                 self.__sendMessage({'Type': 'Asteroids',
                                     'Info': toSend})
-        elif bodyDic['Type'] == 'Event' and bodyDic['from'] != self.__messenger.user:
+        elif bodyDic['Type'] == 'Event' and bodyDic['from'] != self.__messenger.user and bodyDic['from'] in self.__playerIds:
             for dics in bodyDic['Events']:
                 #if player accelerates accelerate the given ship 
                 if dics['Type'] == 'Accelerate':
