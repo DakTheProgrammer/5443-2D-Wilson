@@ -8,9 +8,26 @@ from Asteroid import Asteroid
 from HealthBar import HealthBar
 from Scores import Scores 
 
-
 class GameDriver:
+    """
+    a 
+    """
     def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 30, multiplayer = None):
+        """
+        Parameters
+        ----------
+            title : 
+            backgroundColor : tuple, optional
+                Defaults to (255,255,255)
+            height : int, optional
+                Defaults to 1200
+            width : int, optional
+                Defaults to 770
+            fps : int, optional
+                Defaults to 30
+            multiplayer : optional 
+                Defaults to None
+        """
         self.__host = False
 
         pygame.init()
@@ -65,6 +82,9 @@ class GameDriver:
         )
 
     def GameLoop(self):
+        """
+        
+        """
         while self.__running:
             self.__CheckCollisions()
             
@@ -75,6 +95,9 @@ class GameDriver:
             self.__delta = self.__clock.tick(self.__fps) / self.__fps
 
     def __Draw(self):
+        """
+        draws the pygame display with the background, ships, asteroids
+        """
         self.__screen.fill(self.__backgroundColor)
         self.__background.draw(self.__screen)
         
@@ -91,6 +114,9 @@ class GameDriver:
         pygame.display.flip()
 
     def __HandleEvents(self):
+        """ 
+        handles the keyboard imput and message passing for multiple players
+        """
         sendMessage = False
         Message = {
             'Type': 'Event',
@@ -140,6 +166,8 @@ class GameDriver:
             self.__sendMessage(Message)
             
     def __CheckCollisions(self):
+        """_summary_
+        """
         temp = []
             
         for players in self.__otherPlayers:
@@ -168,6 +196,12 @@ class GameDriver:
                 
                     
     def __newAsteroids(self, asteroid):
+        """_summary_
+
+        Args:
+            asteroid (_type_): _description_
+            
+        """
         self.__asteroids.remove(asteroid)
         # 
         if asteroid.getScale() > 1:
@@ -190,6 +224,14 @@ class GameDriver:
                                         'Info': toSend})
 
     def __receiveMessage(self, ch, method, properties, body):
+        """_summary_
+
+        Args:
+            ch (_type_): _description_
+            method (_type_): _description_
+            properties (_type_): _description_
+            body (_type_): _description_
+        """
         #print(body)
         #converts bytes to dictionary
         bodyDic = ast.literal_eval(body.decode('utf-8'))
@@ -242,4 +284,9 @@ class GameDriver:
             
             
     def __sendMessage(self, bodyDic):
+        """_summary_
+
+        Args:
+            bodyDic (_type_): _description_
+        """
         self.__messenger.send("broadcast", bodyDic)

@@ -7,7 +7,167 @@ from copy import deepcopy
 import Util
 
 class Ship:
+    """
+    A class that represents the battle ships in the game
+    
+    Attributes
+    ----------
+    __spawnLoc : tuple
+        the location the ship spawns at
+    __health : int
+        the health of the ship
+    __score : int
+        the score of the ship
+    __imageMul : float
+        the image multiplier of the ship
+    Colors : list
+        the list of colors for the ships
+    __color : tuple
+        the color of the ship
+    __bodyStates : list
+        the list of body states of the ship
+    __body : BaseSprite
+        the body of the ship
+    __expStates : list
+        the list of explosion states
+    expImage : PIL Image
+        the image of the ship explosion
+    __expFrames : int   
+        the number of frames in the explosion animation
+    __expCurrentFrame : int
+        the current frame of the explosion animation
+    __expBuffer : int
+        the buffer for the explosion animation
+    __expBufferMax : int
+        the max buffer for the explosion animation
+    __explode : BaseSprite
+        the explosion sprite
+    engine : pygame.image
+        the image of the engine
+    __idleStates : list
+        the list of idle states
+    idleEngineImage : PIL Image
+        the image of the idle engine
+    __idleFrames : int
+        the number of frames in the idle engine animation
+    __idleCurrentFrame : int
+        the current frame of the idle engine animation
+    __accelStates : list
+        the list of acceleration states
+    accelEngineImage : PIL Image
+        the image of the acceleration engine
+    __accelFrames : int
+        the number of frames in the acceleration engine animation
+    __accelCurrentFrame : int
+        the current frame of the acceleration engine animation
+    __engineThrust : BaseSprite
+        the engine thrust on the ship
+    gunImage : PIL image
+        the image of the gun
+    __gunState : int
+        the state of the gun
+    __gunStates : list
+        the list of gun states
+    __gunImage : Image
+        the image of the gun
+    __gunFrames : int
+        the number of frames in the gun animation
+    __gunCurrentFrame : 
+        the current frame of the gun animation
+     __gun : BaseSprite
+        the gun on the ship
+    __ship : pygame.sprite.Group
+        the group of sprites for the ship
+    __position : tuple
+        the ships posittion
+    __up : Vector2
+        the vector for the up direction
+    __velocity : Vector2
+        the vector for the velocity
+    __direction : Vector2
+        the vector for the direction of the ship
+    __acceleration : float
+        the acceleration of the ship
+    __maneuverability : float
+        the maneuverability of the ship
+    __bullets : list
+        the list of bullets
+    __expBuffer : int
+        the buffer for the explosion animation
+    __expBufferMax : int
+        the max buffer for the explosion animation
+    __gunBuffer : int
+        the buffer for the gun animation
+    __gunBufferMax : int
+        the max buffer for the gun animation
+    __idleBuffer : int
+        the buffer for the idle engine animation
+    __idleBufferMax : int
+        the max buffer for the idle engine animation
+    __accelBuffer : int
+        the buffer for the acceleration engine animation
+    __accelBufferMax : int
+        the max buffer for the acceleration engine animation
+    __shooting : bool
+        if the ship is shooting
+    __accelerating : bool
+        if the ship is accelerating
+    __exploding : bool
+        if the ship is exploding
+    __startTime : pygame.time   
+        the start time of the game
+    __shipDamage : pygame.mixer
+        the sound for the ship taking damage
+    __fireBullet = pygame.mixer
+        the sound for the ship firing bullets
+    __shipExplode : pygame.mixer
+        the sound for the ship exploding
+ 
+    Methods
+    -------
+    draw(screen, delta)
+        Draws the ship to the screen
+    rotate(clockwise = True)
+        Rotates the ship sprite
+    accelerate()
+        Accelerates the ship according to direction and velocity
+    AsteroidCollision(asteroids)
+        Checks for collisions with asteroids
+    BulletCollision(bullets)
+        Checks for collisions with other players bullets
+    Shoot()
+        Shoots a bullet
+    Stop()
+        sets velocity of ship to 0 to stop the ship
+    __onHealthChange()
+        Changes the body of the ship based on health
+    getHealth()
+        Returns the health of the ship
+    getScore()
+        Returns the score of the ship
+    getLocation()
+        Returns the location of the ship
+    getVelocity()
+        Returns the velocity of the ship
+    getColor()
+        Returns the color of the ship
+    getSprite()
+        Returns the sprite for the ship
+    gotShot()
+        Decrements the health and score of the ship
+    
+    """
     def __init__(self, loc, player, vel = 0):
+        """
+        Parameters
+        ----------
+            loc : tuple
+                the location the ship spawns
+            player : sprite
+                the player in the game
+            vel : int, optional 
+                Defaults to 0
+        """
         self.__spawnLoc = loc
         self.__health = 100
         self.__score = 0
@@ -94,7 +254,6 @@ class Ship:
 
             self.__accelStates.append(img)
             
-            
         self.__engineThrust = BaseSprite(self.__idleStates[0], Util.scale(self.__idleStates[0].get_size(), self.__imageMul), mask=True)
             
         self.__gunStates = []
@@ -154,7 +313,15 @@ class Ship:
         #self.__boostHealth = pygame.mixer.Sound('Sounds/coin.mp3')
         self.__fireBullet = pygame.mixer.Sound('Sounds/laser.wav')
         self.__shipExplode = pygame.mixer.Sound('Sounds/explosion-debris.wav')
-    def draw(self, screen, delta): 
+    def draw(self, screen, delta):
+        """
+        Draws the ship to the screen
+        
+        Parameters
+        ----------
+            screen : pygame.display
+            delta : 
+        """
    
         for bullet in self.__bullets:
             bullet.draw(screen)
@@ -229,15 +396,39 @@ class Ship:
             self.__startTime = pygame.time.get_ticks()
 
     def rotate(self, clockwise = True):
+        """
+        Rotates the group of ship sprites
+        
+        Parameters
+        ----------
+            clockwise : bool, optional
+                Defaults to True.
+        """
         sign = 1 if clockwise else -1
         angle = self.__maneuverability * sign
         self.__direction.rotate_ip(angle)
 
     def accelerate(self):
+        """
+        Accelerates the ship
+        """
         self.__accelerating = True
         self.__velocity += self.__direction * self.__acceleration
 
     def AsteroidCollision(self, asteroids):
+        """
+        Checks for collision between the ship and an asteroid
+        
+        Parameters
+        ----------
+            asteroids : sprite
+
+        Returns
+        --------
+            bool : 
+                if collision detected
+
+        """
         for asteroid in asteroids:
             sprite = asteroid.getSprite()
             didIt = [False]
@@ -252,21 +443,20 @@ class Ship:
                 return True, asteroid
             
         return False, None
-        
-    def getHealth(self):
-        return self.__health
     
-    def Shoot(self):
-        if self.__shooting == False:
-            self.__shooting = True
-        
-        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-30), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
-        
-        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
-    def Stop(self):
-        self.__velocity = Vector2(0)    
-        
     def BulletCollision(self, asteroids, players):
+        """_summary_
+
+        Parameters
+        ----------
+            asteroids : sprite
+            players : sprite
+
+        Returns
+        ---------
+            bool :
+                if bullet collision detected on another ship or asteroid
+        """
         for ship in players:
             if ship != self:
                 obj = ship.getSprite()
@@ -288,7 +478,27 @@ class Ship:
                 
         return False, None
     
+    def Shoot(self):
+        """
+        Shooting bullets
+        """
+        if self.__shooting == False:
+            self.__shooting = True
+        
+        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-30), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+        
+        # self.__bullets.append(Bullet(self.__gun.rect.center + Vector2(0,-60), deepcopy(self.__direction), self.__direction.angle_to(self.__up)))
+    def Stop(self):
+        """
+        Stops the ship
+        """
+        self.__velocity = Vector2(0)    
+        
+    
     def __onHealthChange(self):
+        """
+        Changes the ship's body image based on health
+        """
         if self.__health >= 75:
             self.__body.setImage(self.__bodyStates[0], self.__imageMul)
         elif self.__health >= 50:
@@ -308,23 +518,70 @@ class Ship:
             self.__score -= 100
             self.__velocity = Vector2(0)
             self.__onHealthChange()
-           
+            
+    def getHealth(self):
+        """
+        Gets the Health of the player's ship
+        
+        Returns
+        -------
+            health : int 
+        """
+        return self.__health 
+          
     def getScore(self):
+        """
+        Gets the score of the player's ship
+        
+        Returns:
+            score : int
+        """
         return self.__score
     
     def getLocation(self):
+        """ 
+        Gets the location of the player's ship
+
+        Returns
+        -------
+            body : BaseSprite : tuple
+        """
         return self.__body.rect.center
     
     def getVelocity(self):
+        """
+        Gets the velocity of the player's ship
+        
+        Returns
+        -------
+            velocity : tuple
+        """
         return self.__velocity.x, self.__velocity.y
     
     def getColor(self):
+        """
+        Gets the color of the player's ship
+
+        Returns
+        -------
+            color : RGB value
+        """
         return self.__color
     
     def getSprite(self):
+        """
+        Gets the sprite of the player's ship
+        
+        Returns
+        -------
+           body : sprite
+        """
         return self.__body
     
     def gotShot(self):
+        """
+        Called when the ship is hit by a bullet
+        """
         pygame.mixer.Channel(3).set_volume(.1)
         pygame.mixer.Channel(3).play(self.__shipDamage)
         self.__health -= 20

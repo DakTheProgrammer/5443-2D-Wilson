@@ -1,5 +1,3 @@
-"""
-"""
 import json
 import sys
 import time
@@ -8,6 +6,18 @@ from threading import Thread
 from rich import print
 
 def isJson(myjson):
+    """
+    Checks if a string is valid json
+
+    Parameters
+    ----------
+        myjson : json
+
+    Returns 
+    -------
+        bool
+        
+    """
     try:
         json.loads(myjson)
     except ValueError as e:
@@ -16,8 +26,37 @@ def isJson(myjson):
 
 
 class Comms(object):
-    """This base class simply connects to the rabbitmq server and is used by both the sender
+    """
+    This base class simply connects to the rabbitmq server and is used by both the sender
     and listener classes.
+    
+    Attributes
+    ----------
+    exchange : str
+        the 'channel' we will send messages on
+    port : int
+        port number (nearly always 5672)
+    host : str
+        the ip address or domain name of the server
+    user : str
+        your username
+    password : str
+        your password
+    binding_keys : list
+        a list of binding keys to listen to
+    messageQueue : dict
+        a dictionary of messages to be sent to the server
+    _messageQueue : dict
+        a dictionary of messages to be sent to the server
+    
+    Methods
+    -------
+    setupConnection (**kwargs)
+        This method authenticates with the message server
+    connect()
+        This method connects to the message server
+    
+    
     """
 
     def __init__(self, **kwargs):
@@ -94,8 +133,34 @@ class Comms(object):
 
 
 class CommsListener(Comms):
+    """
+    This class represents an exteded base class of Comms
+
+    Parameters
+    ----------
+    Comms : class
+        
+    Methods
+    -------
+    bindKeysToQueue(binding_keys=None)
+        This method binds the queue to the exchange
+    startConsuming(callback=None)
+        This method starts consuming messages
+    callBack(ch, method, properties, body)
+        This method is called when a message is received
+    threadedListen(callback=None)
+        This method listens for messages
+
+        
+    """
     def __init__(self, **kwargs):
-        """Extends base class Comms."""
+        """
+        Parameters
+        ---------- 
+        **kwargs : keyword arguments
+        
+        """
+        
         self.binding_keys = kwargs.get("binding_keys", [])
 
         super().__init__(**kwargs)
@@ -136,6 +201,14 @@ class CommsListener(Comms):
             )
 
     def startConsuming(self, callback=None):
+        """
+        Starts comsuming messages
+        
+        Parameters
+        ----------
+        callback : optional 
+            Defaults to None.
+        """ 
         if not callback:
             callback = self.callback
         self.channel.basic_consume(
@@ -144,8 +217,15 @@ class CommsListener(Comms):
         self.channel.start_consuming()
 
     def callback(self, ch, method, properties, body):
-        """This method gets run when a message is received. You can alter it to
-        do whatever is necessary.
+        """
+        This method gets run when a message is received. You can alter it to
+        do whatever is necessary
+
+        Parameters:
+            ch : channel
+            method : 
+            properties : 
+            body : json
         """
 
         if isJson(body):
@@ -158,6 +238,14 @@ class CommsListener(Comms):
         print(self.messageQueue)
 
     def threadedListen(self, callback=None):
+        """
+        This method starts a thread to listen for messages
+
+        Parameters
+        ----------
+        callback : optional 
+            Defaults to None
+        """
         self.bindKeysToQueue([f"#.{self.user}.#", "#.broadcast.#"])
         Thread(
             target=self.startConsuming,
@@ -167,13 +255,40 @@ class CommsListener(Comms):
 
 
 class CommsSender(Comms):
+    """
+    Extends Comms and adds a "send" method which sends data to a specified channel (exchange).
+    
+    Parameters
+    ----------
+    Comms : class
+        
+    Methods
+    -------
+    send(target, sender, body, closeConnection=True)
+        This method sends a message to the server
+    publish(target, body)
+        This method publishes a message to the server
+    threadedSend(**kwargs)
+        This method immediately calls send with a thread
+    closeConnection()
+        This method closes the connection to the server
+    """
     def __init__(self, **kwargs):
-        """Extends Comms and adds a "send" method which sends data to a
-        specified channel (exchange).
-        """
+        
         super().__init__(**kwargs)
 
     def send(self, target, sender, body, closeConnection=True):
+        """
+        This class is used to send messages to the server.
+
+        Parameters
+        ----------
+            target : 
+            sender : 
+            body : json
+            closeConnection : bool, optional
+                Defaults to True.
+        """
         # print(f"Sending: target: {target}, body: {body}")
 
         body = json.loads(body)
