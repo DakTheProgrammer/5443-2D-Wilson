@@ -10,7 +10,61 @@ from Scores import Scores
 
 class GameDriver:
     """
-    a 
+    The main driver that handles all game functionality.
+    
+    Attributes
+    ----------
+    __host : 
+    __screen : pygame.Display
+        The screen the game is played on
+    __clock : pygame.time.Clock
+        The clock that controls the fps
+    __fps : int
+        The frames per second
+    __delta : int
+        The time between frames
+    __running : bool
+        Whether or not the game is running
+    __asteroidCrash : pygame.mixer.Sound
+        The sound that plays when a bullet hits an asteroid 
+    __backgroundColor : tuple
+        The background color of the game in (R,G,B) format
+    __ship : Ship()
+        The player's ship
+    __asteroids : list
+        The list of asteroids
+    __healthBar : HealthBar()
+        The health bar of the player
+    __scores : Scores()
+        The scores of the game
+    __background : Background()
+        The background of the game
+    multiplayer :
+        Whether or not the game is multiplayer
+    __playerIds : list
+        list of playId's in the game
+    __otherPlayer : list
+        list of other players in the game
+    __allPlayers : list 
+        list of all player's ships in the game
+
+    Methods
+    -------
+    GameLoop()
+        The main game loop
+    __Draw()
+        Draws all game objects
+    __handleEvents()
+        Handles all pygame events in the game
+    __CheckCollision()
+        Checks for bullet and asteroid collisions
+    __newAsteroids()
+        Creates new asteroids 
+    __receiveMessage(message)
+        Receives a message from the server
+    __sendMessage(message)
+        Sends a message to the server
+    
     """
     def __init__(self, title, backgroundColor = (255,255,255), height = 1200, width = 770, fps = 30, multiplayer = None):
         """
@@ -83,7 +137,7 @@ class GameDriver:
 
     def GameLoop(self):
         """
-        
+        The main game loop
         """
         while self.__running:
             self.__CheckCollisions()
@@ -96,7 +150,7 @@ class GameDriver:
 
     def __Draw(self):
         """
-        draws the pygame display with the background, ships, asteroids
+        Draws the pygame display with the background, ships, asteroids
         """
         self.__screen.fill(self.__backgroundColor)
         self.__background.draw(self.__screen)
@@ -115,7 +169,7 @@ class GameDriver:
 
     def __HandleEvents(self):
         """ 
-        handles the keyboard imput and message passing for multiple players
+        Handles the keyboard imput and message passing for multiple players
         """
         sendMessage = False
         Message = {
@@ -166,7 +220,8 @@ class GameDriver:
             self.__sendMessage(Message)
             
     def __CheckCollisions(self):
-        """_summary_
+        """
+        Checks for bullet collisions and asteroid collisions
         """
         temp = []
             
@@ -196,10 +251,12 @@ class GameDriver:
                 
                     
     def __newAsteroids(self, asteroid):
-        """_summary_
-
-        Args:
-            asteroid (_type_): _description_
+        """
+        Creates new asteroids when all asteroids are destroyed
+        
+        Parameters
+        ----------
+            asteroid : image
             
         """
         self.__asteroids.remove(asteroid)
@@ -224,13 +281,15 @@ class GameDriver:
                                         'Info': toSend})
 
     def __receiveMessage(self, ch, method, properties, body):
-        """_summary_
-
-        Args:
-            ch (_type_): _description_
-            method (_type_): _description_
-            properties (_type_): _description_
-            body (_type_): _description_
+        """
+        Receives messages from the server and handles them
+        
+        Parameters
+        ----------
+            ch : channel
+            method :
+            properties :
+            body : json
         """
         #print(body)
         #converts bytes to dictionary
@@ -284,9 +343,11 @@ class GameDriver:
             
             
     def __sendMessage(self, bodyDic):
-        """_summary_
-
-        Args:
-            bodyDic (_type_): _description_
+        """
+        Sends a message to the server
+        
+        Parameters
+        ----------
+            bodyDic : dictionary
         """
         self.__messenger.send("broadcast", bodyDic)
