@@ -38,6 +38,8 @@ if len(sys.argv) > 1:
 
     game = GameDriver('Game', multiplayer=multiplayer)
 else:
-    game = GameDriver('Game')
+    print('\n\nIncorrect arguments for multiplayer!!!')
+    print('\n\nShould look like: `python main.py exchange username`')
+    sys.exit()
 
 game.GameLoop()
