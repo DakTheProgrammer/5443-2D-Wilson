@@ -16,7 +16,7 @@ class SpriteSheet:
         
         self.__tileImages = []
         
-        #places a tranparent tile in spot 0
+        #places a transparent tile in spot 0
         alphaBlock = sheet.crop((0,0,tileSize, tileSize))
         self.__tileImages.append(pygame.image.fromstring(alphaBlock.tobytes(), alphaBlock.size, alphaBlock.mode))
         

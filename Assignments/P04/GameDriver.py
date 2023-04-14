@@ -1,5 +1,9 @@
+from cmath import rect
+from turtle import Screen, width
 import pygame
+from SpriteSheet import SpriteSheet
 from Map import Map
+from Player import Player
 
 class GameDriver:
     def __init__(self, title, background = (255,255,255), height = 800, width = 800, fps = 60):
@@ -14,7 +18,13 @@ class GameDriver:
 
         pygame.display.set_caption(title)
         
-        self.map = Map('./Levels/Test.tmx')
+        startLevel = './Levels/Start.tmx'
+
+        self.__spriteSheet = SpriteSheet(startLevel)
+        self.__map = Map(startLevel, self.__spriteSheet.getSpritesList())
+
+        #41 is p1 default character
+        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList())
 
     def GameLoop(self):
         while self.__running:
@@ -26,12 +36,15 @@ class GameDriver:
 
     def __draw(self):
         
-        self.__screen.fill((255,255,255))
-        self.map.draw(self.__screen)
+        self.__screen.fill(self.__background)
+        self.__map.draw(self.__screen)
+        self.__playerOne.draw(self.__screen)
         
         zoom = pygame.transform.rotozoom(self.__screen.copy(), 0, 2)
         zoomRec = zoom.get_rect()
-        zoomRec.center = self.__screen.get_rect().center
+
+        #zoomRec.center = (self.__playerOne.rect.centerx + (1.5 * self.__screen.get_width()), self.__playerOne.rect.centery + (1.5 * self.__screen.get_height()))
+        #print(self.__playerOne.rect.center, zoomRec.center)
         
         self.__screen.blit(zoom, zoomRec)
         
