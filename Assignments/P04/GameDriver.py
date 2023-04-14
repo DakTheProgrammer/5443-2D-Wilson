@@ -25,9 +25,15 @@ class GameDriver:
             self.__delta = self.__clock.tick(self.__fps)
 
     def __draw(self):
-        self.__screen.fill((255,255,255))
         
+        self.__screen.fill((255,255,255))
         self.map.draw(self.__screen)
+        
+        zoom = pygame.transform.rotozoom(self.__screen.copy(), 0, 2)
+        zoomRec = zoom.get_rect()
+        zoomRec.center = self.__screen.get_rect().center
+        
+        self.__screen.blit(zoom, zoomRec)
         
         pygame.display.flip()
 
