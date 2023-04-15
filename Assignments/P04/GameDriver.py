@@ -43,8 +43,17 @@ class GameDriver:
         zoom = pygame.transform.rotozoom(self.__screen.copy(), 0, 2)
         zoomRec = zoom.get_rect()
 
-        #zoomRec.center = (self.__playerOne.rect.centerx + (1.5 * self.__screen.get_width()), self.__playerOne.rect.centery + (1.5 * self.__screen.get_height()))
-        #print(self.__playerOne.rect.center, zoomRec.center)
+        zoomRec.center = ((-self.__playerOne.rect.centerx * 2) + (1.5 * self.__screen.get_width()), (-self.__playerOne.rect.centery * 2) + (1.5 * self.__screen.get_height()))
+
+        if self.__playerOne.rect.left < self.__screen.get_width() * .25:
+            zoomRec.left = 0
+        elif self.__playerOne.rect.right > self.__screen.get_width() * .75:
+            zoomRec.right = self.__screen.get_width()
+        
+        if self.__playerOne.rect.top < self.__screen.get_height() * .25:
+            zoomRec.top = 0
+        elif self.__playerOne.rect.bottom > self.__screen.get_height() * .75:
+            zoomRec.bottom = self.__screen.get_height()
         
         self.__screen.blit(zoom, zoomRec)
         
