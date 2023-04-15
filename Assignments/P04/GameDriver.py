@@ -1,5 +1,3 @@
-from cmath import rect
-from turtle import Screen, width
 import pygame
 from SpriteSheet import SpriteSheet
 from Map import Map
@@ -24,8 +22,8 @@ class GameDriver:
         self.__map = Map(startLevel, self.__spriteSheet.getSpritesList())
 
         #41 is p1 default character
-        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList())
-
+        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(),self.__map.getSpawnTile()[0] )
+        
     def GameLoop(self):
         while self.__running:
             self.__draw()
@@ -63,3 +61,22 @@ class GameDriver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.__running = False
+                
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    ... # attack
+                  
+        x,y = 0,0  
+        is_key_pressed = pygame.key.get_pressed()    
+        if is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]:
+            x = 1
+        elif is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]:
+            x = -1
+        
+        if is_key_pressed[pygame.K_w] or is_key_pressed[pygame.K_UP]:
+            y = -1
+        elif is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]:
+            y = 1
+        self.__playerOne.move(x,y)
+            
+        

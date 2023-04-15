@@ -34,8 +34,19 @@ class Map:
     def __loadTiles(self, floor, objects, size):
         for i, list in enumerate(floor):
             for j, num in enumerate(list):
-                self.__floorTiles.append(Tile(self.__tileImages[num], (j * size, i * size, size, size)))
+                self.__floorTiles.append(Tile(self.__tileImages[num], (j * size, i * size, size, size),num))
                 
         for i, list in enumerate(objects):
             for j, num in enumerate(list):
-                self.__objectTiles.append(Tile(self.__tileImages[num], (j * size, i * size, size, size)))
+                self.__objectTiles.append(Tile(self.__tileImages[num], (j * size, i * size, size, size),num))
+                
+    def getSpawnTile(self):
+        # self.__objectTiles.index(196)
+        spawnPos = []
+        for tile in self.__objectTiles:
+            if tile.getTileNum() == 196:
+                spawnPos.append(tile)
+                if len(spawnPos) == 2:
+                    return spawnPos
+        return spawnPos
+        
