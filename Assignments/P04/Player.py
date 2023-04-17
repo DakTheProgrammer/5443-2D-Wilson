@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self, default, sheet, spawn):
         
-        self.weapon = Weapon(340,sheet)
+        
         self.offset = int(sqrt(len(sheet) - 1).real)
         self.__sprites = sheet
         
@@ -22,12 +22,16 @@ class Player(pygame.sprite.Sprite):
         
         self.moveSpeed = 1
         self.facing = 'R'
+        
+        self.weapon = Weapon(340,sheet, self.rect)
 
     def draw(self, screen):
         self.headRec.topleft = (self.rect.topleft[0], self.rect.topleft[1] - self.rect.height)
 
         screen.blit(self.image, self.rect)
         screen.blit(self.head, self.headRec)
+        
+        self.weapon.draw(screen)
         
     #  -y moves up, +y moves down, -x moves left, +x moves right
     def move(self, x, y):

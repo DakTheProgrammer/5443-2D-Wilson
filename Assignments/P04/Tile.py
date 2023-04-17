@@ -5,6 +5,9 @@ class Tile(pygame.sprite.Sprite):
         self.image = img
         self.rect = pygame.rect.Rect(rect)
         self.__tileNum = index
+        
+        super().__init__()
+    
     def draw(self, screen):
         screen.blit(self.image, self.rect)
         
