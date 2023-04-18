@@ -24,14 +24,25 @@ class Player(pygame.sprite.Sprite):
         self.facing = 'R'
         
         self.weapon = Weapon(340,sheet, self.rect)
-
+        self.__attacking = False
+        self.attackBuffer = 0
+        
+        
+        super().__init__()
+        
     def draw(self, screen):
         self.headRec.topleft = (self.rect.topleft[0], self.rect.topleft[1] - self.rect.height)
-
+        
+        if self.__attacking:
+            self.weapon.draw(screen, self.rect, self.facing)
+            self.attackBuffer +=1
+            if self.attackBuffer > 7:
+                self.__attacking = False
+                self.attackBuffer = 0
+            
         screen.blit(self.image, self.rect)
         screen.blit(self.head, self.headRec)
         
-        self.weapon.draw(screen)
         
     #  -y moves up, +y moves down, -x moves left, +x moves right
     def move(self, x, y):
@@ -52,3 +63,12 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
             self.rect.left += x * self.moveSpeed
             self.rect.top += y * self.moveSpeed
+            
+    def attack(self):
+        self.__attacking = True
+        
+    def getAttack(self):
+        return self.__attacking
+    
+    def getCollision(self, objectRecs):
+        return self.rect.collidelistall(objectRecs)

@@ -18,8 +18,15 @@ class Map:
         self.__tileImages = sheet
         self.__floorTiles = []
         self.__objectTiles = []
+        self.__objectRecs = []
+        self.__objects = []
         
         self.__loadTiles(floorCSV, objectsCSV, tileSize)
+        
+        for object in self.__objectTiles:
+            if object.getTileNum() != 0:
+                self.__objectRecs.append(object.rect)
+                self.__objects.append(object)
         
     def draw(self, screen):
         for tile in self.__floorTiles:
@@ -49,4 +56,6 @@ class Map:
                 if len(spawnPos) == 2:
                     return spawnPos
         return spawnPos
-        
+    
+    def getObjectRecs(self):
+        return self.__objectRecs

@@ -30,6 +30,8 @@ class GameDriver:
 
             self.__handleEvents()
 
+            self.__checkCollisions()
+
             self.__delta = self.__clock.tick(self.__fps)
 
     def __draw(self):
@@ -63,8 +65,8 @@ class GameDriver:
                 self.__running = False
                 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    ... # attack
+                if event.key == pygame.K_SPACE and not self.__playerOne.getAttack():
+                    self.__playerOne.attack()
                   
         x,y = 0,0  
         is_key_pressed = pygame.key.get_pressed()    
@@ -78,5 +80,7 @@ class GameDriver:
         elif is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]:
             y = 1
         self.__playerOne.move(x,y)
-            
+        
+    def __checkCollisions(self):    
+        print(self.__playerOne.getCollision(self.__map.getObjectRecs()))
         
