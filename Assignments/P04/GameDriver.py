@@ -82,5 +82,5 @@ class GameDriver:
         self.__playerOne.move(x,y)
         
     def __checkCollisions(self):    
-        print(self.__playerOne.getCollision(self.__map.getObjectRecs()))
+        self.__playerOne.getCollision(self.__map.getObjectRecs(),self.__map.getObjects())
         

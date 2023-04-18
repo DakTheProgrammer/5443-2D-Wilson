@@ -27,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.__attacking = False
         self.attackBuffer = 0
         
+        self.__barriers = [2,3,4,33,34,35,166,168,212,232,256,259,269,290,291,341,360,389,424,450,451,481,482,483,488]
         
         super().__init__()
         
@@ -70,5 +71,13 @@ class Player(pygame.sprite.Sprite):
     def getAttack(self):
         return self.__attacking
     
-    def getCollision(self, objectRecs):
-        return self.rect.collidelistall(objectRecs)
+    def getCollision(self, objectRecs, objectsTile):
+        
+        collisions = self.rect.collidelistall(objectRecs)
+        if collisions == []:
+            return False
+        else:
+            for collision in collisions:
+                if objectsTile[collision] in self.__barriers:
+                    ...
+                

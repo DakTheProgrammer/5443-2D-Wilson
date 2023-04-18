@@ -59,3 +59,6 @@ class Map:
     
     def getObjectRecs(self):
         return self.__objectRecs
+    
+    def getObjects(self):
+        return self.__objects
