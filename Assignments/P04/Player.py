@@ -21,7 +21,14 @@ class Player(pygame.sprite.Sprite):
         self.head = self.__sprites[default - self.offset]
         self.headRec = self.head.get_rect()
         self.currentFrame = 0
-        self.walking = [self.__sprites[default], self.__sprites[default+1], self.__sprites[default+2], self.__sprites[default+3]]
+        self.walking = [] #[self.__sprites[default], self.__sprites[default+1], self.__sprites[default+2], self.__sprites[default+3]]
+        self.headMove = []
+        self.animationBuffer = 0
+        self.animationBufferMax = 2
+
+        for i in range(5):
+            self.walking.append(self.__sprites[default + i])
+            self.headMove.append(self.__sprites[default - self.offset + i])
 
         self.moveSpeed = 1
         self.facing = 'R'
@@ -43,6 +50,20 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
     def draw(self, screen):
+        if self.animationBuffer == self.animationBufferMax:
+            self.animationBuffer = 0
+            if self.currentFrame == len(self.walking) - 1:
+                    self.currentFrame = 0
+            else:
+                self.currentFrame += 1
+                self.image = self.walking[self.currentFrame]
+                self.head = self.headMove[self.currentFrame]
+                if self.facing == 'L':
+                    self.image = pygame.transform.flip(self.image, True, False)
+                    self.head = pygame.transform.flip(self.head, True, False)
+        else:
+            self.animationBuffer += 1
+        
         self.headRec.topleft = (self.rect.topleft[0], self.rect.topleft[1] - self.rect.height)
 
         if self.__attacking:
@@ -59,13 +80,7 @@ class Player(pygame.sprite.Sprite):
     #  -y moves up, +y moves down, -x moves left, +x moves right
     def move(self, x, y):
         if x != 0 or y != 0:
-            if self.currentFrame == len(self.walking) - 1:
-                self.currentFrame = 0
-            else:
-                self.currentFrame += 1
-                self.image = self.walking[self.currentFrame]
-                if self.facing == 'L':
-                    self.image = pygame.transform.flip(self.image, True, False)
+            
 
             if self.facing == 'R' and x < 0:
                 self.facing = 'L'
