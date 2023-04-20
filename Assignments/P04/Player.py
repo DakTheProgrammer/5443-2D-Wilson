@@ -96,14 +96,11 @@ class Player(pygame.sprite.Sprite):
             return False
         else:
             for collision in collisions:
-                #print(objectsTile[collision].getTileNum())
                 if objectsTile[collision].getTileNum() in self.__barriers:
-                    # print('self =', self.rect.x, self.rect.y)
-                    # print(objectRecs[collision].x, objectRecs[collision].y)
-
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
-
-                    print(angle)
+                    
+                    #use to test for my bad trig
+                    #print(angle)
 
                     if angle > -45 and angle < 45:
                         self.__canMove['Right'] = False
@@ -116,21 +113,6 @@ class Player(pygame.sprite.Sprite):
 
                     if angle > 45 and angle < 135:
                         self.__canMove['Up'] = False
-
-                    # if angle < -45 and angle > -135:
-                    #     self.__canMove['Down'] = False
-                    
-                    # if self.rect.y < objectRecs[collision].y:
-                    #     self.__canMove['Down'] = False
-                    # elif self.rect.y > objectRecs[collision].y:
-                    #     self.__canMove['Up'] = False
-
-                    # if self.rect.x < objectRecs[collision].x:
-                    #     self.__canMove['Right'] = False
-                    # elif self.rect.x > objectRecs[collision].x:
-                    #     self.__canMove['Left'] = False
-
-                    #print(self.rect.bottom, objectRecs[collision].top + 1)
                     
 
     def getCanMove(self, dir):
