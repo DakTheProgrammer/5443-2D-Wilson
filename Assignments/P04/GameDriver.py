@@ -70,14 +70,14 @@ class GameDriver:
                   
         x,y = 0,0  
         is_key_pressed = pygame.key.get_pressed()    
-        if is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]:
+        if (is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]) and self.__playerOne.getCanMove('Right'):
             x = 1
-        elif is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]:
+        elif (is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]) and self.__playerOne.getCanMove('Left'):
             x = -1
         
-        if is_key_pressed[pygame.K_w] or is_key_pressed[pygame.K_UP]:
+        if (is_key_pressed[pygame.K_w] or is_key_pressed[pygame.K_UP]) and self.__playerOne.getCanMove('Up'):
             y = -1
-        elif is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]:
+        elif (is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]) and self.__playerOne.getCanMove('Down'):
             y = 1
         self.__playerOne.move(x,y)
         
