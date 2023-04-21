@@ -6,7 +6,7 @@ from Weapon import Weapon
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, default, sheet, spawn):
+    def __init__(self, default, sheet, spawn, level):
 
 
         self.offset = int(math.sqrt(len(sheet) - 1).real)
@@ -37,15 +37,14 @@ class Player(pygame.sprite.Sprite):
         self.__attacking = False
         self.attackBuffer = 0
 
-        #self.__barriers = [2,3,4,33,34,35,166,168,212,232,256,258,259,269,290,291,341,360,389,424,450,451,481,482,483,488]
-        self.__barriers = [3,35,167,169,181,213,233,257,258,259,260,291,292,297,310,342,361,390,419,420,425,450,451,452,453,482,483,484,485,489]
-
         self.__canMove = {
             'Up': True,
             'Down': True,
             'Right': True,
             'Left': True
         }
+
+        self.__currentLevel = level
 
         super().__init__()
 
@@ -104,14 +103,14 @@ class Player(pygame.sprite.Sprite):
     def getAttack(self):
         return self.__attacking
 
-    def getCollision(self, objectRecs, objectsTile):
+    def getCollision(self, objectRecs, objectTiles):
 
         collisions = self.rect.collidelistall(objectRecs)
         if collisions == []:
             return False
         else:
             for collision in collisions:
-                if objectsTile[collision].getTileNum() in self.__barriers:
+                if objectTiles[collision].isBarrier():
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
                     
                     #use to test for my bad trig
@@ -128,6 +127,8 @@ class Player(pygame.sprite.Sprite):
 
                     if angle > 45 and angle < 135:
                         self.__canMove['Up'] = False
+                elif objectTiles[collision].isButton():
+                    self.__currentLevel.buttonEvent(collision, objectTiles)
                     
 
     def getCanMove(self, dir):

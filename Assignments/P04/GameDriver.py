@@ -2,6 +2,7 @@ import pygame
 from SpriteSheet import SpriteSheet
 from Map import Map
 from Player import Player
+from StartLevel import StartLevel
 
 class GameDriver:
     def __init__(self, title, background = (255,255,255), height = 800, width = 800, fps = 60):
@@ -17,13 +18,14 @@ class GameDriver:
 
         pygame.display.set_caption(title)
         
-        startLevel = './Levels/Start.tmx'
-
-        self.__spriteSheet = SpriteSheet(startLevel)
-        self.__map = Map(startLevel, self.__spriteSheet.getSpritesList())
+        startLevelTmx = './Levels/Start.tmx'
+        
+        self.__spriteSheet = SpriteSheet(startLevelTmx)
+        self.__map = Map(startLevelTmx, self.__spriteSheet.getSpritesList())
+        self.__level = StartLevel(self.__spriteSheet)
 
         #41 is p1 default character
-        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(),self.__map.getSpawnTile()[1])
+        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level)
         
     def GameLoop(self):
         while self.__running:

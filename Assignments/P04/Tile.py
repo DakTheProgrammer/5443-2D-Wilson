@@ -5,6 +5,10 @@ class Tile(pygame.sprite.Sprite):
         self.image = img
         self.rect = pygame.rect.Rect(rect)
         self.__tileNum = index
+
+        self.__barriers = [3,35,167,169,181,213,233,257,258,259,260,291,292,297,310,342,361,390,419,420,425,450,451,452,453,482,483,484,485,489]
+
+        self.__Button = [386,388]
         
         super().__init__()
     
@@ -13,4 +17,19 @@ class Tile(pygame.sprite.Sprite):
         
     def getTileNum(self):
         return self.__tileNum
+    
+    def isBarrier(self):
+        if self.__tileNum in self.__barriers: 
+            return True
+        else: 
+            return False
         
+    def isButton(self):
+        if self.__tileNum in self.__Button:
+            return True
+        else:
+            return False
+    
+    def updateState(self, sheet, amount):
+        self.__tileNum += amount
+        self.image = sheet.getSpritesList()[self.__tileNum]
