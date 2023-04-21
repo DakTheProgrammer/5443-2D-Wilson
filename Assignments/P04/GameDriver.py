@@ -13,6 +13,7 @@ class GameDriver:
         self.__fps = fps
         self.__delta = 0
         self.__running = True
+        self.__zoomIn = True
 
         pygame.display.set_caption(title)
         
@@ -40,22 +41,23 @@ class GameDriver:
         self.__map.draw(self.__screen)
         self.__playerOne.draw(self.__screen)
         
-        zoom = pygame.transform.rotozoom(self.__screen.copy(), 0, 2)
-        zoomRec = zoom.get_rect()
+        if self.__zoomIn: 
+            zoom = pygame.transform.scale2x(self.__screen.copy())#pygame.transform.rotozoom(self.__screen.copy(), 0, 2)
+            zoomRec = zoom.get_rect()
 
-        zoomRec.center = ((-self.__playerOne.rect.centerx * 2) + (1.5 * self.__screen.get_width()), (-self.__playerOne.rect.centery * 2) + (1.5 * self.__screen.get_height()))
+            zoomRec.center = ((-self.__playerOne.rect.centerx * 2) + (1.5 * self.__screen.get_width()), (-self.__playerOne.rect.centery * 2) + (1.5 * self.__screen.get_height()))
 
-        if self.__playerOne.rect.left < self.__screen.get_width() * .25:
-            zoomRec.left = 0
-        elif self.__playerOne.rect.right > self.__screen.get_width() * .75:
-            zoomRec.right = self.__screen.get_width()
-        
-        if self.__playerOne.rect.top < self.__screen.get_height() * .25:
-            zoomRec.top = 0
-        elif self.__playerOne.rect.bottom > self.__screen.get_height() * .75:
-            zoomRec.bottom = self.__screen.get_height()
-        
-        self.__screen.blit(zoom, zoomRec)
+            if self.__playerOne.rect.left < self.__screen.get_width() * .25:
+                zoomRec.left = 0
+            elif self.__playerOne.rect.right > self.__screen.get_width() * .75:
+                zoomRec.right = self.__screen.get_width()
+            
+            if self.__playerOne.rect.top < self.__screen.get_height() * .25:
+                zoomRec.top = 0
+            elif self.__playerOne.rect.bottom > self.__screen.get_height() * .75:
+                zoomRec.bottom = self.__screen.get_height()
+            
+            self.__screen.blit(zoom, zoomRec)
         
         pygame.display.flip()
 
@@ -79,7 +81,13 @@ class GameDriver:
             y = -1
         elif (is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]) and self.__playerOne.getCanMove('Down'):
             y = 1
+
         self.__playerOne.move(x,y)
+
+        if is_key_pressed[pygame.K_z]:
+            self.__zoomIn = False
+        else:
+            self.__zoomIn = True
         
     def __checkCollisions(self):    
         self.__playerOne.getCollision(self.__map.getObjectRecs(),self.__map.getObjects())

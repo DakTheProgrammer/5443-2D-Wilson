@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
         if self.__attacking:
             self.weapon.draw(screen, self.rect, self.facing)
             self.attackBuffer +=1
-            if self.attackBuffer > 7:
+            if self.attackBuffer > 3:
                 self.__attacking = False
                 self.attackBuffer = 0
 
