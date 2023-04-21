@@ -33,3 +33,7 @@ class Tile(pygame.sprite.Sprite):
     def updateState(self, sheet, amount):
         self.__tileNum += amount
         self.image = sheet.getSpritesList()[self.__tileNum]
+
+    def update(self, num, img):
+        self.image = img
+        self.__tileNum = num

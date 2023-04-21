@@ -5,7 +5,7 @@ from copy import deepcopy
 
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, default, sheet, rec):
-        
+        self.defaultSprite = default
         self.offset = int(sqrt(len(sheet) - 1).real)
         self.__sprites = sheet
         handleRec = deepcopy(rec)
@@ -44,5 +44,18 @@ class Weapon(pygame.sprite.Sprite):
         
         self.handle.draw(screen)
         self.blade.draw(screen)
+    
+    def newWeapon(self, spriteNum):
+        self.defaultSprite = spriteNum
         
-        
+        self.blade.image = self.__sprites[spriteNum - self.offset]
+        self.handle.image = self.__sprites[spriteNum]
+        if self.facing == 'R':
+            self.handle.image = pygame.transform.rotate(self.handle.image, -90)
+            self.blade.image = pygame.transform.rotate(self.blade.image, -90)
+        else:
+            self.handle.image = pygame.transform.rotate(self.handle.image, 90)
+            self.blade.image = pygame.transform.rotate(self.blade.image, 90)
+            
+    def getCollision(self, objectRecs, objectTiles):
+        ...

@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, default, sheet, spawn, level):
 
-
+        self.defaultSprite = default
         self.offset = int(math.sqrt(len(sheet) - 1).real)
         self.__sprites = sheet
 
@@ -26,14 +26,12 @@ class Player(pygame.sprite.Sprite):
         self.animationBuffer = 0
         self.animationBufferMax = 2
 
-        for i in range(5):
-            self.walking.append(self.__sprites[default + i])
-            self.headMove.append(self.__sprites[default - self.offset + i])
+        self.__setFrames(default)
 
         self.moveSpeed = 1
         self.facing = 'R'
 
-        self.weapon = Weapon(340,sheet, self.rect)
+        self.weapon = Weapon(340, sheet, self.rect)
         self.__attacking = False
         self.attackBuffer = 0
 
@@ -104,13 +102,17 @@ class Player(pygame.sprite.Sprite):
         return self.__attacking
 
     def getCollision(self, objectRecs, objectTiles):
-
-        collisions = self.rect.collidelistall(objectRecs)
-        if collisions == []:
+        
+        self.weapon.getCollision(objectRecs, objectTiles)
+        
+        playerCollisions = self.rect.collidelistall(objectRecs)
+        if playerCollisions == []:
             return False
         else:
-            for collision in collisions:
+            for collision in playerCollisions:
+                
                 if objectTiles[collision].isBarrier():
+                    
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
                     
                     #use to test for my bad trig
@@ -128,7 +130,13 @@ class Player(pygame.sprite.Sprite):
                     if angle > 45 and angle < 135:
                         self.__canMove['Up'] = False
                 elif objectTiles[collision].isButton():
-                    self.__currentLevel.buttonEvent(collision, objectTiles)
+                    print(collision)
+                    sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
+                    if sprite != None:
+                        if type == 'B':
+                            self.__setFrames(sprite)
+                        elif type == 'W':
+                            self.weapon.newWeapon(sprite)
                     
 
     def getCanMove(self, dir):
@@ -136,3 +144,11 @@ class Player(pygame.sprite.Sprite):
     
     def __angle_of_line(self, x1, y1, x2, y2):
         return math.degrees(math.atan2(-(y2-y1), x2-x1))
+
+    def __setFrames(self, default):
+        self.defaultSprite = default
+        self.walking = []
+        self.headMove = []
+        for i in range(5):
+            self.walking.append(self.__sprites[default + i])
+            self.headMove.append(self.__sprites[default - self.offset + i])
