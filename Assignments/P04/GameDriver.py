@@ -23,7 +23,7 @@ class GameDriver:
         self.__map = Map(startLevel, self.__spriteSheet.getSpritesList())
 
         #41 is p1 default character
-        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(),self.__map.getSpawnTile()[0] )
+        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(),self.__map.getSpawnTile()[1])
         
     def GameLoop(self):
         while self.__running:
