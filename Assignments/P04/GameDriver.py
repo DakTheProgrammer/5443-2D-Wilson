@@ -25,7 +25,7 @@ class GameDriver:
         self.__level = StartLevel(self.__spriteSheet)
 
         #41 is p1 default character
-        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)
+        self.__playerOne = Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level)
         
     def GameLoop(self):
         while self.__running:

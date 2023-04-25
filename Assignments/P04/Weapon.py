@@ -57,5 +57,15 @@ class Weapon(pygame.sprite.Sprite):
             self.handle.image = pygame.transform.rotate(self.handle.image, 90)
             self.blade.image = pygame.transform.rotate(self.blade.image, 90)
             
-    def getCollision(self, objectRecs, objectTiles):
-        ...
+    def getCollision(self, objectRecs, objectTiles, level):
+        weaponCollisions = self.blade.rect.collidelistall(objectRecs)
+        weaponCollisions.extend(self.blade.rect.collidelistall(objectRecs))
+        
+        weaponCollisions = [*set(weaponCollisions)]
+        
+        if weaponCollisions == []:
+            return False
+        else:
+            for collision in weaponCollisions:
+                if objectTiles[collision].isLever():
+                    level.leverEvent(objectTiles, collision)
