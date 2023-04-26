@@ -112,12 +112,14 @@ class GameDriver:
         self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects())
      
     def __setUpdates(self):
+        
         self.__Updates = {'type': 'updates',
-                          'pos': self.__players[self.__owner].rect.topleft} 
+                          'pos': self.__players[self.__owner].rect.topleft,
+                          'facing': self.__players[self.__owner].facing} 
      
     def __receiveMessage(self, ch, method, properties, body):
         bodyDic = ast.literal_eval(body.decode('utf-8'))
-        
+        print(bodyDic)
         if bodyDic['type'] == 'who' and bodyDic['from'] != self.__messenger.user:
             self.__partner = bodyDic['from']
             self.__sendMessage(bodyDic['from'], {'type': 'owner', 'owner': self.__messenger.user})
@@ -126,6 +128,7 @@ class GameDriver:
             self.__owner += 1
         elif bodyDic['type'] == 'updates':
             self.__players[self.__owner ^ 1].rect.topleft = bodyDic['pos']
+            self.__players[self.__owner ^ 1].facing = bodyDic['facing']
         
     def __sendMessage(self, target, body):
         if target != None:
