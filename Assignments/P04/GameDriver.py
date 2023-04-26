@@ -35,7 +35,7 @@ class GameDriver:
         self.__level = StartLevel(self.__spriteSheet)
 
         #40 is p1 default character
-        self.__players = [Player(40, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(104, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
+        self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
         
     def GameLoop(self):
         while self.__running:
@@ -115,11 +115,14 @@ class GameDriver:
         
         self.__Updates = {'type': 'updates',
                           'pos': self.__players[self.__owner].rect.topleft,
-                          'facing': self.__players[self.__owner].facing} 
+                          'facing': self.__players[self.__owner].facing,
+                          'body': self.__players[self.__owner].defaultSprite,
+                          'weapon': self.__players[self.__owner].getWeaponSprite(),
+                          'attacking': int(self.__players[self.__owner].getAttack())
+                          } 
      
     def __receiveMessage(self, ch, method, properties, body):
         bodyDic = ast.literal_eval(body.decode('utf-8'))
-        print(bodyDic)
         if bodyDic['type'] == 'who' and bodyDic['from'] != self.__messenger.user:
             self.__partner = bodyDic['from']
             self.__sendMessage(bodyDic['from'], {'type': 'owner', 'owner': self.__messenger.user})
@@ -129,6 +132,12 @@ class GameDriver:
         elif bodyDic['type'] == 'updates':
             self.__players[self.__owner ^ 1].rect.topleft = bodyDic['pos']
             self.__players[self.__owner ^ 1].facing = bodyDic['facing']
+            self.__players[self.__owner ^ 1].setFrames(bodyDic['body'])
+            self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
+            if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
+            
+            
+            
         
     def __sendMessage(self, target, body):
         if target != None:

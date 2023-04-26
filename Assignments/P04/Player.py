@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.animationBuffer = 0
         self.animationBufferMax = 2
 
-        self.__setFrames(default)
+        self.setFrames(default)
 
         self.moveSpeed = 1
         self.facing = 'R'
@@ -77,8 +77,6 @@ class Player(pygame.sprite.Sprite):
     #  -y moves up, +y moves down, -x moves left, +x moves right
     def move(self, x, y):
         if x != 0 or y != 0:
-            
-
             if self.facing == 'R' and x < 0:
                 self.facing = 'L'
                 self.image = pygame.transform.flip(self.image, True, False)
@@ -100,6 +98,9 @@ class Player(pygame.sprite.Sprite):
 
     def getAttack(self):
         return self.__attacking
+    
+    def setAttack(self):
+        self.__attacking = True
 
     def getCollision(self, objectRecs, objectTiles):
         if self.__attacking and self.attackBuffer == 1:
@@ -134,7 +135,7 @@ class Player(pygame.sprite.Sprite):
                     sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
                     if sprite != None:
                         if type == 'B':
-                            self.__setFrames(sprite)
+                            self.setFrames(sprite)
                         elif type == 'W':
                             self.weapon.newWeapon(sprite)
                     
@@ -145,10 +146,13 @@ class Player(pygame.sprite.Sprite):
     def __angle_of_line(self, x1, y1, x2, y2):
         return math.degrees(math.atan2(-(y2-y1), x2-x1))
 
-    def __setFrames(self, default):
+    def setFrames(self, default):
         self.defaultSprite = default
         self.walking = []
         self.headMove = []
         for i in range(5):
             self.walking.append(self.__sprites[default + i])
             self.headMove.append(self.__sprites[default - self.offset + i])
+            
+    def getWeaponSprite(self):
+        return self.weapon.defaultSprite
