@@ -17,6 +17,8 @@ class GameDriver:
         self.__running = True
         self.__zoomIn = True
         self.__messenger = messenger
+        self.__Updates = {}
+        self.__partner = None
         
         messenger.setCallback(self.__receiveMessage)
         
@@ -44,6 +46,10 @@ class GameDriver:
             self.__checkCollisions()
 
             self.__delta = self.__clock.tick(self.__fps)
+            
+            self.__setUpdates()
+            
+            self.__sendMessage(self.__partner, self.__Updates)
 
     def __draw(self):
         
@@ -105,13 +111,22 @@ class GameDriver:
     def __checkCollisions(self):    
         self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects())
      
+    def __setUpdates(self):
+        self.__Updates = {'type': 'updates',
+                          'pos': self.__players[self.__owner].rect.topleft} 
+     
     def __receiveMessage(self, ch, method, properties, body):
         bodyDic = ast.literal_eval(body.decode('utf-8'))
         
         if bodyDic['type'] == 'who' and bodyDic['from'] != self.__messenger.user:
-            self.__sendMessage(bodyDic['from'], {'type': 'owner', 'owner': self.__owner})
+            self.__partner = bodyDic['from']
+            self.__sendMessage(bodyDic['from'], {'type': 'owner', 'owner': self.__messenger.user})
         elif bodyDic['type'] == 'owner':
+            self.__partner = bodyDic['owner']
             self.__owner += 1
+        elif bodyDic['type'] == 'updates':
+            self.__players[self.__owner ^ 1].rect.topleft = bodyDic['pos']
         
     def __sendMessage(self, target, body):
-        self.__messenger.send(target, body)
+        if target != None:
+            self.__messenger.send(target, body)
