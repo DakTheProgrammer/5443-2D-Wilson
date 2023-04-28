@@ -137,6 +137,9 @@ class Player(pygame.sprite.Sprite):
                             self.setFrames(sprite)
                         elif type == 'W':
                             self.weapon.newWeapon(sprite)
+                elif objectTiles[collision].isExit():
+                    self.moveSpeed = 0
+                    self.rect.center = objectTiles[collision].rect.center
                     
 
     def getCanMove(self, dir):

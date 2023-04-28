@@ -12,6 +12,8 @@ class Tile(pygame.sprite.Sprite):
         
         self.__Lever = [390,391]
         
+        self.__exit = 358
+        
         super().__init__()
     
     def draw(self, screen):
@@ -38,6 +40,12 @@ class Tile(pygame.sprite.Sprite):
     
     def isLever(self):
         if self.__tileNum in self.__Lever:
+            return True
+        else:
+            return False
+        
+    def isExit(self):
+        if self.__tileNum == self.__exit:
             return True
         else:
             return False
