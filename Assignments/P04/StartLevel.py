@@ -20,6 +20,8 @@ class StartLevel:
         
         self.__doorTop = [73,72,55,54]
         self.__doorBottom = [234,233,216,215]
+
+        self.__topObjs = 142
         
         self.__spriteOffset = int(sqrt(len(sheet.getSpritesList()) - 1).real)
         
@@ -119,4 +121,5 @@ class StartLevel:
                 for part in self.__doorBottom:
                     tiles[part].updateState(self.__sheet, -3)
                 
-                
+    def getTopObjs(self):
+        return self.__topObjs

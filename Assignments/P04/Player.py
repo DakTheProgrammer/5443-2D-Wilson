@@ -111,7 +111,7 @@ class Player(pygame.sprite.Sprite):
             return False
         else:
             for collision in playerCollisions:
-                
+                #print(collision)
                 if objectTiles[collision].isBarrier():
                     
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
@@ -131,7 +131,6 @@ class Player(pygame.sprite.Sprite):
                     if angle > 45 and angle < 135:
                         self.__canMove['Up'] = False
                 elif objectTiles[collision].isButton():
-                    #print(collision)
                     sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
                     if sprite != None:
                         if type == 'B':

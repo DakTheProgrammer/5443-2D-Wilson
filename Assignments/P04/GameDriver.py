@@ -33,6 +33,7 @@ class GameDriver:
         self.__spriteSheet = SpriteSheet(startLevelTmx)
         self.__map = Map(startLevelTmx, self.__spriteSheet.getSpritesList())
         self.__level = StartLevel(self.__spriteSheet)
+        self.__levelNum = 0
 
         #40 is p1 default character
         self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
@@ -112,14 +113,25 @@ class GameDriver:
         self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects())
      
     def __setUpdates(self):
-        
-        self.__Updates = {'type': 'updates',
-                          'pos': self.__players[self.__owner].rect.topleft,
-                          'facing': self.__players[self.__owner].facing,
-                          'body': self.__players[self.__owner].defaultSprite,
-                          'weapon': self.__players[self.__owner].getWeaponSprite(),
-                          'attacking': int(self.__players[self.__owner].getAttack())
-                          } 
+        if self.__levelNum == 0:
+            if self.__owner == 0:
+                tiles = []
+                for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
+                    tiles.append((i,tile.getTileNum()))   
+            else:
+                tiles = []
+                for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
+                    i += self.__level.getTopObjs() + 1
+                    tiles.append((i,tile.getTileNum()))
+
+            self.__Updates = {'type': 'updates',
+                            'pos': self.__players[self.__owner].rect.topleft,
+                            'facing': self.__players[self.__owner].facing,
+                            'body': self.__players[self.__owner].defaultSprite,
+                            'weapon': self.__players[self.__owner].getWeaponSprite(),
+                            'attacking': int(self.__players[self.__owner].getAttack()),
+                            'tiles': tiles
+                            } 
      
     def __receiveMessage(self, ch, method, properties, body):
         bodyDic = ast.literal_eval(body.decode('utf-8'))
@@ -135,6 +147,12 @@ class GameDriver:
             self.__players[self.__owner ^ 1].setFrames(bodyDic['body'])
             self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
             if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
+
+
+            objects = self.__map.getObjects()
+            sprites = self.__spriteSheet.getSpritesList()
+            for set in bodyDic['tiles']:
+                objects[set[0]].update(set[1], sprites[set[1]])
             
             
             

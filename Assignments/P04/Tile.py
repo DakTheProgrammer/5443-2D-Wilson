@@ -15,7 +15,11 @@ class Tile(pygame.sprite.Sprite):
         super().__init__()
     
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        #this is needed bc message passing and pygame no like each other :(
+        try:
+            screen.blit(self.image, self.rect)
+        except:
+            pass
         
     def getTileNum(self):
         return self.__tileNum
