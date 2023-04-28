@@ -121,8 +121,8 @@ class GameDriver:
                 self.__levelNum += 1
                 self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
                 for player in self.__players: player.moveSpeed = 1
-                self.__players[0].rect = self.__map.getSpawnTile()[0].rect
-                self.__players[1].rect = self.__map.getSpawnTile()[1].rect
+                self.__players[0].rect = self.__map.getSpawnTile()[0].rect.topleft
+                self.__players[1].rect = self.__map.getSpawnTile()[1].rect.topleft
                 
      
     def __setUpdates(self):
