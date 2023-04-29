@@ -33,6 +33,15 @@ class Map:
             tile.draw(screen)
             
         for tile in self.__objectTiles:
+            if tile.isCoin() and tile.animationBuffer == tile.maxBuffer:
+                tile.animationBuffer = 0
+                if tile.getTileNum() == 563:
+                    tile.update(564, self.__tileImages[564])
+                else:
+                    tile.update(563, self.__tileImages[563])
+            else:
+                tile.animationBuffer += 1
+                
             tile.draw(screen)
 
     def getTileset(self):

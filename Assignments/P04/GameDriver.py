@@ -29,7 +29,7 @@ class GameDriver:
         pygame.display.set_caption(title)
         
         self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx']
-        self.__levelNum = 0
+        self.__levelNum = 1
         
         self.__spriteSheet = SpriteSheet(self.__levels[self.__levelNum])
         self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())

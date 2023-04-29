@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.headMove = []
         self.animationBuffer = 0
         self.animationBufferMax = 2
+        self.__score = 0
 
         self.setFrames(default)
 
@@ -140,7 +141,9 @@ class Player(pygame.sprite.Sprite):
                 elif objectTiles[collision].isExit():
                     self.moveSpeed = 0
                     self.rect.center = objectTiles[collision].rect.center
-                    
+                elif objectTiles[collision].isCoin():
+                    objectTiles[collision].update(0,self.__sprites[0])
+                    self.__score += 5
 
     def getCanMove(self, dir):
         return self.__canMove[dir]

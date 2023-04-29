@@ -6,13 +6,18 @@ class Tile(pygame.sprite.Sprite):
         self.rect = pygame.rect.Rect(rect)
         self.__tileNum = index
 
-        self.__barriers = [3,5,35,66,67,99,102,165,166,167,169,181,198,213,233,257,258,259,260,291,292,293,297,310,323,324,342,357,361,390,391,425,450,451,452,453,482,483,484,485,489,628,659]
+        self.__barriers = [3,5,6,35,38,66,67,99,163,165,166,167,169,181,198,213,233,257,258,259,260,291,292,293,297,310,323,324,342,357,361,390,391,425,450,451,452,453,482,483,484,485,489,628,659]
 
+        self.__coin = [563,564] 
+           
         self.__Button = [386,388]
         
         self.__Lever = [390,391]
         
         self.__exit = 358
+        
+        self.animationBuffer = 0
+        self.maxBuffer = 7
         
         super().__init__()
     
@@ -22,6 +27,7 @@ class Tile(pygame.sprite.Sprite):
             screen.blit(self.image, self.rect)
         except:
             pass
+            
         
     def getTileNum(self):
         return self.__tileNum
@@ -49,6 +55,15 @@ class Tile(pygame.sprite.Sprite):
             return True
         else:
             return False
+
+    def isCoin(self):
+        if self.__tileNum in self.__coin:
+            return True
+        else:
+            return False
+        
+    def getCoinsList(self):
+        return self.__coin
         
     def updateState(self, sheet, amount):
         self.__tileNum += amount
