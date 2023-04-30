@@ -26,7 +26,11 @@ class Map:
         self.__goblins = []
 
         self.__oneGoblinsSprites = [184]
-
+        self.__twoGoblinsSprites = [[664,696]]
+        self.__fourGoblinsSprites = [[738,739,770,771]]
+        
+        self.__twoHolder = []
+        self.__fourHolder = []
         
         self.__loadTiles(floorCSV, objectsCSV, tileSize)
         
@@ -88,4 +92,31 @@ class Map:
 
         for object in self.__objectTiles:
             if object.getTileNum() in self.__oneGoblinsSprites:
-                self.__goblins.append(Goblin(object, players, self.__tileImages))
+                self.__goblins.append(Goblin([object], self.__players, self.__tileImages))
+            else:
+                for char in self.__twoGoblinsSprites:
+                    if object.getTileNum() in char:
+                        if object.getTileNum() == char[0]:
+                            self.__twoHolder.append([object])
+                        else:
+                            self.__twoHolder[0].append(object)
+                            self.__goblins.append(Goblin(self.__twoHolder[0], self.__players, self.__tileImages))
+                            self.__twoHolder.pop(0)
+                            
+                for char in self.__fourGoblinsSprites:
+                    if object.getTileNum() in char:
+                        if object.getTileNum() == char[0]:
+                            self.__fourHolder.append([object])
+                        else:
+                            index = char.index(object.getTileNum())
+                            for holder in self.__fourHolder:
+                                if len(holder) == index:
+                                    holder.append(object)
+                                    break
+                            if self.__fourHolder != [] and len(self.__fourHolder[0]) == 4:
+                                self.__goblins.append(Goblin(self.__fourHolder[0], self.__players, self.__tileImages))
+                                self.__fourHolder.pop(0)
+                                        
+                  
+                            
+                    
