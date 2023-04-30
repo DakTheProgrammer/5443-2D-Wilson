@@ -5,6 +5,7 @@ class Goblin:
     def __init__(self, tiles, players, sheet):
         self.sheet = sheet
         self.tiles = tiles
+        self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
         self.tiles.reverse()
 
         dist = 10000
@@ -15,7 +16,7 @@ class Goblin:
             if math.dist(tiles[0].rect.topleft, player.rect.topleft) < dist:
                 dist = math.dist(tiles[0].rect.topleft, player.rect.topleft)
                 self.closestPlayer = player
-
+        self.moveSpeed = 1
         self.moveDelay = 0
         self.maxMoveDelay = 3
 
@@ -50,23 +51,35 @@ class Goblin:
                 if i == 0:
                     if tile.rect[0] != self.closestPlayer.rect[0]:
                         if tile.rect[0] < self.closestPlayer.rect[0]:
-                            tile.rect[0] += 1
-                            x = 1
+                            tile.rect[0] += self.moveSpeed
+                            x = self.moveSpeed
                         else:
-                            tile.rect[0] -= 1
-                            x = -1
+                            tile.rect[0] -= self.moveSpeed
+                            x = -self.moveSpeed
                     
                     if tile.rect[1] != self.closestPlayer.rect[1]:
                         if tile.rect[1] < self.closestPlayer.rect[1]:
-                            tile.rect[1] += 1
-                            y = 1
+                            tile.rect[1] += self.moveSpeed
+                            y = self.moveSpeed
                         else:
-                            tile.rect[1] -= 1
-                            y = -1
+                            tile.rect[1] -= self.moveSpeed
+                            y = -self.moveSpeed
                 else:
                     tile.rect[0] += x
                     tile.rect[1] += y
+                    
+            self.rect[0] += x
+            self.rect[1] += y
         else:
             self.moveDelay += 1
-
         
+
+    def getCollisions(self, objectRecs, objectTiles):
+        goblinCollisions = self.rect.collidelistall(objectRecs)
+        if goblinCollisions == []:
+            return False
+        else:
+            for collision in goblinCollisions:
+                if objectTiles[collision].isBarrier():
+                    
+                    self.moveSpeed = 0

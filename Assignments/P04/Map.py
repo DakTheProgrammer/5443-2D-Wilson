@@ -38,10 +38,10 @@ class Map:
             if object.getTileNum() != 0:
                 self.__objectRecs.append(object.rect)
                 self.__objects.append(object)
-
         
     def draw(self, screen):
         for goblin in self.__goblins:
+            goblin.getCollisions(self.__objectRecs, self.__objects)
             goblin.move()
 
         for tile in self.__floorTiles:
@@ -58,6 +58,8 @@ class Map:
                 tile.animationBuffer += 1
                 
             tile.draw(screen)
+            
+            #pygame.draw.rect(screen, (255,0,0), self.__goblins[0].rect)
 
     def getTileset(self):
         return self.__tileImages
