@@ -131,6 +131,8 @@ class Player(pygame.sprite.Sprite):
 
                     if angle > 45 and angle < 135:
                         self.__canMove['Up'] = False
+                        
+                        
                 elif objectTiles[collision].isButton():
                     sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
                     if sprite != None:

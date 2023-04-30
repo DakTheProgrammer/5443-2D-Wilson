@@ -58,8 +58,8 @@ class Map:
                 tile.animationBuffer += 1
                 
             tile.draw(screen)
-            
-            #pygame.draw.rect(screen, (255,0,0), self.__goblins[0].rect)
+            # for gob in self.__goblins:
+            #     pygame.draw.rect(screen, (255,0,0), gob.rect)
 
     def getTileset(self):
         return self.__tileImages

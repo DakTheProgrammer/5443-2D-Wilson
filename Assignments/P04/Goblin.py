@@ -5,7 +5,13 @@ class Goblin:
     def __init__(self, tiles, players, sheet):
         self.sheet = sheet
         self.tiles = tiles
-        self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
+        if len(self.tiles) == 1:
+            self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
+        elif len(self.tiles) == 2:
+            self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 32))
+        else:
+            self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (32, 32))
+            
         self.tiles.reverse()
 
         dist = 10000
@@ -16,10 +22,18 @@ class Goblin:
             if math.dist(tiles[0].rect.topleft, player.rect.topleft) < dist:
                 dist = math.dist(tiles[0].rect.topleft, player.rect.topleft)
                 self.closestPlayer = player
+                
         self.moveSpeed = 1
         self.moveDelay = 0
         self.maxMoveDelay = 3
-
+        
+        self.__canMove = {
+            'Up': True,
+            'Down': True,
+            'Right': True,
+            'Left': True
+        }
+        
         self.defaults = []
         for tile in self.tiles:
             self.defaults.append(tile.getTileNum())
@@ -50,18 +64,18 @@ class Goblin:
             for i,tile in enumerate(self.tiles):
                 if i == 0:
                     if tile.rect[0] != self.closestPlayer.rect[0]:
-                        if tile.rect[0] < self.closestPlayer.rect[0]:
+                        if tile.rect[0] < self.closestPlayer.rect[0] and self.__canMove['Right']:
                             tile.rect[0] += self.moveSpeed
                             x = self.moveSpeed
-                        else:
+                        elif self.__canMove['Left']:
                             tile.rect[0] -= self.moveSpeed
                             x = -self.moveSpeed
                     
                     if tile.rect[1] != self.closestPlayer.rect[1]:
-                        if tile.rect[1] < self.closestPlayer.rect[1]:
+                        if tile.rect[1] < self.closestPlayer.rect[1] and self.__canMove['Down']:
                             tile.rect[1] += self.moveSpeed
                             y = self.moveSpeed
-                        else:
+                        elif self.__canMove['Up']:
                             tile.rect[1] -= self.moveSpeed
                             y = -self.moveSpeed
                 else:
@@ -72,6 +86,13 @@ class Goblin:
             self.rect[1] += y
         else:
             self.moveDelay += 1
+            
+        self.__canMove = {
+                'Up': True,
+                'Down': True,
+                'Right': True,
+                'Left': True
+            }
         
 
     def getCollisions(self, objectRecs, objectTiles):
@@ -82,4 +103,23 @@ class Goblin:
             for collision in goblinCollisions:
                 if objectTiles[collision].isBarrier():
                     
-                    self.moveSpeed = 0
+                    
+                    angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
+                        
+                        #use to test for my bad trig
+                        #print(angle)
+
+                    if angle > -45 and angle < 45:
+                        self.__canMove['Right'] = False
+                    
+                    if (angle > 135 and angle <= 180) or (angle > -180 and angle < -135):
+                        self.__canMove['Left'] = False
+                    
+                    if angle < -45 and angle > -135:
+                        self.__canMove['Down'] = False
+
+                    if angle > 45 and angle < 135:
+                        self.__canMove['Up'] = False
+                        
+    def __angle_of_line(self, x1, y1, x2, y2):
+        return math.degrees(math.atan2(-(y2-y1), x2-x1))
