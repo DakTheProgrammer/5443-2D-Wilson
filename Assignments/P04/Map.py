@@ -3,6 +3,7 @@ from pathlib import Path
 import pytiled_parser
 from PIL import Image
 
+from Goblin import Goblin
 from Tile import Tile
 
 class Map:
@@ -20,6 +21,12 @@ class Map:
         self.__objectTiles = []
         self.__objectRecs = []
         self.__objects = []
+        self.__players = []
+
+        self.__goblins = []
+
+        self.__oneGoblinsSprites = [184]
+
         
         self.__loadTiles(floorCSV, objectsCSV, tileSize)
         
@@ -27,8 +34,12 @@ class Map:
             if object.getTileNum() != 0:
                 self.__objectRecs.append(object.rect)
                 self.__objects.append(object)
+
         
     def draw(self, screen):
+        for goblin in self.__goblins:
+            goblin.move()
+
         for tile in self.__floorTiles:
             tile.draw(screen)
             
@@ -71,3 +82,10 @@ class Map:
     
     def getObjects(self):
         return self.__objects
+
+    def setPlayers(self, players):
+        self.__players = players
+
+        for object in self.__objectTiles:
+            if object.getTileNum() in self.__oneGoblinsSprites:
+                self.__goblins.append(Goblin(object, players, self.__tileImages))

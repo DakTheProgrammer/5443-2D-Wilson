@@ -38,6 +38,8 @@ class GameDriver:
 
         #40 is p1 default character
         self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
+
+        self.__map.setPlayers(self.__players)
         
     def GameLoop(self):
         while self.__running:
@@ -120,12 +122,24 @@ class GameDriver:
             if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
                 self.__levelNum += 1
                 self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
+                
                 for player in self.__players: player.moveSpeed = 1
                 self.__players[0].rect.topleft = self.__map.getSpawnTile()[0].rect.topleft
                 self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
+
+                self.__map.setPlayers(self.__players)
                 
      
     def __setUpdates(self):
+        self.__Updates = {'type': 'updates',
+                            'pos': self.__players[self.__owner].rect.topleft,
+                            'facing': self.__players[self.__owner].facing,
+                            'body': self.__players[self.__owner].defaultSprite,
+                            'weapon': self.__players[self.__owner].getWeaponSprite(),
+                            'attacking': int(self.__players[self.__owner].getAttack()),
+                            'ready': self.__players[self.__owner].moveSpeed
+                            } 
+
         if self.__levelNum == 0:
             if self.__owner == 0:
                 tiles = []
@@ -137,15 +151,9 @@ class GameDriver:
                     i += self.__level.getTopObjs() + 1
                     tiles.append((i,tile.getTileNum()))
 
-            self.__Updates = {'type': 'updates',
-                            'pos': self.__players[self.__owner].rect.topleft,
-                            'facing': self.__players[self.__owner].facing,
-                            'body': self.__players[self.__owner].defaultSprite,
-                            'weapon': self.__players[self.__owner].getWeaponSprite(),
-                            'attacking': int(self.__players[self.__owner].getAttack()),
-                            'tiles': tiles,
-                            'ready': self.__players[self.__owner].moveSpeed
-                            } 
+            self.__Updates.update({'tiles': tiles})
+
+            
      
     def __receiveMessage(self, ch, method, properties, body):
         bodyDic = ast.literal_eval(body.decode('utf-8'))
@@ -156,19 +164,20 @@ class GameDriver:
             self.__partner = bodyDic['owner']
             self.__owner += 1
         elif bodyDic['type'] == 'updates':
-            if self.__levelNum == 0:
-                self.__players[self.__owner ^ 1].rect.topleft = bodyDic['pos']
-                self.__players[self.__owner ^ 1].facing = bodyDic['facing']
-                self.__players[self.__owner ^ 1].setFrames(bodyDic['body'])
-                self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
-                if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
+            self.__players[self.__owner ^ 1].rect.topleft = bodyDic['pos']
+            self.__players[self.__owner ^ 1].facing = bodyDic['facing']
+            self.__players[self.__owner ^ 1].setFrames(bodyDic['body'])
+            self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
+            if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
+            self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
 
+            if self.__levelNum == 0:
                 objects = self.__map.getObjects()
                 sprites = self.__spriteSheet.getSpritesList()
                 for set in bodyDic['tiles']:
                     objects[set[0]].update(set[1], sprites[set[1]])
                     
-                self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
+                
         
     def __sendMessage(self, target, body):
         if target != None:
