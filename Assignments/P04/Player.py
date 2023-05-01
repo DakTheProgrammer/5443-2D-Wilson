@@ -4,7 +4,6 @@ import math
 from Weapon import Weapon
 
 
-
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, default, sheet, spawn, level):
@@ -107,7 +106,9 @@ class Player(pygame.sprite.Sprite):
 
     def getCollision(self, objectRecs, objectTiles, map):
         if self.__attacking and self.attackBuffer == 1:
-            self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map)
+            if self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map):
+                self.__score += 10
+                
         
         playerCollisions = self.rect.collidelistall(objectRecs)
         if playerCollisions == []:

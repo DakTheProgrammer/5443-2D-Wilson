@@ -134,5 +134,5 @@ class Map:
                 goblin.hit(self.__tileImages)
                 if goblin.goblinHealth == 0:
                     self.__goblins.remove(goblin)
-                            
-                    
+                    return True        
+        return False

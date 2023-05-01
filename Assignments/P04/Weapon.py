@@ -71,4 +71,6 @@ class Weapon(pygame.sprite.Sprite):
                     level.leverEvent(objectTiles, collision)
                     
                 elif objectTiles[collision].isGoblin():
-                    map.hitGoblin(objectTiles[collision])
+                    if map.hitGoblin(objectTiles[collision]):
+                        return True
+            return False
