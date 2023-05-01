@@ -4,6 +4,8 @@ from SpriteSheet import SpriteSheet
 from Map import Map
 from Player import Player
 from StartLevel import StartLevel
+from GUI import GUI
+
 
 class GameDriver:
     def __init__(self, title, messenger ,background = (255,255,255), height = 800, width = 800, fps = 60):
@@ -38,7 +40,7 @@ class GameDriver:
 
         #40 is p1 default character
         self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
-
+        self.__GUI = GUI(self.__spriteSheet.getSpritesList())
         self.__map.setPlayers(self.__players)
         
     def GameLoop(self):
@@ -61,6 +63,7 @@ class GameDriver:
         
         self.__screen.fill(self.__background)
         self.__map.draw(self.__screen)
+        self.__GUI.draw(self.__screen)
         for player in self.__players:
             player.draw(self.__screen)
 
@@ -83,7 +86,8 @@ class GameDriver:
                 zoomRec.bottom = self.__screen.get_height()
             
             self.__screen.blit(zoom, zoomRec)
-        
+            
+       
         pygame.display.flip()
 
     def __handleEvents(self):
