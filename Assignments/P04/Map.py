@@ -26,7 +26,7 @@ class Map:
         self.__goblins = []
 
         self.__oneGoblinsSprites = [184]
-        self.__twoGoblinsSprites = [[664,696]]
+        self.__twoGoblinsSprites = [[664,696], [600,632], [472,504]]
         self.__fourGoblinsSprites = [[738,739,770,771]]
         
         self.__twoHolder = []
@@ -82,6 +82,15 @@ class Map:
                 if len(spawnPos) == 2:
                     return spawnPos
         return spawnPos
+    
+    def getPortalTile(self):
+        portalPos = []
+        for tile in self.__objectTiles:
+            if tile.getTileNum() == 295:
+                portalPos.append(tile)
+                if len(portalPos) == 2:
+                    return portalPos
+        return portalPos
     
     def getObjectRecs(self):
         return self.__objectRecs

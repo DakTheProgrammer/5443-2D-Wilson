@@ -119,7 +119,7 @@ class Player(pygame.sprite.Sprite):
                     self.__goblinCollisionCount +=1
                     # print("G ",self.__goblinCollisionCount)
                     if self.__goblinCollisionCount > 50:
-                        self.__playerHealth -= 5
+                        self.__playerHealth -= 10
                         print("P ",self.__playerHealth)
                         self.__goblinCollisionCount = 0
                 
