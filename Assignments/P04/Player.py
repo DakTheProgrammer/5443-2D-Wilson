@@ -103,9 +103,9 @@ class Player(pygame.sprite.Sprite):
     def setAttack(self):
         self.__attacking = True
 
-    def getCollision(self, objectRecs, objectTiles):
+    def getCollision(self, objectRecs, objectTiles, map):
         if self.__attacking and self.attackBuffer == 1:
-            self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel)
+            self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map)
         
         playerCollisions = self.rect.collidelistall(objectRecs)
         if playerCollisions == []:

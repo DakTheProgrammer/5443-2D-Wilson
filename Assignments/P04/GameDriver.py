@@ -115,7 +115,7 @@ class GameDriver:
             self.__zoomIn = True
         
     def __checkCollisions(self):    
-        self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects())
+        self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects(), self.__map)
      
     def __checkNewLevel(self):
         if self.__levelNum == 0:

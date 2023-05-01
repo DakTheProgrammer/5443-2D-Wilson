@@ -57,7 +57,7 @@ class Weapon(pygame.sprite.Sprite):
             self.handle.image = pygame.transform.rotate(self.handle.image, 90)
             self.blade.image = pygame.transform.rotate(self.blade.image, 90)
             
-    def getCollision(self, objectRecs, objectTiles, level):
+    def getCollision(self, objectRecs, objectTiles, level, map):
         weaponCollisions = self.blade.rect.collidelistall(objectRecs)
         weaponCollisions.extend(self.blade.rect.collidelistall(objectRecs))
         
@@ -69,3 +69,6 @@ class Weapon(pygame.sprite.Sprite):
             for collision in weaponCollisions:
                 if objectTiles[collision].isLever():
                     level.leverEvent(objectTiles, collision)
+                    
+                elif objectTiles[collision].isGoblin():
+                    map.hitGoblin(objectTiles[collision])

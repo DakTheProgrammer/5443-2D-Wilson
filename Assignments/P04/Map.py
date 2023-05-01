@@ -119,6 +119,11 @@ class Map:
                                 self.__goblins.append(Goblin(self.__fourHolder[0], self.__players, self.__tileImages))
                                 self.__fourHolder.pop(0)
                                         
-                  
+    def hitGoblin(self, tile):
+        for goblin in self.__goblins:
+            if tile in goblin.tiles:
+                goblin.hit(self.__tileImages)
+                if goblin.health == 0:
+                    self.__goblins.remove(goblin)
                             
                     

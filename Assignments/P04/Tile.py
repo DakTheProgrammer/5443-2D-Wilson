@@ -14,8 +14,11 @@ class Tile(pygame.sprite.Sprite):
         
         self.__Lever = [390,391]
         
+        self.__goblin = [184,185,186,187,188,189,190,191,664,665,666,667,668,669,670,671,696,697,698,699,700,701,702,703,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785]
+        
         self.__exit = 358
         
+            
         self.animationBuffer = 0
         self.maxBuffer = 7
         
@@ -58,6 +61,12 @@ class Tile(pygame.sprite.Sprite):
 
     def isCoin(self):
         if self.__tileNum in self.__coin:
+            return True
+        else:
+            return False
+        
+    def isGoblin(self):
+        if self.__tileNum in self.__goblin:
             return True
         else:
             return False
