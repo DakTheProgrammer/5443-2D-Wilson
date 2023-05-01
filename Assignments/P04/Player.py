@@ -4,6 +4,7 @@ import math
 from Weapon import Weapon
 
 
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, default, sheet, spawn, level):
@@ -26,7 +27,8 @@ class Player(pygame.sprite.Sprite):
         self.animationBuffer = 0
         self.animationBufferMax = 2
         self.__score = 0
-
+        self.__playerHealth = 100
+        self.__goblinCollisionCount = 0
         self.setFrames(default)
 
         self.moveSpeed = 1
@@ -113,6 +115,14 @@ class Player(pygame.sprite.Sprite):
         else:
             for collision in playerCollisions:
                 #print(collision)
+                if objectTiles[collision].isGoblin():
+                    self.__goblinCollisionCount +=1
+                    # print("G ",self.__goblinCollisionCount)
+                    if self.__goblinCollisionCount > 50:
+                        self.__playerHealth -= 5
+                        print("P ",self.__playerHealth)
+                        self.__goblinCollisionCount = 0
+                
                 if objectTiles[collision].isBarrier():
                     
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
@@ -163,3 +173,6 @@ class Player(pygame.sprite.Sprite):
             
     def getWeaponSprite(self):
         return self.weapon.defaultSprite
+    
+  
+    

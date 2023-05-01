@@ -123,7 +123,7 @@ class Map:
         for goblin in self.__goblins:
             if tile in goblin.tiles:
                 goblin.hit(self.__tileImages)
-                if goblin.health == 0:
+                if goblin.goblinHealth == 0:
                     self.__goblins.remove(goblin)
                             
                     

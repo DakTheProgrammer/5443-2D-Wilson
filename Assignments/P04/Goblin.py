@@ -7,13 +7,13 @@ class Goblin:
         self.tiles = tiles
         if len(self.tiles) == 1:
             self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
-            self.health = 1
+            self.goblinHealth = 1
         elif len(self.tiles) == 2:
             self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 32))
-            self.health = 2
+            self.goblinHealth = 2
         else:
             self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (32, 32))
-            self.health = 4
+            self.goblinHealth = 4
         self.tiles.reverse()
 
         dist = 10000
@@ -124,11 +124,13 @@ class Goblin:
                         self.__canMove['Up'] = False
                         
     def hit(self, sheet):
-        self.health -= 1
-        if self.health == 0:
+        self.goblinHealth -= 1
+        if self.goblinHealth == 0:
             for tile in self.tiles:
                 tile.update(0, sheet[0])
 
                         
     def __angle_of_line(self, x1, y1, x2, y2):
         return math.degrees(math.atan2(-(y2-y1), x2-x1))
+    
+    
