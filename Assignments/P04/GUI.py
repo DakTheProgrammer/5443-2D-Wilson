@@ -5,5 +5,5 @@ class GUI:
     def __init__(self, sheet):
         self.__healthBar = HealthBar(sheet)
         
-    def draw(self, screen):
-        self.__healthBar.draw(screen)
+    def draw(self, screen, left, top):
+        self.__healthBar.draw(screen, left, top)

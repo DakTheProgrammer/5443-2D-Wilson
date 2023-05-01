@@ -63,7 +63,7 @@ class GameDriver:
         
         self.__screen.fill(self.__background)
         self.__map.draw(self.__screen)
-        self.__GUI.draw(self.__screen)
+        
         for player in self.__players:
             player.draw(self.__screen)
 
@@ -85,6 +85,7 @@ class GameDriver:
             elif self.__players[self.__owner].rect.bottom > self.__screen.get_height() * .75:
                 zoomRec.bottom = self.__screen.get_height()
             
+            self.__GUI.draw(zoom, abs(zoomRec[0]), abs(zoomRec[1]))
             self.__screen.blit(zoom, zoomRec)
             
        

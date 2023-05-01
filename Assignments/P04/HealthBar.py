@@ -7,6 +7,7 @@ class HealthBar:
         for i in range(5):
             self.tiles.append(Tile(sheet[531],pygame.rect.Rect(i*16,0,16,16),531))
             
-    def draw(self, screen):
-        for tile in self.tiles:
+    def draw(self, screen, left, top):
+        for i, tile in enumerate(self.tiles):
+            tile.rect.topleft = (left + (i * 16), top)
             screen.blit(tile.image, tile.rect)
