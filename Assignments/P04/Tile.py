@@ -14,19 +14,40 @@ class Tile(pygame.sprite.Sprite):
         
         self.__Lever = [390,391]
         
-        self.__goblin = [184,185,186,187,188,189,190,191,664,665,666,667,668,669,670,671,696,697,698,699,700,701,702,703,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785]
+        self.__goblin = [184,185,186,187,188,189,190,191,477,504,505,506,507,508,509,510,511,664,665,666,667,668,669,670,671,696,697,698,699,700,701,702,703,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785]
         
         self.__exit = 358
         
+        self.__trap = [355,356,357]
+        
+        self.__potion = [467,468,469,470,499,500,501,502]
+        
+        self.__exitChest = [596,597,598]
+        
+        self.__treasureChest = [628,629,630]
             
         self.animationBuffer = 0
         self.maxBuffer = 7
+        self.maxTrapBuffer = 20
+        
+        self.chestImages = []
+        self.chestCur = 0
+        self.chestAnimation = False
         
         super().__init__()
     
     def draw(self, screen):
         #this is needed bc message passing and pygame no like each other :(
         try:
+            if self.chestAnimation:
+                
+                self.image = self.chestImages[self.chestCur]
+                if self.chestCur != len(self.chestImages) - 1:
+                    self.chestCur += 1
+                else: 
+                    self.chestAnimation = False
+                    self.chestCur = 0
+            
             screen.blit(self.image, self.rect)
         except:
             pass
@@ -34,6 +55,7 @@ class Tile(pygame.sprite.Sprite):
         
     def getTileNum(self):
         return self.__tileNum
+    
     
     def isBarrier(self):
         if self.__tileNum in self.__barriers: 
@@ -49,6 +71,12 @@ class Tile(pygame.sprite.Sprite):
     
     def isLever(self):
         if self.__tileNum in self.__Lever:
+            return True
+        else:
+            return False
+        
+    def isTrap(self):
+        if self.__tileNum in self.__trap:
             return True
         else:
             return False
@@ -70,6 +98,30 @@ class Tile(pygame.sprite.Sprite):
             return True
         else:
             return False
+        
+    def isPotion(self):
+        if self.__tileNum in self.__potion:
+            return True
+        else:
+            return False
+    
+    def isTreasureChest(self):
+        if self.__tileNum in self.__treasureChest:
+            return True
+        else:
+            return False
+        
+    def isExitChest(self):
+        if self.__tileNum == self.__exitChest[0]:
+            return True
+        else:
+            return False
+        
+    def ExitChestAnimation(self, sprites):
+        if len(self.chestImages) != 3:
+            for i in range(3):
+                self.chestImages.append(sprites[self.__exitChest[i]])
+            self.chestAnimation = True
         
     def getCoinsList(self):
         return self.__coin

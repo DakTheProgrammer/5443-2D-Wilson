@@ -4,7 +4,9 @@ from SpriteSheet import SpriteSheet
 from Map import Map
 from Player import Player
 from StartLevel import StartLevel
+from LevelOne import LevelOne
 from GUI import GUI
+from Score import Score 
 
 
 class GameDriver:
@@ -21,6 +23,7 @@ class GameDriver:
         self.__messenger = messenger
         self.__Updates = {}
         self.__partner = None
+       
         
         messenger.setCallback(self.__receiveMessage)
         
@@ -35,7 +38,7 @@ class GameDriver:
         
         self.__spriteSheet = SpriteSheet(self.__levels[self.__levelNum])
         self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
-        self.__level = StartLevel(self.__spriteSheet)
+        self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[0])#StartLevel(self.__spriteSheet)
         
 
         #40 is p1 default character
@@ -61,9 +64,11 @@ class GameDriver:
 
     def __draw(self):
         
+        
+        
         self.__screen.fill(self.__background)
         self.__map.draw(self.__screen)
-        
+      
         for player in self.__players:
             player.draw(self.__screen)
 
@@ -86,6 +91,7 @@ class GameDriver:
                 zoomRec.bottom = self.__screen.get_height()
             
             self.__GUI.draw(zoom, abs(zoomRec[0]), abs(zoomRec[1]))
+            
             self.__screen.blit(zoom, zoomRec)
             
        
@@ -121,6 +127,7 @@ class GameDriver:
         
     def __checkCollisions(self):    
         self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects(), self.__map)
+        self.__GUI.update(self.__players[self.__owner].getHealth(),self.__players[self.__owner].getScore())
      
     def __checkNewLevel(self):
         if self.__levelNum == 0:

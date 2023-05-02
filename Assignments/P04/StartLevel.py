@@ -123,7 +123,4 @@ class StartLevel:
                 
     def getTopObjs(self):
         return self.__topObjs
-    
-    def exitEvent(self, tiles, objNum):
-        ...
             

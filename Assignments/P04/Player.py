@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.__score = 0
         self.__playerHealth = 100
         self.__goblinCollisionCount = 0
+        self.__trapCount = 0
         self.setFrames(default)
 
         self.moveSpeed = 1
@@ -108,7 +109,7 @@ class Player(pygame.sprite.Sprite):
         if self.__attacking and self.attackBuffer == 1:
             if self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map):
                 self.__score += 10
-                
+                #print(self.__score)
         
         playerCollisions = self.rect.collidelistall(objectRecs)
         if playerCollisions == []:
@@ -116,14 +117,16 @@ class Player(pygame.sprite.Sprite):
         else:
             for collision in playerCollisions:
                 #print(collision)
+                #print(objectTiles[collision].getTileNum())
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
                     # print("G ",self.__goblinCollisionCount)
                     if self.__goblinCollisionCount > 50:
                         self.__playerHealth -= 10
-                        print("P ",self.__playerHealth)
+                        # print("P ",self.__playerHealth)
                         self.__goblinCollisionCount = 0
-                
+                if objectTiles[collision].isExitChest():
+                    objectTiles[collision].ExitChestAnimation(self.__sprites)
                 if objectTiles[collision].isBarrier():
                     
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
@@ -151,12 +154,23 @@ class Player(pygame.sprite.Sprite):
                             self.setFrames(sprite)
                         elif type == 'W':
                             self.weapon.newWeapon(sprite)
+                        elif type == 'P':
+                            self.rect.topleft = sprite
+                        
                 elif objectTiles[collision].isExit():
                     self.moveSpeed = 0
                     self.rect.center = objectTiles[collision].rect.center
                 elif objectTiles[collision].isCoin():
                     objectTiles[collision].update(0,self.__sprites[0])
                     self.__score += 5
+                elif objectTiles[collision].isPotion():
+                    objectTiles[collision].update(0,self.__sprites[0])
+                    self.__playerHealth +=10
+                elif objectTiles[collision].isTrap():
+                    self.__trapCount += 1
+                    if self.__trapCount > 50:
+                        self.__playerHealth -= 10
+                        self.__trapCount = 0
 
     def getCanMove(self, dir):
         return self.__canMove[dir]
@@ -175,5 +189,10 @@ class Player(pygame.sprite.Sprite):
     def getWeaponSprite(self):
         return self.weapon.defaultSprite
     
+    def getScore(self):
+       
+        return self.__score
   
+    def getHealth(self):
+        return self.__playerHealth
     

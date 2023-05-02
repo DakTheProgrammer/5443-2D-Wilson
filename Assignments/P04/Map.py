@@ -54,13 +54,28 @@ class Map:
                     tile.update(564, self.__tileImages[564])
                 else:
                     tile.update(563, self.__tileImages[563])
-            else:
+            elif tile.isCoin():
                 tile.animationBuffer += 1
-                
+            
+            if (tile.isTrap() or tile.getTileNum() == 354) and tile.animationBuffer == tile.maxTrapBuffer:
+                tile.animationBuffer = 0
+                if tile.getTileNum() == 357:
+                    tile.update(356, self.__tileImages[356])
+                elif tile.getTileNum() == 356:
+                    tile.update(355, self.__tileImages[355])
+                elif tile.getTileNum() == 355:
+                    tile.update(354, self.__tileImages[354])
+                else: 
+                    tile.update(357, self.__tileImages[357])
+            elif tile.isTrap() or tile.getTileNum() == 354:
+                tile.animationBuffer += 1
+          
             tile.draw(screen)
             # for gob in self.__goblins:
             #     pygame.draw.rect(screen, (255,0,0), gob.rect)
 
+            
+            
     def getTileset(self):
         return self.__tileImages
     
