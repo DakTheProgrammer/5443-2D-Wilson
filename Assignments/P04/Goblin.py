@@ -42,59 +42,64 @@ class Goblin:
             
         self.animationNum = 0
         self.maxAnimation = 7
+        self.alive = True
 
     def move(self):
-        if self.moveDelay == self.maxMoveDelay:
-            
-            if self.animationNum != self.maxAnimation:
-                for tile in self.tiles:
-                    if len(self.tiles) < 3:
-                        tile.update(tile.getTileNum() + 1, self.sheet[tile.getTileNum() + 1])
-                    else:
-                        tile.update(tile.getTileNum() + 2, self.sheet[tile.getTileNum() + 2])
-                self.animationNum += 1
-            else:
-                self.animationNum = 0
-                for i, tile in enumerate(self.tiles):
-                    tile.update(self.defaults[i], self.sheet[self.defaults[i]])
+        if self.alive and self.tiles[0].getTileNum() == 0:
+            self.alive = False
 
-            
-            self.moveDelay = 0
-            
-            x,y = 0,0
-            
-            for i,tile in enumerate(self.tiles):
-                if i == 0:
-                    if tile.rect[0] != self.closestPlayer.rect[0]:
-                        if tile.rect[0] < self.closestPlayer.rect[0] and self.__canMove['Right']:
-                            tile.rect[0] += self.moveSpeed
-                            x = self.moveSpeed
-                        elif self.__canMove['Left']:
-                            tile.rect[0] -= self.moveSpeed
-                            x = -self.moveSpeed
-                    
-                    if tile.rect[1] != self.closestPlayer.rect[1]:
-                        if tile.rect[1] < self.closestPlayer.rect[1] and self.__canMove['Down']:
-                            tile.rect[1] += self.moveSpeed
-                            y = self.moveSpeed
-                        elif self.__canMove['Up']:
-                            tile.rect[1] -= self.moveSpeed
-                            y = -self.moveSpeed
+        if self.alive:
+            if self.moveDelay == self.maxMoveDelay:
+                
+                if self.animationNum != self.maxAnimation:
+                    for tile in self.tiles:
+                        if len(self.tiles) < 3:
+                            tile.update(tile.getTileNum() + 1, self.sheet[tile.getTileNum() + 1])
+                        else:
+                            tile.update(tile.getTileNum() + 2, self.sheet[tile.getTileNum() + 2])
+                    self.animationNum += 1
                 else:
-                    tile.rect[0] += x
-                    tile.rect[1] += y
-                    
-            self.rect[0] += x
-            self.rect[1] += y
-        else:
-            self.moveDelay += 1
-            
-        self.__canMove = {
-                'Up': True,
-                'Down': True,
-                'Right': True,
-                'Left': True
-            }
+                    self.animationNum = 0
+                    for i, tile in enumerate(self.tiles):
+                        tile.update(self.defaults[i], self.sheet[self.defaults[i]])
+
+                
+                self.moveDelay = 0
+                
+                x,y = 0,0
+                
+                for i,tile in enumerate(self.tiles):
+                    if i == 0:
+                        if tile.rect[0] != self.closestPlayer.rect[0]:
+                            if tile.rect[0] < self.closestPlayer.rect[0] and self.__canMove['Right']:
+                                tile.rect[0] += self.moveSpeed
+                                x = self.moveSpeed
+                            elif self.__canMove['Left']:
+                                tile.rect[0] -= self.moveSpeed
+                                x = -self.moveSpeed
+                        
+                        if tile.rect[1] != self.closestPlayer.rect[1]:
+                            if tile.rect[1] < self.closestPlayer.rect[1] and self.__canMove['Down']:
+                                tile.rect[1] += self.moveSpeed
+                                y = self.moveSpeed
+                            elif self.__canMove['Up']:
+                                tile.rect[1] -= self.moveSpeed
+                                y = -self.moveSpeed
+                    else:
+                        tile.rect[0] += x
+                        tile.rect[1] += y
+                        
+                self.rect[0] += x
+                self.rect[1] += y
+            else:
+                self.moveDelay += 1
+                
+            self.__canMove = {
+                    'Up': True,
+                    'Down': True,
+                    'Right': True,
+                    'Left': True
+                }
         
 
     def getCollisions(self, objectRecs, objectTiles):

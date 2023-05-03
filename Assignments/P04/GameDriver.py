@@ -33,7 +33,7 @@ class GameDriver:
         
         pygame.display.set_caption(title)
         
-        self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx']
+        self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx', './Levels/LevelTwo.tmx']
         self.__levelNum = 0
         
         self.__spriteSheet = SpriteSheet(self.__levels[self.__levelNum])
@@ -93,7 +93,8 @@ class GameDriver:
             self.__GUI.draw(zoom, abs(zoomRec[0]), abs(zoomRec[1]))
             
             self.__screen.blit(zoom, zoomRec)
-            
+        else:
+            self.__GUI.draw(self.__screen, 0, 0)
        
         pygame.display.flip()
 
@@ -127,23 +128,24 @@ class GameDriver:
         else:
             self.__zoomIn = True
         
-    def __checkCollisions(self):    
-        self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects(), self.__map)
+    def __checkCollisions(self): 
+        if self.__players[self.__owner].moveSpeed != 0:
+            self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects(), self.__map)
         self.__GUI.update(self.__players[self.__owner].getHealth(),self.__players[self.__owner].getScore())
      
     def __checkNewLevel(self):
-        if self.__levelNum == 0:
-            if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
-                self.__levelNum += 1
-                self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
-                
-                for player in self.__players: player.moveSpeed = 1
-                self.__players[0].rect.topleft = self.__map.getSpawnTile()[0].rect.topleft
-                self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
+        #if self.__levelNum == 0:
+        if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
+            for player in self.__players: player.moveSpeed = 1
+            self.__levelNum += 1
+            self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
+            
+            self.__players[0].rect.topleft = self.__map.getSpawnTile()[0].rect.topleft
+            self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
 
-                self.__map.setPlayers(self.__players)
-                self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
-                self.__players[self.__owner].setCurrentLevel(self.__level)
+            self.__map.setPlayers(self.__players)
+            self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
+            self.__players[self.__owner].setCurrentLevel(self.__level)
                 
      
     def __setUpdates(self):
@@ -153,35 +155,23 @@ class GameDriver:
                             'body': self.__players[self.__owner].defaultSprite,
                             'weapon': self.__players[self.__owner].getWeaponSprite(),
                             'attacking': int(self.__players[self.__owner].getAttack()),
-                            'ready': self.__players[self.__owner].moveSpeed
+                            'ready': self.__players[self.__owner].moveSpeed,
+                            'level': self.__levelNum
                             } 
 
-        if self.__levelNum == 0:
-            if self.__owner == 0:
-                tiles = []
-                for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
-                    tiles.append((i,tile.getTileNum()))   
-            else:
-                tiles = []
-                for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
-                    i += self.__level.getTopObjs() + 1
-                    tiles.append((i,tile.getTileNum()))
+        #if self.__levelNum == 0:
+        if self.__owner == 0:
+            tiles = []
+            for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
+                tiles.append((i,tile.getTileNum()))   
+        else:
+            tiles = []
+            for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
+                i += self.__level.getTopObjs() + 1
+                tiles.append((i,tile.getTileNum()))
 
-            self.__Updates.update({'tiles': tiles})
-        # elif self.__levelNum == 1:
-        #     if self.__owner == 0:
-        #         tile = self.__map.getObjects()
-        #         tiles = []
-        #         objs = [172,173,136,137,93,102,112,124,125,222,303,302,301,282,281,280,265,264,253,207,73]
-        #         for obj in objs:
-        #             tiles.append((obj,tile[obj].getTileNum()))
+        self.__Updates.update({'tiles': tiles})
 
-        #     else:
-        #         tiles = []
-        #         objs = []
-
-
-        #     self.__Updates.update({'tiles': tiles})
 
             
      
@@ -201,7 +191,7 @@ class GameDriver:
             if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
             self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
 
-            if self.__levelNum == 0:
+            if self.__levelNum == bodyDic['level']:
                 objects = self.__map.getObjects()
                 sprites = self.__spriteSheet.getSpritesList()
                 for set in bodyDic['tiles']:

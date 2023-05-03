@@ -3,55 +3,54 @@ import pygame
 class LevelOne:
     def __init__(self, sheet, portalLoc):
         self.sheet = sheet.getSpritesList()
-        self.__portalButtonLeft = 125
-        self.__portalButtonRight = 132
+        self.__portalButtonTop = 65
+        self.__portalButtonBottom = 259
         self.__portalLocation = portalLoc.rect.topleft
-        self.__leverLeft = 207
-        self.__leverRight = 245
-        self.__leverLeftCur = 'L'
-        self.__leverRightCur = 'L'
-        self.__doorLeft = [172,173,136,137]
-        self.__doorRight = [190,191,155,154]
+        self.__leverTop = 104
+        self.__leverTopCur = 'L'
+        self.__leverBottomCur = 'L'
+        self.__doorTop = [87,88,70,69]
+        self.__doorBottom = [281,282,264,263]
         
-    
+        self.__topObjs = 174
     
         self.__sheet = sheet
         
     def buttonEvent(self, objNum, tiles, bodySprite, weaponSprite):
-        print(2)
-        if objNum == self.__portalButtonRight:
-            tiles[self.__portalButtonRight].update(389, self.sheet[389])
+        if objNum == self.__portalButtonBottom:
+            tiles[self.__portalButtonBottom].update(389, self.sheet[389])
         else:
-            tiles[self.__portalButtonLeft].update(389, self.sheet[389])
+            tiles[self.__portalButtonTop].update(389, self.sheet[389])
 
         return self.__portalLocation, 'P'
         
     def leverEvent(self, tiles, objNum):
-        if objNum == self.__leverLeft:
-            if self.__leverLeftCur == 'L':
-                self.__leverLeftCur = 'R'
+        if objNum == self.__leverTop:
+            if self.__leverTopCur == 'L':
+                self.__leverTopCur = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
                 
-                for part in self.__doorLeft:
+                for part in self.__doorTop:
                     tiles[part].updateState(self.__sheet, 3)
             else:
-                self.__leverLeftCur = 'L'
+                self.__leverTopCur = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
                 
-                for part in self.__doorLeft:
+                for part in self.__doorTop:
                     tiles[part].updateState(self.__sheet, -3)
         else:
-            if self.__leverRightCur == 'L':
-                self.__leverRightCur = 'R'
+            if self.__leverBottomCur == 'L':
+                self.__leverBottomCur = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
                 
-                for part in self.__doorRight:
+                for part in self.__doorBottom:
                     tiles[part].updateState(self.__sheet, 3)
             else:
-                self.__leverRightCur = 'L'
+                self.__leverBottomCur = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
                 
-                for part in self.__doorRight:
+                for part in self.__doorBottom:
                     tiles[part].updateState(self.__sheet, -3)
                     
-  
+    def getTopObjs(self):
+        return self.__topObjs
