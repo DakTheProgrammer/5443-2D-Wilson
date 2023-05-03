@@ -27,10 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.animationBufferMax = 2
         self.__score = 0
         self.__playerHealth = 100
+        self.__milestone = 100
         self.__goblinCollisionCount = 0
         self.__trapCount = 0
         self.setFrames(default)
-
+        
         self.moveSpeed = 1
         self.facing = 'R'
 
@@ -109,6 +110,7 @@ class Player(pygame.sprite.Sprite):
         if self.__attacking and self.attackBuffer == 1:
             if self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map):
                 self.__score += 10
+                self.scoreAddHealth()
                 #print(self.__score)
         
         playerCollisions = self.rect.collidelistall(objectRecs)
@@ -121,8 +123,9 @@ class Player(pygame.sprite.Sprite):
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
                     # print("G ",self.__goblinCollisionCount)
-                    if self.__goblinCollisionCount > 50:
+                    if self.__goblinCollisionCount > 50 and self.__playerHealth > 0:
                         self.__playerHealth -= 10
+                        self.zeroHealth()
                         # print("P ",self.__playerHealth)
                         self.__goblinCollisionCount = 0
                 if objectTiles[collision].isExitChest():
@@ -165,13 +168,15 @@ class Player(pygame.sprite.Sprite):
                 elif objectTiles[collision].isCoin():
                     objectTiles[collision].update(0,self.__sprites[0])
                     self.__score += 5
+                    self.scoreAddHealth()
                 elif objectTiles[collision].isPotion():
                     objectTiles[collision].update(0,self.__sprites[0])
                     self.__playerHealth +=10
                 elif objectTiles[collision].isTrap():
                     self.__trapCount += 1
-                    if self.__trapCount > 50:
+                    if self.__trapCount > 50 and self.__playerHealth > 0:
                         self.__playerHealth -= 10
+                        self.zeroHealth()
                         self.__trapCount = 0
 
     def getCanMove(self, dir):
@@ -192,7 +197,6 @@ class Player(pygame.sprite.Sprite):
         return self.weapon.defaultSprite
     
     def getScore(self):
-       
         return self.__score
   
     def getHealth(self):
@@ -201,3 +205,15 @@ class Player(pygame.sprite.Sprite):
     def setCurrentLevel(self, level):
         self.__currentLevel = level
     
+    def scoreAddHealth(self):
+        if  self.__score >= self.__milestone:
+            self.__milestone += 100
+            self.__playerHealth += 10
+            
+    def zeroHealth(self):
+        if self.__playerHealth <= 0:
+            self.__playerHealth = 50
+            if self.__score >= 25:
+                self.__score -= 25
+            else:
+                self.__score = 0
