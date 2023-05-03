@@ -159,18 +159,18 @@ class GameDriver:
                             'level': self.__levelNum
                             } 
 
-        #if self.__levelNum == 0:
-        if self.__owner == 0:
-            tiles = []
-            for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
-                tiles.append((i,tile.getTileNum()))   
-        else:
-            tiles = []
-            for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
-                i += self.__level.getTopObjs() + 1
-                tiles.append((i,tile.getTileNum()))
+        if self.__levelNum != 2:
+            if self.__owner == 0:
+                tiles = []
+                for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
+                    tiles.append((i,tile.getTileNum()))   
+            else:
+                tiles = []
+                for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
+                    i += self.__level.getTopObjs() + 1
+                    tiles.append((i,tile.getTileNum()))
 
-        self.__Updates.update({'tiles': tiles})
+            self.__Updates.update({'tiles': tiles})
 
 
             
