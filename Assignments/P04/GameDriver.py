@@ -34,11 +34,11 @@ class GameDriver:
         pygame.display.set_caption(title)
         
         self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx']
-        self.__levelNum = 1
+        self.__levelNum = 0
         
         self.__spriteSheet = SpriteSheet(self.__levels[self.__levelNum])
         self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
-        self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[0])#StartLevel(self.__spriteSheet)
+        self.__level = StartLevel(self.__spriteSheet)
         
 
         #40 is p1 default character
@@ -105,6 +105,8 @@ class GameDriver:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not self.__players[self.__owner].getAttack():
                     self.__players[self.__owner].attack()
+                if event.key == pygame.K_o:
+                    self.__players[self.__owner].moveSpeed = 0
                   
         x,y = 0,0  
         is_key_pressed = pygame.key.get_pressed()    
@@ -140,6 +142,8 @@ class GameDriver:
                 self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
 
                 self.__map.setPlayers(self.__players)
+                self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
+                self.__players[self.__owner].setCurrentLevel(self.__level)
                 
      
     def __setUpdates(self):
@@ -164,6 +168,20 @@ class GameDriver:
                     tiles.append((i,tile.getTileNum()))
 
             self.__Updates.update({'tiles': tiles})
+        # elif self.__levelNum == 1:
+        #     if self.__owner == 0:
+        #         tile = self.__map.getObjects()
+        #         tiles = []
+        #         objs = [172,173,136,137,93,102,112,124,125,222,303,302,301,282,281,280,265,264,253,207,73]
+        #         for obj in objs:
+        #             tiles.append((obj,tile[obj].getTileNum()))
+
+        #     else:
+        #         tiles = []
+        #         objs = []
+
+
+        #     self.__Updates.update({'tiles': tiles})
 
             
      
@@ -188,7 +206,6 @@ class GameDriver:
                 sprites = self.__spriteSheet.getSpritesList()
                 for set in bodyDic['tiles']:
                     objects[set[0]].update(set[1], sprites[set[1]])
-                    
                 
         
     def __sendMessage(self, target, body):

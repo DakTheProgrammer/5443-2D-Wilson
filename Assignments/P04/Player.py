@@ -116,7 +116,7 @@ class Player(pygame.sprite.Sprite):
             return False
         else:
             for collision in playerCollisions:
-                #print(collision)
+                print(collision)
                 #print(objectTiles[collision].getTileNum())
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
@@ -148,6 +148,7 @@ class Player(pygame.sprite.Sprite):
                         
                         
                 elif objectTiles[collision].isButton():
+                    print(3)
                     sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
                     if sprite != None:
                         if type == 'B':
@@ -195,4 +196,7 @@ class Player(pygame.sprite.Sprite):
   
     def getHealth(self):
         return self.__playerHealth
+    
+    def setCurrentLevel(self, level):
+        self.__currentLevel = level
     
