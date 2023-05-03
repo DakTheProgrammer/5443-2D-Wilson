@@ -25,9 +25,9 @@ class Map:
 
         self.__goblins = []
 
-        self.__oneGoblinsSprites = [184]
-        self.__twoGoblinsSprites = [[664,696], [600,632], [472,504]]
-        self.__fourGoblinsSprites = [[738,739,770,771]]
+        self.__oneGoblinsSprites = [56,184,248,312]
+        self.__twoGoblinsSprites = [[664,696],[600,632],[472,504],[344,376]]
+        self.__fourGoblinsSprites = [[738,739,770,771],[546,547,578,579]]
         
         self.__twoHolder = []
         self.__fourHolder = []
