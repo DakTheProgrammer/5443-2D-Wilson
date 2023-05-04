@@ -145,9 +145,9 @@ class GameDriver:
             self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
 
             self.__map.setPlayers(self.__players)
-            if self.__levelNum == 0:
+            if self.__levelNum == 1:
                 self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
-            elif self.__levelNum == 1:
+            elif self.__levelNum == 2:
                 self.__level = LevelTwo(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
             self.__players[self.__owner].setCurrentLevel(self.__level)
                 
