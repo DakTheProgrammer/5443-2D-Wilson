@@ -12,6 +12,9 @@ class LevelTwo:
         self.__doorTop = [87,88,70,69]
         self.__doorBottom = [281,282,264,263]
         
-        self.__topObjs = 174
+        self.__topObjs = 229
     
         self.__sheet = sheet
+
+    def getTopObjs(self):
+        return self.__topObjs

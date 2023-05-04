@@ -41,7 +41,7 @@ class Goblin:
             self.defaults.append(tile.getTileNum())
             
         self.animationNum = 0
-        self.maxAnimation = 7
+        self.maxAnimation = 6
         self.alive = True
 
     def move(self):

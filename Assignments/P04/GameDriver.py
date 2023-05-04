@@ -5,6 +5,7 @@ from Map import Map
 from Player import Player
 from StartLevel import StartLevel
 from LevelOne import LevelOne
+from LevelTwo import LevelTwo
 from GUI import GUI
 from Score import Score 
 
@@ -134,7 +135,7 @@ class GameDriver:
         self.__GUI.update(self.__players[self.__owner].getHealth(),self.__players[self.__owner].getScore())
      
     def __checkNewLevel(self):
-        #if self.__levelNum == 0:
+        
         if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
             for player in self.__players: player.moveSpeed = 1
             self.__levelNum += 1
@@ -144,7 +145,10 @@ class GameDriver:
             self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
 
             self.__map.setPlayers(self.__players)
-            self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
+            if self.__levelNum == 0:
+                self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
+            elif self.__levelNum == 1:
+                self.__level = LevelTwo(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
             self.__players[self.__owner].setCurrentLevel(self.__level)
                 
      
@@ -158,19 +162,18 @@ class GameDriver:
                             'ready': self.__players[self.__owner].moveSpeed,
                             'level': self.__levelNum
                             } 
+        
+        if self.__owner == 0:
+            tiles = []
+            for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
+                tiles.append((i,tile.getTileNum()))   
+        else:
+            tiles = []
+            for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
+                i += self.__level.getTopObjs() + 1
+                tiles.append((i,tile.getTileNum()))
 
-        if self.__levelNum != 2:
-            if self.__owner == 0:
-                tiles = []
-                for i, tile in enumerate(self.__map.getObjects()[0:self.__level.getTopObjs()]):
-                    tiles.append((i,tile.getTileNum()))   
-            else:
-                tiles = []
-                for i, tile in enumerate(self.__map.getObjects()[self.__level.getTopObjs() + 1:]):
-                    i += self.__level.getTopObjs() + 1
-                    tiles.append((i,tile.getTileNum()))
-
-            self.__Updates.update({'tiles': tiles})
+        self.__Updates.update({'tiles': tiles})
 
 
             
