@@ -24,7 +24,6 @@ class Map:
         self.__players = []
 
         self.__goblins = []
-
         self.__oneGoblinsSprites = [56,88,120,184,248,312]
         self.__twoGoblinsSprites = [[664,696],[600,632],[472,504],[344,376]]
         self.__fourGoblinsSprites = [[738,739,770,771],[546,547,578,579],[642,643,674,675]]
@@ -55,6 +54,15 @@ class Map:
                 else:
                     tile.update(563, self.__tileImages[563])
             elif tile.isCoin():
+                tile.animationBuffer += 1
+            
+            if tile.isNPC() and tile.animationBuffer == tile.maxBuffer:
+                tile.animationBuffer = 0
+                if  tile.getTileNum() < 766:
+                    tile.update(tile.getTileNum()+1, self.__tileImages[tile.getTileNum()+1])
+                else:
+                    tile.update(760, self.__tileImages[760])
+            elif tile.isNPC():
                 tile.animationBuffer += 1
             
             if (tile.isTrap() or tile.getTileNum() == 354) and tile.animationBuffer == tile.maxTrapBuffer:

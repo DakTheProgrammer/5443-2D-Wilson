@@ -18,6 +18,8 @@ class Tile(pygame.sprite.Sprite):
         
         self.__exit = 358
         
+        self.__NPC = [760,761,762,763,764,765,766]
+        
         self.__trap = [355,356,357]
         
         self.__potion = [467,468,469,470,499,500,501,502]
@@ -74,6 +76,14 @@ class Tile(pygame.sprite.Sprite):
             return True
         else:
             return False
+        
+        
+    def isNPC(self):
+        if self.__tileNum in self.__NPC:
+            return True
+        else:
+            return False
+            
         
     def isTrap(self):
         if self.__tileNum in self.__trap:
