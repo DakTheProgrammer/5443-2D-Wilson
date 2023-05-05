@@ -6,6 +6,7 @@ from Player import Player
 from StartLevel import StartLevel
 from LevelOne import LevelOne
 from LevelTwo import LevelTwo
+from LevelThree import LevelThree
 from GUI import GUI
 from Score import Score 
 
@@ -34,7 +35,7 @@ class GameDriver:
         
         pygame.display.set_caption(title)
         
-        self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx', './Levels/LevelTwo.tmx']
+        self.__levels = ['./Levels/Start.tmx', './Levels/LevelOne.tmx', './Levels/LevelTwo.tmx', './Levels/LevelThree.tmx']
         self.__levelNum = 0
         
         self.__spriteSheet = SpriteSheet(self.__levels[self.__levelNum])
@@ -149,9 +150,11 @@ class GameDriver:
                 self.__level = LevelOne(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
             elif self.__levelNum == 2:
                 self.__level = LevelTwo(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
-            self.__players[self.__owner].setCurrentLevel(self.__level)
-                
-     
+                self.__players[self.__owner].setCurrentLevel(self.__level)
+            elif self.__levelNum == 3:
+                self.__level = LevelThree(self.__spriteSheet, self.__map.getPortalTile()[self.__owner])
+                self.__players[self.__owner].setCurrentLevel(self.__level)
+            
     def __setUpdates(self):
         self.__Updates = {'type': 'updates',
                             'pos': self.__players[self.__owner].rect.topleft,

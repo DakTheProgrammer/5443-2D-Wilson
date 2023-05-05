@@ -1,18 +1,18 @@
 import pygame
 
-class LevelTwo:
+class LevelThree:
     def __init__(self, sheet, portalLoc):
         self.sheet = sheet.getSpritesList()
         self.__portalButtonTop = 51
         self.__portalButtonBottom = 300
         self.__portalLocation = portalLoc.rect.topleft
-        self.__leverTop = 145
+        self.__leverTop = 303
         self.__leverTopCur = 'L'
         self.__leverBottomCur = 'L'  
-        self.__doorTop = [131,132,118,119]
-        self.__doorBottom = [380,381,367,368]
+        self.__doorTop = [280,281,258,259]
+        self.__doorBottom = [809,810,831,832]
         
-        self.__topObjs = 229
+        self.__topObjs = 450
     
         self.__sheet = sheet
         
