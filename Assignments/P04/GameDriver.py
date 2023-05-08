@@ -27,11 +27,7 @@ class GameDriver:
         self.__partner = None
         self.__newLevelSound = pygame.mixer.Sound("Assets/sounds/game-pop.wav")
         
-        messenger.setCallback(self.__receiveMessage)
         
-        self.__sendMessage('broadcast', {'type': 'who'})
-        
-        self.__owner = 0
         
         pygame.display.set_caption(title)
         
@@ -47,6 +43,12 @@ class GameDriver:
         self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
         self.__GUI = GUI(self.__spriteSheet.getSpritesList())
         self.__map.setPlayers(self.__players)
+        
+        messenger.setCallback(self.__receiveMessage)
+        
+        self.__sendMessage('broadcast', {'type': 'who'})
+        
+        self.__owner = 0
         
     def GameLoop(self):
         while self.__running:
