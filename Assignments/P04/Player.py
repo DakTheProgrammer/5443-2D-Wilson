@@ -122,7 +122,7 @@ class Player(pygame.sprite.Sprite):
             return False
         else:
             for collision in playerCollisions:
-                print(collision)
+                # print(collision)
                 #print(objectTiles[collision].getTileNum())
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
