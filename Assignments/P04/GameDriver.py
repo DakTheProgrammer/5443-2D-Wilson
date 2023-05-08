@@ -8,11 +8,86 @@ from LevelOne import LevelOne
 from LevelTwo import LevelTwo
 from LevelThree import LevelThree
 from GUI import GUI
-from Score import Score 
 
 
 class GameDriver:
+    """
+    This class is the main driver for the game. It handles the game loop, 
+    drawing, and event handling. It also handles the communication between the two players.
+
+    Attributes
+    ----------
+    __background : tuple
+        The background color of the game window
+    __screen : pygame.Surface
+        The game window
+    __clock : pygame.time.Clock
+        The game clock
+    __fps : int
+        The frames per second
+    __delta : int
+        The time between frames
+    __running : bool
+        Whether the game is running or not
+    __zoomIn : bool
+        Whether the game is zoomed in or not
+    __messenger : Messenger 
+        The messenger object that handles the communication between the two players
+    __Updates : dict
+        The dictionary that holds the updates that are sent to the other player
+    __partner : str
+        The name of the other player
+    __newLevelSound : pygame.mixer.Sound
+        The sound that plays when the players move to a new level
+    __levels : list
+        The list of levels
+    __levelNum : int
+        The current level number
+    __spriteSheet : SpriteSheet
+        The sprite sheet object
+    __map : Map
+        The map object
+    __level : Level
+        The level being played
+    __players : list
+        The list of players
+    __GUI : GUI
+        The GUI on the screen
+    __owner : int
+        The index of the player that is the owner of the game
+    
+    Methods
+    -------
+    GameLoop()
+        The main game loop
+    __draw()
+        Draws the game
+    __handleEvents()
+        Handles the events like key presses
+    __checkCollisions()
+        Checks for collisions
+    __checkNewLevel()
+        Checks if the players have moved to a new level
+    __setUpdates()
+        Sets the updates that are sent to the other player
+    __receiveMessage(ch, method, properties, body)
+        Receives messages from the other player
+    __sendMessage(target, body)
+        Sends messages to the other player
+    
+    """
     def __init__(self, title, messenger ,background = (255,255,255), height = 800, width = 800, fps = 60):
+        """The constructor for the GameDriver class that initializes the game window and the game objects
+        as well as the messenger object and the messenger callback so that the game can communicate with the other player
+
+        Args:
+            title (str): the title of the game window
+            messenger (Messenger): the messenger object that handles The communication between the two players
+            background (tuple, optional): Defaults to (255,255,255). The background color of the game window
+            height (int, optional): Defaults to 800. The height of the game window
+            width (int, optional): Defaults to 800. The width of the game window
+            fps (int, optional): Defaults to 60. The frames per second
+        """
         pygame.init()
 
         self.__background = background
@@ -38,8 +113,6 @@ class GameDriver:
         self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
         self.__level = StartLevel(self.__spriteSheet)
         
-
-        #40 is p1 default character
         self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
         self.__GUI = GUI(self.__spriteSheet.getSpritesList())
         self.__map.setPlayers(self.__players)
@@ -51,6 +124,12 @@ class GameDriver:
         self.__owner = 0
         
     def GameLoop(self):
+        """
+        The main game loop that handles the game loop, drawing, event handling, and communication between the two players
+
+        Parameters
+        ----------
+        """
         while self.__running:
             self.__draw()
 
@@ -67,7 +146,12 @@ class GameDriver:
             self.__checkNewLevel()
 
     def __draw(self):
-        
+        """
+        The method that draws the game screen as well as the GUI and the zoomed in screen
+
+        Parameters
+        ----------
+        """
         
         
         self.__screen.fill(self.__background)
@@ -103,6 +187,12 @@ class GameDriver:
         pygame.display.flip()
 
     def __handleEvents(self):
+        """
+        The method that handles the events like key presses
+
+        Parameters
+        ----------
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.__running = False
@@ -132,12 +222,24 @@ class GameDriver:
         else:
             self.__zoomIn = True
         
-    def __checkCollisions(self): 
+    def __checkCollisions(self):
+        """
+        The method that checks for collisions
+
+        Parameters
+        ----------
+        """
         if self.__players[self.__owner].moveSpeed != 0:
             self.__players[self.__owner].getCollision(self.__map.getObjectRecs(),self.__map.getObjects(), self.__map)
         self.__GUI.update(self.__players[self.__owner].getHealth(),self.__players[self.__owner].getScore())
      
     def __checkNewLevel(self):
+        """
+        The method that checks if the players have moved to a new level
+
+        Parameters
+        ----------
+        """
         
         if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
             self.__newLevelSound.play()
@@ -160,6 +262,12 @@ class GameDriver:
             self.__players[self.__owner].setCurrentLevel(self.__level)
             
     def __setUpdates(self):
+        """
+        The method that sets the updates that are sent to the other player
+
+        Parameters
+        ----------
+        """
         self.__Updates = {'type': 'updates',
                             'pos': self.__players[self.__owner].rect.topleft,
                             'facing': self.__players[self.__owner].facing,
@@ -186,6 +294,15 @@ class GameDriver:
             
      
     def __receiveMessage(self, ch, method, properties, body):
+        """
+        This method receives messages from the other player and handles them
+
+        Args:
+            ch (Channel): The channel that the message was received on
+            method (Method): The method that the message was received on
+            properties (Properties): The properties of the message
+            body (Binary JSON): The message that was received
+        """
         bodyDic = ast.literal_eval(body.decode('utf-8'))
         if bodyDic['type'] == 'who' and bodyDic['from'] != self.__messenger.user:
             self.__partner = bodyDic['from']
@@ -198,7 +315,7 @@ class GameDriver:
             self.__players[self.__owner ^ 1].facing = bodyDic['facing']
             self.__players[self.__owner ^ 1].setFrames(bodyDic['body'])
             self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
-            if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].setAttack()
+            if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].attack()
             self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
 
             if self.__levelNum == bodyDic['level']:
@@ -209,5 +326,12 @@ class GameDriver:
                 
         
     def __sendMessage(self, target, body):
+        """
+        This method sends messages to the other player
+
+        Args:
+            target (str): The person that the message is being sent to
+            body (dict): The dictionary that is being sent
+        """
         if target != None:
             self.__messenger.send(target, body)

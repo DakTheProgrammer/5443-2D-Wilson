@@ -2,7 +2,71 @@ import pygame
 from cmath import sqrt
 
 class StartLevel:
+    """
+    StartLevel class is a container for the start level.
+
+    Attributes
+    ----------
+    __redCharSelectButtons : list
+        A list of red character select buttons
+    __blueCharSelectButtons : list
+        A list of blue character select buttons
+    __redWeaponSelectButtons : list
+        A list of red weapon select buttons
+    __blueWeaponSelectButtons : list
+        A list of blue weapon select buttons
+    __redCharSelectButtonsCur : int
+        The current red character select button
+    __blueCharSelectButtonsCur : int
+        The current blue character select button
+    __redWeaponSelectButtonsCur : int
+        The current red weapon select button
+    __blueWeaponSelectButtonsCur : int
+        The current blue weapon select button
+    __newBodyOffset : int
+        The new body location offset
+    __newHeadOffset : int
+        The new head location offset
+    __leverTop : int
+        The top lever
+    __leverBottom : int
+        The bottom lever
+    __leverTopCur : str
+        The current top lever state
+    __leverBottomCur : str
+        The current bottom lever state
+    __doorOpen : pygame.mixer.Sound
+        A sound that plays when the door opens
+    __doorClose : pygame.mixer.Sound
+        A sound that plays when the door closes
+    __doorTop : list
+        A list of the top door parts
+    __doorBottom : list
+        A list of the bottom door parts
+    __topObjs : int
+        The number of top objects
+    __spriteOffset : int
+        The sprite offset
+    __sheet : SpriteSheet
+        The sprite sheet
+    
+    Methods
+    -------
+    buttonEvent(objNum, tiles, bodySprite, weaponSprite)
+        Handles button events
+    leverEvent(tiles, objNum)
+        Handles lever events
+    getTopObjs()
+        Gets the number of top objects
+    """
     def __init__(self, sheet):
+        """
+        Constructor for StartLevel class that takes in a sprite sheet.
+        To handle all the level states.
+
+        Args:
+            sheet (SpriteSheet): the sprite sheet
+        """
         self.__redCharSelectButtons = [117,118,119,120]
         self.__blueCharSelectButtons = [278, 279, 280, 281]
         self.__redWeaponSelectButtons = [114,115,116]
@@ -30,6 +94,18 @@ class StartLevel:
         self.__sheet = sheet
 
     def buttonEvent(self, objNum, tiles, bodySprite, weaponSprite):
+        """
+        Handles button events.
+
+        Args:
+            objNum (int): the object number for the button
+            tiles (List): the list of tiles to update
+            bodySprite (Tile): the body sprite to update
+            weaponSprite (Tile): the weapon sprite to update
+
+        Returns:
+            sprite, key: a tuple of the sprite and key
+        """
         if objNum in self.__redCharSelectButtons:
             tiles[self.__redCharSelectButtonsCur - self.__newBodyOffset].update(bodySprite, self.__sheet.getSpritesList()[bodySprite])
             tiles[self.__redCharSelectButtonsCur - self.__newBodyOffset - self.__newHeadOffset].update(bodySprite - self.__spriteOffset, self.__sheet.getSpritesList()[bodySprite - self.__spriteOffset])
@@ -96,6 +172,13 @@ class StartLevel:
         return None, None
     
     def leverEvent(self, tiles, objNum):
+        """
+        Handles lever events.
+
+        Args:
+            tiles (List[Tiles]): the list of tiles to update
+            objNum (int): the object number for the lever
+        """
         if objNum == self.__leverTop:
             if self.__leverTopCur == 'L':
                 self.__leverTopCur = 'R'
@@ -128,5 +211,12 @@ class StartLevel:
                     tiles[part].updateState(self.__sheet, -3)
                 
     def getTopObjs(self):
+        """
+        Gets the index of top objects ending.
+        Used in message passing.
+
+        Returns:
+            int: the index of top objects ending
+        """
         return self.__topObjs
             

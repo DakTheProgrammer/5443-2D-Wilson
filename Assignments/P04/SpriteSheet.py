@@ -4,7 +4,26 @@ from pathlib import Path
 from PIL import Image
 
 class SpriteSheet:
+    """
+    SpriteSheet class is a container for the sprite sheet and its properties.
+
+    Attributes
+    ----------
+    __tileImages : list
+        A list of tiles that the sprite sheet will use
+    
+    Methods
+    -------
+    getSpritesList()
+        Gets the list of tiles
+    """
     def __init__(self, tmx):
+        """
+        Constructor for SpriteSheet class that takes in a tmx file.
+
+        Args:
+            tmx (str): the tmx file name
+        """
         file = Path(tmx)
         mapInfo = pytiled_parser.parse_map(file)
         
@@ -27,4 +46,10 @@ class SpriteSheet:
                 self.__tileImages.append(pygame.image.fromstring(img.tobytes(), img.size, img.mode))
 
     def getSpritesList(self):
+        """
+        gets the list of tiles
+
+        Returns:
+            list: the list of tiles
+        """
         return self.__tileImages

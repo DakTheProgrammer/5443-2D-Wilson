@@ -3,6 +3,55 @@ import math
 
 class Goblin:
     def __init__(self, tiles, players, sheet):
+        """
+        This class represents a goblin. It takes in a list of tiles that it will occupy, 
+        a list of players that it will attack, and a sprite sheet. 
+
+        Attributes
+        ----------
+        tiles : list
+            A list of tiles that the goblin will occupy
+        players : list
+            A list of players that the goblin will attack
+        sheet : pygame.Surface
+            A sprite sheet that the goblin will use to animate itself
+        rect : pygame.Rect
+            A rectangle that represents the goblin's position and size
+        goblinHealth : int  
+            The goblin's health
+        moveSpeed : int 
+            The goblin's movement speed
+        moveDelay : int
+            The goblin's movement delay
+        maxMoveDelay : int 
+            The goblin's maximum movement delay
+        __canMove : dict
+            A dictionary that represents the goblin's ability to move in a direction
+        defaults : list
+            A list of the goblin's default tiles
+        animationNum : int
+            The goblin's current animation number
+        maxAnimation : int
+            The goblin's maximum animation number
+        alive : bool
+            A boolean that represents whether or not the goblin is alive
+        closestPlayer : Player
+            The closest player to the goblin
+        __goblinDeathSound : pygame.mixer.Sound
+            A sound that plays when the goblin dies
+        
+        Methods
+        -------
+        move()
+            Moves the goblin
+        getCollisions(objectRecs, objectTiles)
+            Gets the goblin's collisions
+        hit(sheet)
+            Hits the goblin
+        __angle_of_line(x1, y1, x2, y2)
+            Gets the angle of a line
+        """
+
         self.sheet = sheet
         self.tiles = tiles
         self.__goblinDeathSound = pygame.mixer.Sound("Assets/sounds/mixkit-retro-arcade-game-over-470.wav")
@@ -46,6 +95,9 @@ class Goblin:
         self.alive = True
 
     def move(self):
+        """
+        Moves the goblin and animates it
+        """
         if self.alive and self.tiles[0].getTileNum() == 0:
             self.alive = False
 
@@ -104,6 +156,16 @@ class Goblin:
         
 
     def getCollisions(self, objectRecs, objectTiles):
+        """
+        Gets the goblin's collisions
+
+        Args:
+            objectRecs (List[Recs]): a list of rectangles that the goblin can collide with
+            objectTiles (List[Tiles]): a list of tiles that the goblin can collide with
+
+        Returns:
+            Bool: whether or not the goblin collided with something
+        """
         goblinCollisions = self.rect.collidelistall(objectRecs)
         if goblinCollisions == []:
             return False
@@ -130,6 +192,12 @@ class Goblin:
                         self.__canMove['Up'] = False
                         
     def hit(self, sheet):
+        """
+        a method that is called when the goblin is hit
+
+        Args:
+            sheet (SpriteSheet): the sprite sheet that the goblin uses
+        """
         self.goblinHealth -= 1
         if self.goblinHealth == 0:
             self.__goblinDeathSound.play()
@@ -138,6 +206,18 @@ class Goblin:
 
                         
     def __angle_of_line(self, x1, y1, x2, y2):
+        """
+        a method that gets the angle of a line
+
+        Args:
+            x1 (int): first x point on the line
+            y1 (int): first y point on the line
+            x2 (int): second x point on the line
+            y2 (int): second y point on the line
+
+        Returns:
+            float: the angle of a line
+        """
         return math.degrees(math.atan2(-(y2-y1), x2-x1))
     
     

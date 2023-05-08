@@ -1,7 +1,92 @@
 import pygame
 
 class Tile(pygame.sprite.Sprite):
+    """
+    Tile class is a container for the tiles and their properties.
+
+    Attributes
+    ----------
+    image : pygame.Surface
+        The image of the tile
+    rect : pygame.Rect
+        The rectangle of the tile
+    __tileNum : int
+        The tile number
+    __barriers : list
+        A list of tiles that are barriers
+    __coin : list
+        A list of tiles that are coins
+    __Button : list
+        A list of tiles that are buttons
+    __Lever : list
+        A list of tiles that are levers
+    __goblin : list
+        A list of tiles that are goblins
+    __exit : int    
+        The tile that is the exit
+    __NPC : list
+        A list of tiles that are NPCs
+    __trap : list
+        A list of tiles that are traps
+    __potion : list
+        A list of tiles that are potions
+    __exitChest : list  
+        A list of tiles that are exit chests
+    __treasureChest : list  
+        A list of tiles that are treasure chests
+    __waterFountain : list  
+        A list of tiles that are water fountains
+
+    Methods
+    -------
+    draw(screen)
+        Draws the tile
+    getTileNum()
+        Gets the tile number
+    isBarrier()
+        Checks if the tile is a barrier
+    isButton()  
+        Checks if the tile is a button
+    isLever()
+        Checks if the tile is a lever
+    isNPC() 
+        Checks if the tile is an NPC
+    isTrap()
+        Checks if the tile is a trap
+    isExit()
+        Checks if the tile is an exit
+    isCoin()
+        Checks if the tile is a coin
+    isGoblin()
+        Checks if the tile is a goblin
+    isPotion()
+        Checks if the tile is a potion
+    isTreasureChest()
+        Checks if the tile is a treasure chest
+    isExitChest()
+        Checks if the tile is an exit chest
+    ExitChestAnimation(sprites)
+        Animates the exit chest
+    TreasureChestAnimation(sprites)
+        Animates the treasure chest
+    getCoinsList()
+        Gets the list of coins
+    updateState(sheet, amount)
+        Updates the tile state
+    update(num, img)
+        Updates the tile    
+    """
     def __init__(self, img, rect, index):
+        """
+        Constructor for Tile class that takes in an image, rectangle, and index.
+        This creates a tile.
+
+        Args:
+            img (Image): the image of the tile
+            rect (Rect): the rectangle of the tile
+            index (int): the tile number
+        """
+
         self.image = img
         self.rect = pygame.rect.Rect(rect)
         self.__tileNum = index
@@ -43,6 +128,13 @@ class Tile(pygame.sprite.Sprite):
         super().__init__()
     
     def draw(self, screen):
+        """
+        Draws the tile.
+
+        Args:
+            screen (Surface): the screen to draw on
+        """
+
         #this is needed bc message passing and pygame no like each other :(
         try:
             if self.chestAnimation:
@@ -60,22 +152,46 @@ class Tile(pygame.sprite.Sprite):
             
         
     def getTileNum(self):
+        """
+        Gets the tile number.
+
+        Returns:
+            int: The tile number
+        """
         return self.__tileNum
     
     
     def isBarrier(self):
+        """
+        Checks if the tile is a barrier.
+
+        Returns:
+            Bool: True if the tile is a barrier, False otherwise
+        """
         if self.__tileNum in self.__barriers: 
             return True
         else: 
             return False
         
     def isButton(self):
+        """
+        Checks if the tile is a button.
+
+        Returns:
+            Bool: True if the tile is a button, False otherwise
+        """
         if self.__tileNum in self.__Button:
             return True
         else:
             return False
     
     def isLever(self):
+        """
+        Checks if the tile is a lever.
+        
+        Returns:
+            Bool: True if the tile is a lever, False otherwise
+        """
         if self.__tileNum in self.__Lever:
             return True
         else:
@@ -83,6 +199,12 @@ class Tile(pygame.sprite.Sprite):
         
         
     def isNPC(self):
+        """
+        Checks if the tile is an NPC.
+
+        Returns:
+            Bool: True if the tile is an NPC, False otherwise
+        """
         if self.__tileNum in self.__NPC:
             return True
         else:
@@ -90,66 +212,140 @@ class Tile(pygame.sprite.Sprite):
             
         
     def isTrap(self):
+        """
+        checks if the tile is a trap.
+        
+        Returns:
+            Bool: True if the tile is a trap, False otherwise
+        """
         if self.__tileNum in self.__trap:
             return True
         else:
             return False
         
     def isExit(self):
+        """
+        Checks if the tile is an exit.
+
+        Returns:
+            Bool: True if the tile is an exit, False otherwise
+        """
         if self.__tileNum == self.__exit:
             return True
         else:
             return False
 
     def isCoin(self):
+        """
+        Checks if the tile is a coin.
+        
+        Returns:
+            Bool: True if the tile is a coin, False otherwise
+        """
         if self.__tileNum in self.__coin:
             return True
         else:
             return False
         
     def isGoblin(self):
+        """
+        Checks if the tile is a goblin.
+
+        Returns:
+            Bool: True if the tile is a goblin, False otherwise
+        """
         if self.__tileNum in self.__goblin:
             return True
         else:
             return False
         
     def isPotion(self):
+        """
+        Checks if the tile is a potion.
+        
+        Returns:
+            Bool: True if the tile is a potion, False otherwise
+        """
         if self.__tileNum in self.__potion:
             return True
         else:
             return False
     
     def isTreasureChest(self):
+        """ 
+        Checks if the tile is a treasure chest.
+        
+        Returns:
+            Bool: True if the tile is a treasure chest, False otherwise
+        """
         if self.__tileNum in self.__treasureChest:
             return True
         else:
             return False
         
     def isExitChest(self):
+        """
+        Checks if the tile is an exit chest.
+        
+        Returns:
+            Bool: True if the tile is an exit chest, False otherwise
+        """
         if self.__tileNum == self.__exitChest[0]:
             return True
         else:
             return False
         
     def ExitChestAnimation(self, sprites):
+        """
+        Animates the exit chest.
+
+        Args:
+            sprites (List[Images]): The list of images to animate the exit chest
+        """
         if len(self.chestImages) != 3:
             for i in range(3):
                 self.chestImages.append(sprites[self.__exitChest[i]])
             self.chestAnimation = True
             
     def TreasureChestAnimation(self, sprites):
+        """
+        Animates the treasure chest.
+
+        Args:
+            sprites (List[Images]): The list of images to animate the treasure chest
+        """
         if len(self.chestImages) != 3:
             for i in range(3):
                 self.chestImages.append(sprites[self.__treasureChest[i]])
             self.chestAnimation = True
         
     def getCoinsList(self):
+        """
+        Gets the list of coins.
+
+        Returns:
+            List[Tiles]: the list of coins
+        """
         return self.__coin
         
     def updateState(self, sheet, amount):
+        """
+        Updates the tile state by a given amount.
+
+        Args:
+            sheet (SpriteSheet): the sprite sheet
+            amount (int): the amount to update the tile by
+        """
         self.__tileNum += amount
         self.image = sheet.getSpritesList()[self.__tileNum]
 
     def update(self, num, img):
+        """
+        Updates the tile to a new image.
+
+        Args:
+            num (int): the tile number
+            img (Image): the image of the tile
+        """
         self.image = img
         self.__tileNum = num

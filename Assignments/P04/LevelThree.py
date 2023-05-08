@@ -1,6 +1,61 @@
 import pygame
 
 class LevelThree:
+    """
+    The class for the third level and its logic.
+
+    Attributes
+    ----------
+    sheet : SpriteSheet
+        The sprite sheet
+    __portalButtonTop : int
+        The top portal button
+    __portalButtonBottom : int
+        The bottom portal button
+    __portalLocation : tuple
+        The location of the portal
+    __leverTopR : int   
+        The top right lever
+    __leverTopL : int
+        The top left lever
+    __leverBottomR : int    
+        The bottom right lever
+    __leverBottomL : int    
+        The bottom left lever
+    __leverTopCurL : str    
+        The current state of the top left lever
+    __leverTopCurR : str
+        The current state of the top right lever
+    __leverBottomCurR : str
+        The current state of the bottom right lever
+    __leverBottomCurL : str
+        The current state of the bottom left lever  
+    __doorTopL : list   
+        The top left door
+    __doorTopR : list
+        The top right door
+    __doorBottomR : list    
+        The bottom right door
+    __doorBottomL : list
+        The bottom left door
+    __doorOpen : Sound  
+        The sound for opening the door
+    __doorClose : Sound 
+        The sound for closing the door
+    __topObjs : int
+        The number of objects on the top layer
+    __sheet : SpriteSheet   
+        The sprite sheet
+    
+    Methods
+    -------
+    buttonEvent(objNum, tiles, bodySprite, weaponSprite)
+        The event for the portal button
+    leverEvent(tiles, objNum)
+        The event for the lever
+    getTopObjs()
+        Returns the number of objects on the top layer
+    """
     def __init__(self, sheet, portalLoc):
         self.sheet = sheet.getSpritesList()
         self.__portalButtonTop = 51
@@ -25,6 +80,18 @@ class LevelThree:
         self.__sheet = sheet
         
     def buttonEvent(self, objNum, tiles, bodySprite, weaponSprite):
+        """
+        The event for the portal button.
+
+        Args:
+            objNum (int): the object number
+            tiles (list): the list of tiles
+            bodySprite (Body): the body sprite
+            weaponSprite (Weapon): the weapon sprite
+
+        Returns:
+            _type_: _description_
+        """
         if objNum == self.__portalButtonBottom:
             tiles[self.__portalButtonBottom].update(389, self.sheet[389])
         else:
@@ -33,6 +100,13 @@ class LevelThree:
         return self.__portalLocation, 'P'
         
     def leverEvent(self, tiles, objNum):
+        """
+        The event for the lever.
+
+        Args:
+            tiles (list): the list of tiles
+            objNum (int): the object number
+        """
         
         if objNum == self.__leverTopR:
             if self.__leverTopCurR == 'L':
@@ -96,4 +170,10 @@ class LevelThree:
         
 
     def getTopObjs(self):
+        """
+        Returns the number of objects on the top layer.
+
+        Returns:
+            int: the number of objects on the top layer
+        """
         return self.__topObjs

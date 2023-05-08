@@ -5,8 +5,112 @@ from Weapon import Weapon
 
 
 class Player(pygame.sprite.Sprite):
+    """
+    The player class that controls the player.
+
+    Attributes
+    ----------
+    defaultSprite : int
+        The default sprite
+    offset : int
+        The offset
+    __sprites : list
+        The list of sprites
+    __coinSound : pygame.mixer.Sound
+        The coin sound
+    __portalSound : pygame.mixer.Sound
+        The portal sound
+    __potionSound : pygame.mixer.Sound  
+        The potion sound
+    __buttonSound : pygame.mixer.Sound
+        The button sound
+    image : pygame.Surface
+        The image
+    rect : pygame.Rect
+        The rectangle
+    head : pygame.Surface
+        The head
+    headRec : pygame.Rect   
+        The head rectangle
+    currentFrame : int
+        The current frame
+    walking : list
+        The list of walking sprites
+    headMove : list
+        The list of head sprites
+    animationBuffer : int
+        The animation buffer    
+    animationBufferMax : int    
+        The maximum animation buffer
+    __score : int
+        The score
+    __playerHealth : int    
+        The player health
+    __milestone : int
+        The milestone
+    __goblinCollisionCount : int
+        The goblin collision count
+    __trapCount : int   
+        The trap count
+    moveSpeed : int
+        The move speed
+    facing : str    
+        The direction the player is facing
+    weapon : Weapon 
+        The weapon the player has
+    __attacking : bool
+        The attacking state
+    attackBuffer : int
+        The attack buffer
+    __canMove : dict
+        The dictionary of directions the player can move
+    __currentLevel : Level
+        The current level
+
+    Methods
+    -------
+    draw(screen)
+        Draws the player
+    move(x, y)
+        Moves the player
+    attack()
+        Attacks
+    getAttack()
+        Returns the attacking state
+    setAttack() 
+        Sets the attacking state
+    getCollision(objectRecs, objectTiles, map)  
+        Returns the collision
+    getCanMove(dir)
+        Returns the direction the player can move
+    __angle_of_line(x1, y1, x2, y2)
+        Returns the angle of the line
+    setFrames(default)
+        Sets the animation frames
+    getWeaponSprite()
+        Returns the weapon sprite
+    getScore()
+        Returns the score
+    getHealth()
+        Returns the health
+    setCurrentLevel(level)
+        Sets the current level
+    scoreAddHealth()    
+        Adds health to the score
+    zeroHealth()
+        Sets the health to zero
+    """
 
     def __init__(self, default, sheet, spawn, level):
+        """
+        Constructor for Player class that initializes the player.
+        
+        Args:
+            default (int): the default sprite
+            sheet (list): the list of sprites
+            spawn (pygame.Rect): the spawn rectangle
+            level (Level): the current level
+        """
 
         self.defaultSprite = default
         self.offset = int(math.sqrt(len(sheet) - 1).real)
@@ -55,6 +159,12 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
     def draw(self, screen):
+        """
+        Draws the player.
+
+        Args:
+            screen (pygame.Surface): the screen
+        """
         if self.animationBuffer == self.animationBufferMax:
             self.animationBuffer = 0
             if self.currentFrame == len(self.walking) - 1:
@@ -84,6 +194,13 @@ class Player(pygame.sprite.Sprite):
 
     #  -y moves up, +y moves down, -x moves left, +x moves right
     def move(self, x, y):
+        """
+        moves the player.
+
+        Args:
+            x (int): the x coordinate to move   
+            y (int): the y coordinate to move
+        """
         if x != 0 or y != 0:
             if self.facing == 'R' and x < 0:
                 self.facing = 'L'
@@ -102,15 +219,32 @@ class Player(pygame.sprite.Sprite):
         }
 
     def attack(self):
+        """
+        the player attacks.
+        """
         self.__attacking = True
 
     def getAttack(self):
+        """
+        Returns the attacking state.
+
+        Returns:
+            bool: the attacking state
+        """
         return self.__attacking
-    
-    def setAttack(self):
-        self.__attacking = True
 
     def getCollision(self, objectRecs, objectTiles, map):
+        """
+        Returns the collision.
+
+        Args:
+            objectRecs (list): the list of object rectangles
+            objectTiles (list): the list of object tiles
+            map (Map): the map
+
+        Returns:
+            bool: the collision
+        """
         if self.__attacking and self.attackBuffer == 1:
             if self.weapon.getCollision(objectRecs, objectTiles, self.__currentLevel, map):
                 self.__score += 10
@@ -194,12 +328,39 @@ class Player(pygame.sprite.Sprite):
                         self.__trapCount = 0
 
     def getCanMove(self, dir):
+        """
+        Returns the direction the player can move.
+
+        Args:
+            dir (str): the direction
+
+        Returns:
+            bool: the direction the player can move
+        """
         return self.__canMove[dir]
     
     def __angle_of_line(self, x1, y1, x2, y2):
+        """
+        Returns the angle of the line.
+
+        Args:
+            x1 (int): the x coordinate of the first point
+            y1 (int): the y coordinate of the first point
+            x2 (int): the x coordinate of the second point
+            y2 (int): the y coordinate of the second point
+
+        Returns:
+            float: the angle of the line
+        """
         return math.degrees(math.atan2(-(y2-y1), x2-x1))
 
     def setFrames(self, default):
+        """
+        Sets the animation frames.
+
+        Args:
+            default (int): the default sprite
+        """
         self.defaultSprite = default
         self.walking = []
         self.headMove = []
@@ -208,23 +369,53 @@ class Player(pygame.sprite.Sprite):
             self.headMove.append(self.__sprites[default - self.offset + i])
             
     def getWeaponSprite(self):
+        """
+        Returns the weapon sprite.
+
+        Returns:
+            int: the weapon sprite
+        """
         return self.weapon.defaultSprite
     
     def getScore(self):
+        """
+        Returns the score.
+
+        Returns:
+            int: the score
+        """
         return self.__score
   
     def getHealth(self):
+        """
+        Returns the health.
+
+        Returns:
+            int: the health
+        """
         return self.__playerHealth
     
     def setCurrentLevel(self, level):
+        """
+        Sets the current level.
+
+        Args:
+            level (Level): the current level
+        """
         self.__currentLevel = level
     
     def scoreAddHealth(self):
+        """
+        Adds health to the score.
+        """
         if  self.__score >= self.__milestone:
             self.__milestone += 100
             self.__playerHealth += 10
             
     def zeroHealth(self):
+        """
+        Sets the health to zero.
+        """
         if self.__playerHealth <= 0:
             self.__playerHealth = 50
             if self.__score >= 25:
