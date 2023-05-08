@@ -11,7 +11,11 @@ class Player(pygame.sprite.Sprite):
         self.defaultSprite = default
         self.offset = int(math.sqrt(len(sheet) - 1).real)
         self.__sprites = sheet
-
+        self.__coinSound = pygame.mixer.Sound("Assets/sounds/collectcoin-6075.mp3")
+        self.__portalSound = pygame.mixer.Sound("Assets/sounds/cartoon-jump-6462.mp3")
+        self.__potionSound = pygame.mixer.Sound("Assets/sounds/soap-bubbles-pop-96873.mp3")
+        self.__buttonSound = pygame.mixer.Sound("Assets/sounds/select-sound-121244.mp3")
+        
         #image -> player body
         #this is the main part of the sprite
         self.image = self.__sprites[default]
@@ -122,6 +126,7 @@ class Player(pygame.sprite.Sprite):
                 #print(objectTiles[collision].getTileNum())
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
+                    
                     # print("G ",self.__goblinCollisionCount)
                     if self.__goblinCollisionCount > 50 and self.__playerHealth > 0:
                         self.__playerHealth -= 10
@@ -157,23 +162,29 @@ class Player(pygame.sprite.Sprite):
                         
                 elif objectTiles[collision].isButton():
                     sprite, type = self.__currentLevel.buttonEvent(collision, objectTiles, self.defaultSprite, self.weapon.defaultSprite)
+                    
                     if sprite != None:
                         if type == 'B':
                             self.setFrames(sprite)
+                            self.__buttonSound.play()
                         elif type == 'W':
                             self.weapon.newWeapon(sprite)
+                            self.__buttonSound.play()
                         elif type == 'P':
                             self.rect.topleft = sprite
-                        
+                            self.__portalSound.play()
+                            
                 elif objectTiles[collision].isExit():
                     self.moveSpeed = 0
                     self.rect.center = objectTiles[collision].rect.center
                 elif objectTiles[collision].isCoin():
                     objectTiles[collision].update(0,self.__sprites[0])
+                    self.__coinSound.play()
                     self.__score += 5
                     self.scoreAddHealth()
                 elif objectTiles[collision].isPotion():
                     objectTiles[collision].update(0,self.__sprites[0])
+                    self.__potionSound.play()
                     self.__playerHealth +=10
                 elif objectTiles[collision].isTrap():
                     self.__trapCount += 1

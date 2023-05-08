@@ -5,6 +5,7 @@ class Goblin:
     def __init__(self, tiles, players, sheet):
         self.sheet = sheet
         self.tiles = tiles
+        self.__goblinDeathSound = pygame.mixer.Sound("Assets/sounds/mixkit-retro-arcade-game-over-470.wav")
         if len(self.tiles) == 1:
             self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
             self.goblinHealth = 1
@@ -131,6 +132,7 @@ class Goblin:
     def hit(self, sheet):
         self.goblinHealth -= 1
         if self.goblinHealth == 0:
+            self.__goblinDeathSound.play()
             for tile in self.tiles:
                 tile.update(0, sheet[0])
 

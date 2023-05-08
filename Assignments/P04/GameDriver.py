@@ -25,7 +25,7 @@ class GameDriver:
         self.__messenger = messenger
         self.__Updates = {}
         self.__partner = None
-       
+        self.__newLevelSound = pygame.mixer.Sound("Assets/sounds/game-pop.wav")
         
         messenger.setCallback(self.__receiveMessage)
         
@@ -138,6 +138,7 @@ class GameDriver:
     def __checkNewLevel(self):
         
         if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
+            self.__newLevelSound.play()
             for player in self.__players: player.moveSpeed = 1
             self.__levelNum += 1
             self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
