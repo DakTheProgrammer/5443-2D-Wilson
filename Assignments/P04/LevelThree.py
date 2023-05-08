@@ -19,7 +19,7 @@ class LevelThree:
         self.__doorBottomR = [825,826,803,804]
         self.__doorBottomL = [736,737,715,716]
           
-        self.__topObjs = 424
+        self.__topObjs = 514
     
         self.__sheet = sheet
         
