@@ -6,7 +6,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect = pygame.rect.Rect(rect)
         self.__tileNum = index
 
-        self.__barriers = [3,5,6,35,38,66,67,68,99,163,165,166,167,169,181,198,213,233,225,226,227,228,257,258,259,260,261,291,292,293,297,310,323,324,325,342,356,357,361,390,391,425,450,451,452,453,482,483,484,485,489,628,659]
+        self.__barriers = [3,5,6,35,36,37,38,66,67,68,99,100,101,102,163,165,166,167,169,181,198,213,233,225,226,227,228,257,258,259,260,261,291,292,293,297,310,323,324,325,326,342,356,357,361,390,391,425,450,451,452,453,482,483,484,485,489,596,597,628,629,630,659]
 
         self.__coin = [563,564] 
            
@@ -27,6 +27,10 @@ class Tile(pygame.sprite.Sprite):
         self.__exitChest = [596,597,598]
         
         self.__treasureChest = [628,629,630]
+        
+        self.__waterFountain = [100,101,102,132,133,134]
+        
+        self.__lavaFountain = [36,37,38,68,69,70]
             
         self.animationBuffer = 0
         self.maxBuffer = 7
@@ -131,6 +135,12 @@ class Tile(pygame.sprite.Sprite):
         if len(self.chestImages) != 3:
             for i in range(3):
                 self.chestImages.append(sprites[self.__exitChest[i]])
+            self.chestAnimation = True
+            
+    def TreasureChestAnimation(self, sprites):
+        if len(self.chestImages) != 3:
+            for i in range(3):
+                self.chestImages.append(sprites[self.__treasureChest[i]])
             self.chestAnimation = True
         
     def getCoinsList(self):

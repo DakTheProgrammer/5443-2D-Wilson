@@ -118,7 +118,7 @@ class Player(pygame.sprite.Sprite):
             return False
         else:
             for collision in playerCollisions:
-                #print(collision)
+                print(collision)
                 #print(objectTiles[collision].getTileNum())
                 if objectTiles[collision].isGoblin():
                     self.__goblinCollisionCount +=1
@@ -132,6 +132,9 @@ class Player(pygame.sprite.Sprite):
                     objectTiles[collision].ExitChestAnimation(self.__sprites)
                     self.moveSpeed = 0
                     self.rect.center = objectTiles[collision].rect.center
+                if objectTiles[collision].isTreasureChest():
+                    objectTiles[collision].TreasureChestAnimation(self.__sprites)
+                    self.__score += 100
                 if objectTiles[collision].isBarrier():
                     
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)
