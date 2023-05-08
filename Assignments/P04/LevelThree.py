@@ -18,7 +18,8 @@ class LevelThree:
         self.__doorTopR = [282,283,260,261]
         self.__doorBottomR = [825,826,803,804]
         self.__doorBottomL = [736,737,715,716]
-          
+        self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.mp3")
+        self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.mp3")  
         self.__topObjs = 424
     
         self.__sheet = sheet
