@@ -119,8 +119,8 @@ class Player(pygame.sprite.Sprite):
         self.__portalSound = pygame.mixer.Sound("Assets/sounds/hybrid-arcade-tone.wav")
         self.__potionSound = pygame.mixer.Sound("Assets/sounds/bubbling.wav")
         self.__buttonSound = pygame.mixer.Sound("Assets/sounds/select-sound.wav")
-        self.__gameOver = pygame.mixer.Sound("Assets/sounds/winsquare.mp3")
-        
+        self.__gameOver = pygame.mixer.Sound("Assets/sounds/winsquare.wav")
+        self.__chestOpen = pygame.mixer.Sound("Assets/sounds/slide.wav")
         #image -> player body
         #this is the main part of the sprite
         self.image = self.__sprites[default]
@@ -273,16 +273,20 @@ class Player(pygame.sprite.Sprite):
                         # print("P ",self.__playerHealth)
                         self.__goblinCollisionCount = 0
                 if objectTiles[collision].isExitChest():
+                    if self.__chestOpen.get_num_channels() < 1:
+                        self.__chestOpen.set_volume(.3)
+                        self.__chestOpen.play()
+                        self.__chestOpen.fadeout(1000)
                     objectTiles[collision].ExitChestAnimation(self.__sprites)
                     self.moveSpeed = 0
                     self.rect.center = objectTiles[collision].rect.center
                 if objectTiles[collision].isTreasureChest():
                     objectTiles[collision].TreasureChestAnimation(self.__sprites)
-                    # if self.__gameOver.get_num_channels() < 1:
-                    #     self.__gameOver.set_volume(.3)
-                    #     pygame.mixer.music.stop()
-                    #     self.__gameOver.play()
-                    #     self.__gameOver.fadeout(10000)
+                    pygame.mixer.music.stop()
+                    if self.__gameOver.get_num_channels() < 1:
+                        self.__gameOver.set_volume(.3)
+                        self.__gameOver.play()
+                        self.__gameOver.fadeout(30000)
                     self.__score += 100
                 if objectTiles[collision].isBarrier():
                     
@@ -325,7 +329,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect.center = objectTiles[collision].rect.center
                 elif objectTiles[collision].isCoin():
                     objectTiles[collision].update(0,self.__sprites[0])
-                    self.__coinSound.set_volume(.05)
+                    self.__coinSound.set_volume(.08)
                     self.__coinSound.play()
                     self.__score += 5
                     self.scoreAddHealth()
@@ -438,6 +442,6 @@ class Player(pygame.sprite.Sprite):
                 
     def teleport(self):
         self.rect.topleft = self.tpLoc
-        self.__portalSound.set_volume(.05)
+        self.__portalSound.set_volume(.08)
         self.__portalSound.play()
         self.tp = False

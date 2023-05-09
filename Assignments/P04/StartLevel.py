@@ -69,7 +69,7 @@ class StartLevel:
         """
        
         pygame.mixer.music.load("Assets/sounds/StartLevel.wav")
-        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.set_volume(.05)
         pygame.mixer.music.play()
     
         self.__redCharSelectButtons = [117,118,119,120]

@@ -200,7 +200,7 @@ class Goblin:
         """
         self.goblinHealth -= 1
         if self.goblinHealth == 0:
-            self.__goblinDeathSound.set_volume(.05)
+            self.__goblinDeathSound.set_volume(.08)
             self.__goblinDeathSound.play()
             for tile in self.tiles:
                 tile.update(0, sheet[0])

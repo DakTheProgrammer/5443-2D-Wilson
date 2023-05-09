@@ -53,7 +53,7 @@ class LevelOne:
         """
         
         pygame.mixer.music.load("Assets/sounds/LevelOne.wav")
-        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.set_volume(.03)
         pygame.mixer.music.play()
         
         self.sheet = sheet.getSpritesList()

@@ -52,7 +52,7 @@ class LevelTwo:
         """
       
         pygame.mixer.music.load("Assets/sounds/LevelTwo.wav")
-        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.set_volume(.04)
         pygame.mixer.music.play()
         
         self.sheet = sheet.getSpritesList()
