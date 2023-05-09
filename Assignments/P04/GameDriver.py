@@ -283,7 +283,8 @@ class GameDriver:
                             'weapon': self.__players[self.__owner].getWeaponSprite(),
                             'attacking': int(self.__players[self.__owner].getAttack()),
                             'ready': self.__players[self.__owner].moveSpeed,
-                            'level': self.__levelNum
+                            'level': self.__levelNum,
+                            'tp': int(self.__players[self.__owner].tp)
                             } 
         
         if self.__owner == 0:
@@ -325,12 +326,17 @@ class GameDriver:
             self.__players[self.__owner ^ 1].weapon.newWeapon(bodyDic['weapon'])
             if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].attack()
             self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
-
+            self.__players[self.__owner ^ 1].tp = bodyDic['tp']
+            
             if self.__levelNum == bodyDic['level']:
                 objects = self.__map.getObjects()
                 sprites = self.__spriteSheet.getSpritesList()
                 for set in bodyDic['tiles']:
                     objects[set[0]].update(set[1], sprites[set[1]])
+                    
+            if self.__players[self.__owner].tp and self.__players[self.__owner ^ 1].tp:
+                self.__players[self.__owner].teleport()
+                
                 
         
     def __sendMessage(self, target, body):

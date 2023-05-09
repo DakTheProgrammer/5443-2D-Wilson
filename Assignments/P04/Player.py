@@ -156,6 +156,10 @@ class Player(pygame.sprite.Sprite):
         }
 
         self.__currentLevel = level
+        
+        self.tp = False
+        self.tpLoc = self.rect.topleft
+        
 
         super().__init__()
 
@@ -308,9 +312,8 @@ class Player(pygame.sprite.Sprite):
                             self.__buttonSound.set_volume(.1)
                             self.__buttonSound.play()
                         elif type == 'P':
-                            self.rect.topleft = sprite
-                            self.__portalSound.set_volume(.1)
-                            self.__portalSound.play()
+                            self.tpLoc = sprite
+                            self.tp = True
                             
                 elif objectTiles[collision].isExit():
                     self.moveSpeed = 0
@@ -427,3 +430,9 @@ class Player(pygame.sprite.Sprite):
                 self.__score -= 25
             else:
                 self.__score = 0
+                
+    def teleport(self):
+        self.rect.topleft = self.tpLoc
+        self.__portalSound.set_volume(.1)
+        self.__portalSound.play()
+        self.tp = False

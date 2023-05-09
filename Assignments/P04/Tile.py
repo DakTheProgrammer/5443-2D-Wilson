@@ -112,10 +112,6 @@ class Tile(pygame.sprite.Sprite):
         self.__exitChest = [596,597,598]
         
         self.__treasureChest = [628,629,630]
-        
-        self.__waterFountain = [100,101,102,132,133,134]
-        
-        self.__lavaFountain = [36,37,38,68,69,70]
             
         self.animationBuffer = 0
         self.maxBuffer = 7
