@@ -119,8 +119,10 @@ class GameDriver:
         
         messenger.setCallback(self.__receiveMessage)
         
+        #sends message to see whos in the game
         self.__sendMessage('broadcast', {'type': 'who'})
         
+        #used to determine which player is playing 0 is host 1 is p2
         self.__owner = 0
         
     def GameLoop(self):
