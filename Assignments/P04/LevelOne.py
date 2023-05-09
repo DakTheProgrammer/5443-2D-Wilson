@@ -51,6 +51,11 @@ class LevelOne:
             sheet (SpriteSheet): the sprite sheet
             portalLoc (tuple): the location of place to portal to
         """
+        
+        pygame.mixer.music.load("Assets/sounds/LevelOne.wav")
+        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.play()
+        
         self.sheet = sheet.getSpritesList()
         self.__portalButtonTop = 65
         self.__portalButtonBottom = 259

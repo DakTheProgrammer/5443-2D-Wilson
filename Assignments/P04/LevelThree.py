@@ -57,6 +57,13 @@ class LevelThree:
         Returns the number of objects on the top layer
     """
     def __init__(self, sheet, portalLoc):
+        
+        
+        pygame.mixer.music.load("Assets/sounds/LevelThree.wav")
+        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.play()
+        
+        
         self.sheet = sheet.getSpritesList()
         self.__portalButtonTop = 301
         self.__portalButtonBottom = 844
@@ -75,8 +82,9 @@ class LevelThree:
         self.__doorBottomL = [736,737,715,716]
         self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.wav")
         self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.wav")  
+        
         self.__topObjs = 514
-    
+        
         self.__sheet = sheet
         
     def buttonEvent(self, objNum, tiles, bodySprite, weaponSprite):

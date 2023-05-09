@@ -67,6 +67,11 @@ class StartLevel:
         Args:
             sheet (SpriteSheet): the sprite sheet
         """
+       
+        pygame.mixer.music.load("Assets/sounds/StartLevel.wav")
+        pygame.mixer.music.set_volume(.02)
+        pygame.mixer.music.play()
+    
         self.__redCharSelectButtons = [117,118,119,120]
         self.__blueCharSelectButtons = [278, 279, 280, 281]
         self.__redWeaponSelectButtons = [114,115,116]
