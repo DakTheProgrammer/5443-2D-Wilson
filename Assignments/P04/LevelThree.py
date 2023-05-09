@@ -58,8 +58,8 @@ class LevelThree:
     """
     def __init__(self, sheet, portalLoc):
         self.sheet = sheet.getSpritesList()
-        self.__portalButtonTop = 51
-        self.__portalButtonBottom = 300
+        self.__portalButtonTop = 301
+        self.__portalButtonBottom = 844
         self.__portalLocation = portalLoc.rect.topleft
         self.__leverTopR = 305
         self.__leverTopL = 218
