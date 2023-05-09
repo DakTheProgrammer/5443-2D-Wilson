@@ -101,8 +101,8 @@ class GameDriver:
         self.__Updates = {}
         self.__partner = None
         self.__newLevelSound = pygame.mixer.Sound("Assets/sounds/game-pop.wav")
-        
-        
+        self.__walkSound = pygame.mixer.Sound("Assets/sounds/running-in-grass.wav")
+        self.__attackSound = pygame.mixer.Sound("Assets/sounds/mixkit-fast-whip-strike-1511.wav")
         
         pygame.display.set_caption(title)
         
@@ -199,12 +199,14 @@ class GameDriver:
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not self.__players[self.__owner].getAttack():
+                    self.__attackSound.set_volume(.1)
+                    self.__attackSound.play()
                     self.__players[self.__owner].attack()
                 if event.key == pygame.K_o:
                     self.__players[self.__owner].moveSpeed = 0
                   
         x,y = 0,0  
-        is_key_pressed = pygame.key.get_pressed()    
+        is_key_pressed = pygame.key.get_pressed()
         if (is_key_pressed[pygame.K_d] or is_key_pressed[pygame.K_RIGHT]) and self.__players[self.__owner].getCanMove('Right'):
             x = 1
         elif (is_key_pressed[pygame.K_a] or is_key_pressed[pygame.K_LEFT]) and self.__players[self.__owner].getCanMove('Left'):
@@ -214,7 +216,12 @@ class GameDriver:
             y = -1
         elif (is_key_pressed[pygame.K_s] or is_key_pressed[pygame.K_DOWN]) and self.__players[self.__owner].getCanMove('Down'):
             y = 1
-
+        if (x != 0 or y!= 0) and self.__walkSound.get_num_channels() < 1 and self.__players[self.__owner].moveSpeed == 1:
+            self.__walkSound.set_volume(.1)
+            self.__walkSound.play()
+        elif x == 0 and y == 0:
+            self.__walkSound.stop()
+            
         self.__players[self.__owner].move(x,y)
 
         if is_key_pressed[pygame.K_z]:
@@ -242,6 +249,7 @@ class GameDriver:
         """
         
         if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
+            self.__newLevelSound.set_volume(.1)
             self.__newLevelSound.play()
             for player in self.__players: player.moveSpeed = 1
             self.__levelNum += 1

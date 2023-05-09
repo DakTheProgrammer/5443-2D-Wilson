@@ -59,8 +59,8 @@ class LevelTwo:
         self.__leverBottomCur = 'L'  
         self.__doorTop = [131,132,118,119]
         self.__doorBottom = [380,381,367,368]
-        self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.mp3")
-        self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.mp3")
+        self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.wav")
+        self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.wav")
         self.__topObjs = 229
     
         self.__sheet = sheet
@@ -97,12 +97,14 @@ class LevelTwo:
             if self.__leverTopCur == 'L':
                 self.__leverTopCur = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorTop:
                     tiles[part].updateState(self.__sheet, 3)
             else:
                 self.__leverTopCur = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorTop:
                     tiles[part].updateState(self.__sheet, -3)
@@ -110,12 +112,14 @@ class LevelTwo:
             if self.__leverBottomCur == 'L':
                 self.__leverBottomCur = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorBottom:
                     tiles[part].updateState(self.__sheet, 3)
             else:
                 self.__leverBottomCur = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorBottom:
                     tiles[part].updateState(self.__sheet, -3)

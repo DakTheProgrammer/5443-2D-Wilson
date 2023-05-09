@@ -54,7 +54,7 @@ class Goblin:
 
         self.sheet = sheet
         self.tiles = tiles
-        self.__goblinDeathSound = pygame.mixer.Sound("Assets/sounds/mixkit-retro-arcade-game-over-470.wav")
+        self.__goblinDeathSound = pygame.mixer.Sound("Assets/sounds/pixel-death.wav")
         if len(self.tiles) == 1:
             self.rect = pygame.rect.Rect(self.tiles[0].rect.topleft, (16, 16))
             self.goblinHealth = 1
@@ -200,6 +200,7 @@ class Goblin:
         """
         self.goblinHealth -= 1
         if self.goblinHealth == 0:
+            self.__goblinDeathSound.set_volume(.05)
             self.__goblinDeathSound.play()
             for tile in self.tiles:
                 tile.update(0, sheet[0])

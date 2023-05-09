@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytiled_parser
-
+import pygame
 from Goblin import Goblin
 from Tile import Tile
 

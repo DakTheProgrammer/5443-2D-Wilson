@@ -73,8 +73,8 @@ class LevelThree:
         self.__doorTopR = [282,283,260,261]
         self.__doorBottomR = [825,826,803,804]
         self.__doorBottomL = [736,737,715,716]
-        self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.mp3")
-        self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.mp3")  
+        self.__doorOpen = pygame.mixer.Sound("Assets/sounds/open-doors.wav")
+        self.__doorClose = pygame.mixer.Sound("Assets/sounds/door-close.wav")  
         self.__topObjs = 514
     
         self.__sheet = sheet
@@ -112,12 +112,14 @@ class LevelThree:
             if self.__leverTopCurR == 'L':
                 self.__leverTopCurR = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorTopR:
                     tiles[part].updateState(self.__sheet, 3)
             else:
                 self.__leverTopCurR = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorTopR:
                     tiles[part].updateState(self.__sheet, -3)
@@ -126,6 +128,7 @@ class LevelThree:
             if self.__leverTopCurL == 'L':
                 self.__leverTopCurL = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorTopL:
                     tiles[part].updateState(self.__sheet, 3)
@@ -133,6 +136,7 @@ class LevelThree:
             else:
                 self.__leverTopCurL = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorTopL:
                     tiles[part].updateState(self.__sheet, -3)
@@ -142,12 +146,14 @@ class LevelThree:
             if self.__leverBottomCurR == 'L':
                 self.__leverBottomCurR = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorBottomR:
                     tiles[part].updateState(self.__sheet, 3)
             else:
                 self.__leverBottomCurR = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorBottomR:
                     tiles[part].updateState(self.__sheet, -3)
@@ -156,6 +162,7 @@ class LevelThree:
             if self.__leverBottomCurL == 'L':
                 self.__leverBottomCurL = 'R'
                 tiles[objNum].updateState(self.__sheet, 1)
+                self.__doorOpen.set_volume(.3)
                 self.__doorOpen.play()
                 for part in self.__doorBottomL:
                     tiles[part].updateState(self.__sheet, 3)
@@ -163,6 +170,7 @@ class LevelThree:
             else:
                 self.__leverBottomCurL = 'L'
                 tiles[objNum].updateState(self.__sheet, -1)
+                self.__doorClose.set_volume(.3)
                 self.__doorClose.play()
                 for part in self.__doorBottomL:
                     tiles[part].updateState(self.__sheet, -3)
