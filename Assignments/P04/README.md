@@ -2,9 +2,20 @@
 ### Dakota Wilson
 ### Description:
 
-- The game is a dungeon crawler where the players must defeat enemies and collaborate to portal to different areas in the level and continue to the next level. The game is multiplayer and uses RabbitMQ to communicate between the two players. The game uses the tiled map editor to create the levels and the game uses the pytmx library to load the levels into the game. 
-The game uses the pygame library to render the game and handle the game logic.
-The game uses the pika library to communicate between the client and server. 
+- The game is a dungeon crawler where the players must defeat enemies and collaborate to portal to different areas in the level and continue to the next level. The game is multiplayer and uses message passing to communicate between the two players. The game uses the tiled map editor to create the levels and the game uses the pytmx library to load the levels into the game. 
+The game uses the pygame library to render the game and handle the game logic. It also the pika library to communicate with the RabbitMQ server. 
+
+### How to play:
+- Press 'z' to zoom out for a full view of the level.
+- Use the arrow keys or 'awsd' keys to move the player around the map.
+- To start, walk over the buttons to select different players and weapons.
+- Use the space bar to open/close doors and to attack enemies.
+- Collect coins and kill enemies to increase your score.
+- Collect potions to increase your health.
+- In each level, both players must step on the button to portal to a different area. 
+- In each level, both players must reach the chest to continue to the next level.
+- In the last level, each player opens a treasure chest to win the game. 
+
 ### Files
 
 |   #   | File            | Description                                        |
@@ -41,7 +52,8 @@ The game uses the pika library to communicate between the client and server.
     - `python main.py game-06 player-09`
     - `python3 main.py game-06 player-10`
 
-#### Screen Shots:
+### Screen Shots:
+
 - Start Level
 <img src="Assets/screenshots/StartLevel.png">
 
@@ -53,3 +65,6 @@ The game uses the pika library to communicate between the client and server.
 
 - Level Three
 <img src="Assets/screenshots/Level3.png">
+
+- Game Over
+<img src="Assets/screenshots/endPlayer1.png.png"><img src="Assets/screenshots/endPlayer2.png.png">
