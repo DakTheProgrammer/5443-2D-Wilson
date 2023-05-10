@@ -47,10 +47,10 @@ The game uses the pika library to communicate between the client and server.
 <img src="Assets/screenshots/StartLevel.png">
 
 - Level One
-<img src="Assets/screenshots/LevelOne.png">
+<img src="Assets/screenshots/Level1.png">
 
 - Level Two
-<img src="Assets/screenshots/LevelTwo.png">
+<img src="Assets/screenshots/Level2.png">
 
 - Level Three
-<img src="Assets/screenshots/LevelThree.png">
+<img src="Assets/screenshots/Level3.png">
