@@ -15,6 +15,7 @@ The game uses the pygame library to render the game and handle the game logic. I
 - In each level, both players must step on the button to portal to a different area. 
 - In each level, both players must reach the chest to continue to the next level.
 - In the last level, each player opens a treasure chest to win the game. 
+- Press 'r' to reset the game at any time.
 
 ### Files
 
