@@ -9,7 +9,7 @@ The game uses the pika library to communicate between the client and server.
 
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
-|   1   | Comms.py        | The class for communicaitons with RabbitMQ server. |
+|   1   | Comms.py        | The class for communications with RabbitMQ server. |
 |   2   | GameDriver.py   | The class that handles all game functionality.     |
 |   3   | Goblin.py       | The class for the NPC animation.                   |
 |   4   | GUI.py          | The GUI class for displaying the health and score. |
