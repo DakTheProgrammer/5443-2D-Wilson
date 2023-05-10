@@ -160,7 +160,7 @@ class Player(pygame.sprite.Sprite):
         self.tp = False
         self.tpLoc = self.rect.topleft
         
-        self.__isOver = False
+        self.isOver = False
 
         self.__font = pygame.font.Font('Assets/Font/dungeon.ttf', 32)
         self.__gameOverText = self.__font.render("GAME OVER", False, (235, 66, 52))
@@ -200,7 +200,7 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         screen.blit(self.head, self.headRec)
 
-        if self.__isOver:
+        if self.isOver:
             screen.blit(self.__gameOverText, (self.rect.centerx - self.__gameOverText.get_rect().centerx, self.rect.top))
 
 
@@ -290,7 +290,7 @@ class Player(pygame.sprite.Sprite):
                 if objectTiles[collision].isTreasureChest():
                     objectTiles[collision].TreasureChestAnimation(self.__sprites)
                     pygame.mixer.music.stop()
-                    if self.__gameOver.get_num_channels() < 1 and not self.__isOver:
+                    if self.__gameOver.get_num_channels() < 1 and not self.isOver:
                         self.__gameOver.set_volume(.3)
                         self.__gameOver.play()
                         self.__gameOver.fadeout(30000)
@@ -298,7 +298,7 @@ class Player(pygame.sprite.Sprite):
                     if self.__score <= 1000:    
                         self.__score += 100
                     else:
-                        self.__isOver = True
+                        self.isOver = True
                 if objectTiles[collision].isBarrier():
                     
                     angle = self.__angle_of_line(self.rect.centerx, self.rect.centery, objectRecs[collision].centerx, objectRecs[collision].centery)

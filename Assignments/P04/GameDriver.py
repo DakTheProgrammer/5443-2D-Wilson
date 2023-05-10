@@ -119,12 +119,14 @@ class GameDriver:
         
         messenger.setCallback(self.__receiveMessage)
         
-        #sends message to see whos in the game
+        #sends message to see who's in the game
         self.__sendMessage('broadcast', {'type': 'who'})
         
         #used to determine which player is playing 0 is host 1 is p2
         self.__owner = 0
         
+        self.__resets = [False, False]
+
     def GameLoop(self):
         """
         The main game loop that handles the game loop, drawing, event handling, and communication between the two players
@@ -146,6 +148,8 @@ class GameDriver:
             self.__sendMessage(self.__partner, self.__Updates)
             
             self.__checkNewLevel()
+
+            self.__checkResetGame()
 
     def __draw(self):
         """
@@ -206,6 +210,8 @@ class GameDriver:
                     self.__players[self.__owner].attack()
                 if event.key == pygame.K_o:
                     self.__players[self.__owner].moveSpeed = 0
+                if event.key == pygame.K_r:
+                    self.__resets[0] = True
                   
         x,y = 0,0  
         is_key_pressed = pygame.key.get_pressed()
@@ -250,7 +256,7 @@ class GameDriver:
         ----------
         """
         
-        if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0:
+        if self.__players[0].moveSpeed == 0 and self.__players[1].moveSpeed == 0 and self.__levelNum != 3:
             self.__newLevelSound.set_volume(.1)
             self.__newLevelSound.play()
             for player in self.__players: player.moveSpeed = 1
@@ -286,7 +292,8 @@ class GameDriver:
                             'attacking': int(self.__players[self.__owner].getAttack()),
                             'ready': self.__players[self.__owner].moveSpeed,
                             'level': self.__levelNum,
-                            'tp': int(self.__players[self.__owner].tp)
+                            'tp': int(self.__players[self.__owner].tp),
+                            'reset': int(self.__resets[0])
                             } 
         
         if self.__owner == 0:
@@ -329,6 +336,8 @@ class GameDriver:
             if bodyDic['attacking'] == 1: self.__players[self.__owner ^ 1].attack()
             self.__players[self.__owner ^ 1].moveSpeed = bodyDic['ready']
             self.__players[self.__owner ^ 1].tp = bodyDic['tp']
+
+            
             
             if self.__levelNum == bodyDic['level']:
                 objects = self.__map.getObjects()
@@ -338,6 +347,9 @@ class GameDriver:
                     
             if self.__players[self.__owner].tp and self.__players[self.__owner ^ 1].tp:
                 self.__players[self.__owner].teleport()
+
+            self.__resets[1] = bodyDic['reset']
+            
                 
                 
         
@@ -351,3 +363,27 @@ class GameDriver:
         """
         if target != None:
             self.__messenger.send(target, body)
+
+    def __checkResetGame(self):
+
+        if self.__resets[0] and self.__resets[1]:
+            self.__players = [Player(41, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[0], self.__level), Player(105, self.__spriteSheet.getSpritesList(), self.__map.getSpawnTile()[1], self.__level)]
+
+            self.__levelNum = 0
+            self.__resets = [False, False]
+
+            for player in self.__players: 
+                player.moveSpeed = 1
+                player.isOver = False
+
+            
+            self.__map = Map(self.__levels[self.__levelNum], self.__spriteSheet.getSpritesList())
+            
+            self.__players[0].rect.topleft = self.__map.getSpawnTile()[0].rect.topleft
+            self.__players[1].rect.topleft = self.__map.getSpawnTile()[1].rect.topleft
+
+            self.__map.setPlayers(self.__players)
+
+            self.__level = StartLevel(self.__spriteSheet)
+
+            self.__players[self.__owner].setCurrentLevel(self.__level)
