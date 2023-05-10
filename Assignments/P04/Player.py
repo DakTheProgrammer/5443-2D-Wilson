@@ -163,7 +163,7 @@ class Player(pygame.sprite.Sprite):
         self.__isOver = False
 
         self.__font = pygame.font.Font('Assets/Font/dungeon.ttf', 32)
-        self.__gameOverText = self.__font.render("GAME OVER", False, (255, 0, 0))
+        self.__gameOverText = self.__font.render("GAME OVER", False, (235, 66, 52))
 
         super().__init__()
 
