@@ -47,7 +47,9 @@ The game uses the pygame library to render the game and handle the game logic. I
 ### Instructions
 
 - Make sure you install the requirements.txt before running the game.
-
+    - 'pip install -r requirements.txt'
+    - 'pip3 install -r requirements.txt'
+    
 - Example Command:
     - `python main.py game-06 player-09`
     - `python3 main.py game-06 player-10`
@@ -67,4 +69,5 @@ The game uses the pygame library to render the game and handle the game logic. I
 <img src="Assets/screenshots/Level3.png">
 
 - Game Over
-<img src="Assets/screenshots/endPlayer1.png.png"><img src="Assets/screenshots/endPlayer2.png.png">
+<img src="Assets/screenshots/endPlayer1.png.png">
+<img src="Assets/screenshots/endPlayer2.png.png">
