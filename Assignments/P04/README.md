@@ -46,7 +46,7 @@ The game uses the pygame library to render the game and handle the game logic. I
 
 ### Instructions
 
-- Make sure you install library the requirements.txt before running the game.
+- Make sure you install the requirements.txt before running the game.
 
 - Example Command:
     - `python main.py game-06 player-09`
