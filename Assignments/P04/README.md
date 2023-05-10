@@ -39,7 +39,6 @@ The game uses the pika library to communicate between the client and server.
 
 - Example Command:
     - `python main.py game-06 player-09`
-    or
     - `python3 main.py game-06 player-10`
 
 #### Screen Shots:
